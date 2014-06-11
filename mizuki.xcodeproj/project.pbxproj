@@ -1,0 +1,448 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2F397D6D1948BD6F004CC963 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F397D6C1948BD6F004CC963 /* main.m */; };
+		2F397D701948BD6F004CC963 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F397D6F1948BD6F004CC963 /* AppDelegate.m */; };
+		2F397D731948BD6F004CC963 /* mizuki.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2F397D711948BD6F004CC963 /* mizuki.xcdatamodeld */; };
+		2F397D761948BD6F004CC963 /* BWRInvoiceHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F397D751948BD6F004CC963 /* BWRInvoiceHistoryViewController.m */; };
+		2F397D791948BD6F004CC963 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F397D771948BD6F004CC963 /* Main.storyboard */; };
+		2F397D7B1948BD6F004CC963 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F397D7A1948BD6F004CC963 /* Images.xcassets */; };
+		2F397D871948BD6F004CC963 /* mizukiTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F397D861948BD6F004CC963 /* mizukiTests.m */; };
+		2F397D911948BF31004CC963 /* BWRInvoiceConfirmationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F397D901948BF30004CC963 /* BWRInvoiceConfirmationViewController.m */; };
+		2F397D941948C4E7004CC963 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F397D931948C4E7004CC963 /* MobileCoreServices.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2F397D811948BD6F004CC963 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2F397D5F1948BD6E004CC963 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2F397D661948BD6F004CC963;
+			remoteInfo = mizuki;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2F397D671948BD6F004CC963 /* mizuki.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mizuki.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F397D6B1948BD6F004CC963 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2F397D6C1948BD6F004CC963 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		2F397D6E1948BD6F004CC963 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		2F397D6F1948BD6F004CC963 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		2F397D721948BD6F004CC963 /* mizuki.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = mizuki.xcdatamodel; sourceTree = "<group>"; };
+		2F397D741948BD6F004CC963 /* BWRInvoiceHistoryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BWRInvoiceHistoryViewController.h; sourceTree = "<group>"; };
+		2F397D751948BD6F004CC963 /* BWRInvoiceHistoryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BWRInvoiceHistoryViewController.m; sourceTree = "<group>"; };
+		2F397D781948BD6F004CC963 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2F397D7A1948BD6F004CC963 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		2F397D801948BD6F004CC963 /* mizukiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = mizukiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F397D851948BD6F004CC963 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2F397D861948BD6F004CC963 /* mizukiTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = mizukiTests.m; sourceTree = "<group>"; };
+		2F397D901948BF30004CC963 /* BWRInvoiceConfirmationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRInvoiceConfirmationViewController.m; sourceTree = "<group>"; };
+		2F397D921948BF93004CC963 /* BWRInvoiceConfirmationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWRInvoiceConfirmationViewController.h; sourceTree = "<group>"; };
+		2F397D931948C4E7004CC963 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2F397D641948BD6F004CC963 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2F397D941948C4E7004CC963 /* MobileCoreServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2F397D7D1948BD6F004CC963 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2F397D5E1948BD6E004CC963 = {
+			isa = PBXGroup;
+			children = (
+				2F397D931948C4E7004CC963 /* MobileCoreServices.framework */,
+				2F397D691948BD6F004CC963 /* mizuki */,
+				2F397D831948BD6F004CC963 /* mizukiTests */,
+				2F397D681948BD6F004CC963 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2F397D681948BD6F004CC963 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2F397D671948BD6F004CC963 /* mizuki.app */,
+				2F397D801948BD6F004CC963 /* mizukiTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2F397D691948BD6F004CC963 /* mizuki */ = {
+			isa = PBXGroup;
+			children = (
+				2F397D6E1948BD6F004CC963 /* AppDelegate.h */,
+				2F397D6F1948BD6F004CC963 /* AppDelegate.m */,
+				2F397D741948BD6F004CC963 /* BWRInvoiceHistoryViewController.h */,
+				2F397D751948BD6F004CC963 /* BWRInvoiceHistoryViewController.m */,
+				2F397D771948BD6F004CC963 /* Main.storyboard */,
+				2F397D7A1948BD6F004CC963 /* Images.xcassets */,
+				2F397D711948BD6F004CC963 /* mizuki.xcdatamodeld */,
+				2F397D6A1948BD6F004CC963 /* Supporting Files */,
+				2F397D901948BF30004CC963 /* BWRInvoiceConfirmationViewController.m */,
+				2F397D921948BF93004CC963 /* BWRInvoiceConfirmationViewController.h */,
+			);
+			path = mizuki;
+			sourceTree = "<group>";
+		};
+		2F397D6A1948BD6F004CC963 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2F397D6B1948BD6F004CC963 /* Info.plist */,
+				2F397D6C1948BD6F004CC963 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2F397D831948BD6F004CC963 /* mizukiTests */ = {
+			isa = PBXGroup;
+			children = (
+				2F397D861948BD6F004CC963 /* mizukiTests.m */,
+				2F397D841948BD6F004CC963 /* Supporting Files */,
+			);
+			path = mizukiTests;
+			sourceTree = "<group>";
+		};
+		2F397D841948BD6F004CC963 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2F397D851948BD6F004CC963 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2F397D661948BD6F004CC963 /* mizuki */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2F397D8A1948BD6F004CC963 /* Build configuration list for PBXNativeTarget "mizuki" */;
+			buildPhases = (
+				2F397D631948BD6F004CC963 /* Sources */,
+				2F397D641948BD6F004CC963 /* Frameworks */,
+				2F397D651948BD6F004CC963 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = mizuki;
+			productName = mizuki;
+			productReference = 2F397D671948BD6F004CC963 /* mizuki.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2F397D7F1948BD6F004CC963 /* mizukiTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2F397D8D1948BD6F004CC963 /* Build configuration list for PBXNativeTarget "mizukiTests" */;
+			buildPhases = (
+				2F397D7C1948BD6F004CC963 /* Sources */,
+				2F397D7D1948BD6F004CC963 /* Frameworks */,
+				2F397D7E1948BD6F004CC963 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2F397D821948BD6F004CC963 /* PBXTargetDependency */,
+			);
+			name = mizukiTests;
+			productName = mizukiTests;
+			productReference = 2F397D801948BD6F004CC963 /* mizukiTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2F397D5F1948BD6E004CC963 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0600;
+				ORGANIZATIONNAME = "Efrén Aguilar";
+				TargetAttributes = {
+					2F397D661948BD6F004CC963 = {
+						CreatedOnToolsVersion = 6.0;
+					};
+					2F397D7F1948BD6F004CC963 = {
+						CreatedOnToolsVersion = 6.0;
+						TestTargetID = 2F397D661948BD6F004CC963;
+					};
+				};
+			};
+			buildConfigurationList = 2F397D621948BD6E004CC963 /* Build configuration list for PBXProject "mizuki" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2F397D5E1948BD6E004CC963;
+			productRefGroup = 2F397D681948BD6F004CC963 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2F397D661948BD6F004CC963 /* mizuki */,
+				2F397D7F1948BD6F004CC963 /* mizukiTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2F397D651948BD6F004CC963 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2F397D791948BD6F004CC963 /* Main.storyboard in Resources */,
+				2F397D7B1948BD6F004CC963 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2F397D7E1948BD6F004CC963 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2F397D631948BD6F004CC963 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2F397D701948BD6F004CC963 /* AppDelegate.m in Sources */,
+				2F397D911948BF31004CC963 /* BWRInvoiceConfirmationViewController.m in Sources */,
+				2F397D731948BD6F004CC963 /* mizuki.xcdatamodeld in Sources */,
+				2F397D761948BD6F004CC963 /* BWRInvoiceHistoryViewController.m in Sources */,
+				2F397D6D1948BD6F004CC963 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2F397D7C1948BD6F004CC963 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2F397D871948BD6F004CC963 /* mizukiTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2F397D821948BD6F004CC963 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2F397D661948BD6F004CC963 /* mizuki */;
+			targetProxy = 2F397D811948BD6F004CC963 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		2F397D771948BD6F004CC963 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2F397D781948BD6F004CC963 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2F397D881948BD6F004CC963 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				METAL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2F397D891948BD6F004CC963 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				METAL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2F397D8B1948BD6F004CC963 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				INFOPLIST_FILE = mizuki/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2F397D8C1948BD6F004CC963 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				INFOPLIST_FILE = mizuki/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		2F397D8E1948BD6F004CC963 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/mizuki.app/mizuki";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = mizukiTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				METAL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+			};
+			name = Debug;
+		};
+		2F397D8F1948BD6F004CC963 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/mizuki.app/mizuki";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = mizukiTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				METAL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2F397D621948BD6E004CC963 /* Build configuration list for PBXProject "mizuki" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2F397D881948BD6F004CC963 /* Debug */,
+				2F397D891948BD6F004CC963 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2F397D8A1948BD6F004CC963 /* Build configuration list for PBXNativeTarget "mizuki" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2F397D8B1948BD6F004CC963 /* Debug */,
+				2F397D8C1948BD6F004CC963 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		2F397D8D1948BD6F004CC963 /* Build configuration list for PBXNativeTarget "mizukiTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2F397D8E1948BD6F004CC963 /* Debug */,
+				2F397D8F1948BD6F004CC963 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		2F397D711948BD6F004CC963 /* mizuki.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				2F397D721948BD6F004CC963 /* mizuki.xcdatamodel */,
+			);
+			currentVersion = 2F397D721948BD6F004CC963 /* mizuki.xcdatamodel */;
+			path = mizuki.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 2F397D5F1948BD6E004CC963 /* Project object */;
+}
