@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B1D89441950B38200C5A5A3 /* starbucks_liso.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2B1D89431950B38200C5A5A3 /* starbucks_liso.jpg */; };
+		2B1D89461950B3C300C5A5A3 /* starbucks_con_dobles.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2B1D89451950B3C300C5A5A3 /* starbucks_con_dobles.jpg */; };
 		2BDB2E7E195099FC00AD8F67 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BDB2E7D195099FC00AD8F67 /* libstdc++.6.0.9.dylib */; };
 		2BDB2F1D19509B0B00AD8F67 /* Tesseract.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2BDB2E8219509B0B00AD8F67 /* Tesseract.mm */; };
 		2BDB2F1E19509B0B00AD8F67 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 2BDB2E8319509B0B00AD8F67 /* LICENSE */; };
@@ -36,6 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2B1D89431950B38200C5A5A3 /* starbucks_liso.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = starbucks_liso.jpg; sourceTree = "<group>"; };
+		2B1D89451950B3C300C5A5A3 /* starbucks_con_dobles.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = starbucks_con_dobles.jpg; sourceTree = "<group>"; };
 		2BDB2E7D195099FC00AD8F67 /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
 		2BDB2E8119509B0B00AD8F67 /* Tesseract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tesseract.h; sourceTree = "<group>"; };
 		2BDB2E8219509B0B00AD8F67 /* Tesseract.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tesseract.mm; sourceTree = "<group>"; };
@@ -454,6 +458,8 @@
 		2F397D691948BD6F004CC963 /* mizuki */ = {
 			isa = PBXGroup;
 			children = (
+				2B1D89451950B3C300C5A5A3 /* starbucks_con_dobles.jpg */,
+				2B1D89431950B38200C5A5A3 /* starbucks_liso.jpg */,
 				2BDB2F2719509B7E00AD8F67 /* BWRProcessImage.m */,
 				2BDB2F2619509B6600AD8F67 /* BWRProcessImage.h */,
 				2BDB2F2419509B3900AD8F67 /* tessdata */,
@@ -580,7 +586,9 @@
 			files = (
 				2BDB2F1E19509B0B00AD8F67 /* LICENSE in Resources */,
 				2BDB2F2519509B3900AD8F67 /* tessdata in Resources */,
+				2B1D89441950B38200C5A5A3 /* starbucks_liso.jpg in Resources */,
 				2F397D791948BD6F004CC963 /* Main.storyboard in Resources */,
+				2B1D89461950B3C300C5A5A3 /* starbucks_con_dobles.jpg in Resources */,
 				2F397D7B1948BD6F004CC963 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
