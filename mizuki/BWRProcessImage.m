@@ -30,11 +30,11 @@
 {
     Tesseract* tesseract = [[Tesseract alloc] initWithDataPath:@"tessdata" language:@"spa"];
     
-    //Temporal
-    [tesseract setImage:[UIImage imageNamed:@"starbucks_liso.jpg"]];
-    /*Aplicacion futura
-     [tesseract setImage:processImage];
-     */
+    //Pruebas
+    //[tesseract setImage:[UIImage imageNamed:@"starbucks_liso.jpg"]];
+    
+    //Ejecución normal
+    [tesseract setImage:processImage];
     
     [tesseract recognize];
     

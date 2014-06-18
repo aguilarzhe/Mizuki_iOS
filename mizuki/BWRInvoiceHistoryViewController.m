@@ -53,10 +53,10 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if([[segue identifier] isEqualToString:@"invoiceConfirmationSegue"]){
         //Temporal
-        BWRProcessImage *processImage = [[BWRProcessImage alloc] init];
-        /*Aplicacion futura
-         BWRProcessImage *processImage = [[BWRProcessImage alloc] initWithImage:invoiceImage];
-         */
+        //BWRProcessImage *processImage = [[BWRProcessImage alloc] init];
+        //Aplicacion futura
+        BWRProcessImage *processImage = [[BWRProcessImage alloc] initWithImage:invoiceImage];
+        
         
         // TODO: Define BWRConfirmInvoiceViewController
         BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [segue destinationViewController];
