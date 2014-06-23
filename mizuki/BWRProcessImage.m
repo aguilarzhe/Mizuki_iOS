@@ -30,19 +30,27 @@
 -(NSString *)processRecognitionOCR;
 {
     Tesseract* tesseract = [[Tesseract alloc] initWithDataPath:@"tessdata" language:@"spa"];
+    OpenCV *opencv = [[OpenCV alloc] init];
+    UIImage *image_result = [UIImage imageNamed:@"starbucks_con_dobles.jpg"];
     
-    //Pruebas
-    //[tesseract setImage:[UIImage imageNamed:@"starbucks_liso.jpg"]];
+    if(!processImage){
+        return @"Error";
+    }
     
-    //Ejecución normal
-    [tesseract setImage:processImage];
+    //Mejorar la imagen
+    //UIImage *image_erode = [opencv generateDilateImageFromUIImage:processImage];
+    UIImage *image_erode = [opencv generateDilateImageFromUIImage:image_result];
+    processImage = [opencv generateBinaryImageFromUIImage:image_erode];
     
+    //Reconocer texto
+    [tesseract setImage: processImage];
     [tesseract recognize];
-    
     NSString *result = [tesseract recognizedText];
     NSLog(@"%@", result);
     
+    //Liberar memoria
     tesseract = nil; //deallocate and free all memory
+    
     
     return result;
     
