@@ -3,7 +3,7 @@
 //  mizuki
 //
 //  Created by Carolina Mora on 12/06/14.
-//  Copyright (c) 2014 Efrén Aguilar. All rights reserved.
+//  Copyright (c) 2014 Baware S.A. de C.V. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

@@ -3,7 +3,7 @@
 //  mizuki
 //
 //  Created by Efrén Aguilar on 6/11/14.
-//  Copyright (c) 2014 Efrén Aguilar. All rights reserved.
+//  Copyright (c) 2014 Baware S.A. de C.V. All rights reserved.
 //
 
 #import "BWRInvoiceHistoryViewController.h"
@@ -36,6 +36,7 @@
 
 }
 
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 
@@ -43,6 +44,7 @@
 
 -(void)showImageInvoceActionSheet{
     imageInvoiceActionSheet = [[UIActionSheet alloc] initWithTitle:@"Agregar factura" delegate:self cancelButtonTitle:@"Cancelar" destructiveButtonTitle:nil otherButtonTitles:@"Cámara",@"Galeria",@"Capturar datos", nil];
+    
     [imageInvoiceActionSheet showInView:self.view];
 }
 
@@ -52,15 +54,8 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if([[segue identifier] isEqualToString:@"invoiceConfirmationSegue"]){
-        //Temporal
-        //BWRProcessImage *processImage = [[BWRProcessImage alloc] init];
-        //Aplicacion futura
-        BWRProcessImage *processImage = [[BWRProcessImage alloc] initWithImage:invoiceImage];
-        
-        
-        // TODO: Define BWRConfirmInvoiceViewController
         BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [segue destinationViewController];
-        confirmInvoiceViewController.invoiceText = [processImage processRecognitionOCR];
+        confirmInvoiceViewController.invoiceImage = invoiceImage;
     }
 }
 
@@ -109,7 +104,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     
     if([mediaType isEqualToString:(NSString *)kUTTypeImage]){
-        invoiceImage = info [UIImagePickerControllerOriginalImage];
+        invoiceImage = info[UIImagePickerControllerOriginalImage];
         [self confirmInvoice];
     }
 }
