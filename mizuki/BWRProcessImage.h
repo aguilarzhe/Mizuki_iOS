@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Tesseract.h"
+#import "OpenCV.h"
 
 @interface BWRProcessImage : NSObject
 
