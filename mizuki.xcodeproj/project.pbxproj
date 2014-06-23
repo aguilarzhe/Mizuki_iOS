@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2B1D89441950B38200C5A5A3 /* starbucks_liso.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2B1D89431950B38200C5A5A3 /* starbucks_liso.jpg */; };
 		2B1D89461950B3C300C5A5A3 /* starbucks_con_dobles.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2B1D89451950B3C300C5A5A3 /* starbucks_con_dobles.jpg */; };
+		2B23A5FF19589F9B0054FB8A /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B23A5FE19589F9B0054FB8A /* opencv2.framework */; };
+		2B23A60319589FED0054FB8A /* OpenCV.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B23A60219589FED0054FB8A /* OpenCV.mm */; };
 		2BDB2E7E195099FC00AD8F67 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BDB2E7D195099FC00AD8F67 /* libstdc++.6.0.9.dylib */; };
 		2BDB2F1D19509B0B00AD8F67 /* Tesseract.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2BDB2E8219509B0B00AD8F67 /* Tesseract.mm */; };
 		2BDB2F1E19509B0B00AD8F67 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 2BDB2E8319509B0B00AD8F67 /* LICENSE */; };
@@ -40,6 +42,10 @@
 /* Begin PBXFileReference section */
 		2B1D89431950B38200C5A5A3 /* starbucks_liso.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = starbucks_liso.jpg; sourceTree = "<group>"; };
 		2B1D89451950B3C300C5A5A3 /* starbucks_con_dobles.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = starbucks_con_dobles.jpg; sourceTree = "<group>"; };
+		2B23A5FE19589F9B0054FB8A /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../../../../Programas/OpenCV/opencv2.framework; sourceTree = "<group>"; };
+		2B23A60119589FD10054FB8A /* OpenCV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenCV.h; sourceTree = "<group>"; };
+		2B23A60219589FED0054FB8A /* OpenCV.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenCV.mm; sourceTree = "<group>"; };
+		2B23A6041958A0170054FB8A /* mizuki-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mizuki-Prefix.pch"; sourceTree = "<group>"; };
 		2BDB2E7D195099FC00AD8F67 /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
 		2BDB2E8119509B0B00AD8F67 /* Tesseract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tesseract.h; sourceTree = "<group>"; };
 		2BDB2E8219509B0B00AD8F67 /* Tesseract.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tesseract.mm; sourceTree = "<group>"; };
@@ -215,6 +221,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B23A5FF19589F9B0054FB8A /* opencv2.framework in Frameworks */,
 				2BDB2E7E195099FC00AD8F67 /* libstdc++.6.0.9.dylib in Frameworks */,
 				2F397D941948C4E7004CC963 /* MobileCoreServices.framework in Frameworks */,
 				2BDB2F2219509B0B00AD8F67 /* libtesseract_all.a in Frameworks */,
@@ -232,6 +239,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2B23A60019589FA70054FB8A /* opencv-ios */ = {
+			isa = PBXGroup;
+			children = (
+				2B23A60219589FED0054FB8A /* OpenCV.mm */,
+				2B23A60119589FD10054FB8A /* OpenCV.h */,
+			);
+			name = "opencv-ios";
+			sourceTree = "<group>";
+		};
 		2BDB2E7F19509B0B00AD8F67 /* tesseract-ios */ = {
 			isa = PBXGroup;
 			children = (
@@ -438,6 +454,7 @@
 		2F397D5E1948BD6E004CC963 = {
 			isa = PBXGroup;
 			children = (
+				2B23A5FE19589F9B0054FB8A /* opencv2.framework */,
 				2BDB2E7D195099FC00AD8F67 /* libstdc++.6.0.9.dylib */,
 				2F397D931948C4E7004CC963 /* MobileCoreServices.framework */,
 				2F397D691948BD6F004CC963 /* mizuki */,
@@ -458,6 +475,7 @@
 		2F397D691948BD6F004CC963 /* mizuki */ = {
 			isa = PBXGroup;
 			children = (
+				2B23A60019589FA70054FB8A /* opencv-ios */,
 				2B1D89451950B3C300C5A5A3 /* starbucks_con_dobles.jpg */,
 				2B1D89431950B38200C5A5A3 /* starbucks_liso.jpg */,
 				2BDB2F2719509B7E00AD8F67 /* BWRProcessImage.m */,
@@ -481,6 +499,7 @@
 		2F397D6A1948BD6F004CC963 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2B23A6041958A0170054FB8A /* mizuki-Prefix.pch */,
 				2F397D6B1948BD6F004CC963 /* Info.plist */,
 				2F397D6C1948BD6F004CC963 /* main.m */,
 			);
@@ -612,6 +631,7 @@
 				2F397D911948BF31004CC963 /* BWRInvoiceConfirmationViewController.m in Sources */,
 				2BDB2F2819509B7E00AD8F67 /* BWRProcessImage.m in Sources */,
 				2BDB2F1D19509B0B00AD8F67 /* Tesseract.mm in Sources */,
+				2B23A60319589FED0054FB8A /* OpenCV.mm in Sources */,
 				2F397D731948BD6F004CC963 /* mizuki.xcdatamodeld in Sources */,
 				2F397D761948BD6F004CC963 /* BWRInvoiceHistoryViewController.m in Sources */,
 				2F397D6D1948BD6F004CC963 /* main.m in Sources */,
@@ -736,6 +756,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/carolinamora/Documents/Programas/OpenCV,
+				);
 				INFOPLIST_FILE = mizuki/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -755,6 +779,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/carolinamora/Documents/Programas/OpenCV,
+				);
 				INFOPLIST_FILE = mizuki/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
