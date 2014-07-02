@@ -14,6 +14,6 @@
 @property UIImage *invoiceImage;
 
 //Temporal
-@property UILabel *invoiceLabel;
+@property UITextView *invoiceLabel;
 
 @end

@@ -22,12 +22,30 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    invoiceImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10.0f, 50.0f, 480.0f, 200.0f)];
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        invoiceImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 50.0f, self.view.frame.size.width, 200.0f)];
+        invoiceLabel = [[UITextView alloc] initWithFrame:CGRectMake(10.0f, 260.0f, self.view.frame.size.width - 20, self.view.frame.size.height - 260)];
+        [invoiceImageView setContentMode:UIViewContentModeScaleToFill];
+    }else if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+        if(orientation == UIDeviceOrientationLandscapeLeft || orientation == UIDeviceOrientationLandscapeRight){
+            invoiceImageView = [[UIImageView alloc] initWithFrame:CGRectMake(500.0f, 60.0f, 480.0f, self.view.frame.size.height - 80.0f) ];
+            invoiceLabel = [[UITextView alloc] initWithFrame:CGRectMake(10.0f, 60.0f, 480.0f, self.view.frame.size.height - 80.0f)];
+            [invoiceImageView setContentMode:UIViewContentModeScaleAspectFit];
+        }else{
+            invoiceLabel = [[UITextView alloc] initWithFrame:CGRectMake(10.0f, 210.0f, 480.0f, 400.0f)];
+            invoiceImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10.0f, 50.0f, 480.0f, 200.0f)];
+            [invoiceImageView setContentMode:UIViewContentModeScaleToFill];
+        }
+        
+    }
+    
     invoiceImageView.image = invoiceImage;
     [self.view addSubview:invoiceImageView];
     
-    invoiceLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 210.0f, 480.0f, 400.0f)];
-    invoiceLabel.numberOfLines = 0;
+    
+    invoiceLabel.editable = NO;
+    invoiceLabel.scrollEnabled = YES;
     invoiceLabel.text = @"Procesando";
     [self.view addSubview:invoiceLabel];
 
@@ -49,6 +67,7 @@
 {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     NSLog(@"Enter in viewWillTransitionToSize");
+
 }
 
 -(void)processImage{
@@ -63,4 +82,6 @@
     self.invoiceText = text;
     invoiceLabel.text = text;
 }
+
+
 @end
