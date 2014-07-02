@@ -11,11 +11,11 @@
             condition = "invoiceImage == nil"
             continueAfterRunningActions = "No"
             filePath = "mizuki/BWRInvoiceHistoryViewController.m"
-            timestampString = "424894484.337509"
+            timestampString = "426010891.601537"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "119"
-            endingLineNumber = "119">
+            startingLineNumber = "130"
+            endingLineNumber = "130">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Log">

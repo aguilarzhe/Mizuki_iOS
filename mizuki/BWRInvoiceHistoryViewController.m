@@ -15,7 +15,7 @@
 @property UIImage *invoiceImage;
 @property UITableView *invoiceTableView;
 @property NSMutableArray *invoices;
-
+@property UIToolbar *toolbar;
 @end
 
 @implementation BWRInvoiceHistoryViewController
@@ -23,6 +23,7 @@
 @synthesize invoiceImage;
 @synthesize invoiceTableView;
 @synthesize invoices;
+@synthesize toolbar;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -31,6 +32,12 @@
     
     self.navigationItem.rightBarButtonItem = imageInvoiceButton;
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    
+    toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height -44, self.view.frame.size.width, 44)];
+    UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithTitle:@"Mi cuenta" style:UIBarButtonItemStylePlain target:self action:@selector(showSettingsMenu)];
+    UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    [toolbar setItems:@[flexibleItem, settingsButton]];
+    [self.view addSubview:toolbar];
     
     self.title = @"Mis facturas";
 
@@ -51,6 +58,10 @@
 -(void)confirmInvoice{
     [self performSegueWithIdentifier:@"invoiceConfirmationSegue" sender:self];
 }
+
+-(void)showSettingsMenu{
+}
+
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if([[segue identifier] isEqualToString:@"invoiceConfirmationSegue"]){
