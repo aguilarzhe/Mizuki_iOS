@@ -3,7 +3,7 @@
 //  mizuki
 //
 //  Created by Efrén Aguilar on 6/11/14.
-//  Copyright (c) 2014 Efrén Aguilar. All rights reserved.
+//  Copyright (c) 2014 Baware S.A. de C.V. All rights reserved.
 //
 
 #import "AppDelegate.h"
@@ -21,6 +21,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
     return YES;
 }
 

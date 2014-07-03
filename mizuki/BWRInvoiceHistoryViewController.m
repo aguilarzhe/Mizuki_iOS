@@ -3,7 +3,7 @@
 //  mizuki
 //
 //  Created by Efrén Aguilar on 6/11/14.
-//  Copyright (c) 2014 Efrén Aguilar. All rights reserved.
+//  Copyright (c) 2014 Baware S.A. de C.V. All rights reserved.
 //
 
 #import "BWRInvoiceHistoryViewController.h"
@@ -15,7 +15,7 @@
 @property UIImage *invoiceImage;
 @property UITableView *invoiceTableView;
 @property NSMutableArray *invoices;
-
+@property UIToolbar *toolbar;
 @end
 
 @implementation BWRInvoiceHistoryViewController
@@ -23,6 +23,7 @@
 @synthesize invoiceImage;
 @synthesize invoiceTableView;
 @synthesize invoices;
+@synthesize toolbar;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -32,9 +33,16 @@
     self.navigationItem.rightBarButtonItem = imageInvoiceButton;
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
     
+    toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height -44, self.view.frame.size.width, 44)];
+    UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithTitle:@"Mi cuenta" style:UIBarButtonItemStylePlain target:self action:@selector(showSettingsMenu)];
+    UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    [toolbar setItems:@[flexibleItem, settingsButton]];
+    [self.view addSubview:toolbar];
+    
     self.title = @"Mis facturas";
 
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -43,6 +51,7 @@
 
 -(void)showImageInvoceActionSheet{
     imageInvoiceActionSheet = [[UIActionSheet alloc] initWithTitle:@"Agregar factura" delegate:self cancelButtonTitle:@"Cancelar" destructiveButtonTitle:nil otherButtonTitles:@"Cámara",@"Galeria",@"Capturar datos", nil];
+    
     [imageInvoiceActionSheet showInView:self.view];
 }
 
@@ -50,17 +59,14 @@
     [self performSegueWithIdentifier:@"invoiceConfirmationSegue" sender:self];
 }
 
+-(void)showSettingsMenu{
+}
+
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if([[segue identifier] isEqualToString:@"invoiceConfirmationSegue"]){
-        //Temporal
-        //BWRProcessImage *processImage = [[BWRProcessImage alloc] init];
-        //Aplicacion futura
-        BWRProcessImage *processImage = [[BWRProcessImage alloc] initWithImage:invoiceImage];
-        
-        
-        // TODO: Define BWRConfirmInvoiceViewController
         BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [segue destinationViewController];
-        confirmInvoiceViewController.invoiceText = [processImage processRecognitionOCR];
+        confirmInvoiceViewController.invoiceImage = invoiceImage;
     }
 }
 
@@ -109,7 +115,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     
     if([mediaType isEqualToString:(NSString *)kUTTypeImage]){
-        invoiceImage = info [UIImagePickerControllerOriginalImage];
+        invoiceImage = info[UIImagePickerControllerOriginalImage];
         [self confirmInvoice];
     }
 }
