@@ -27,6 +27,7 @@
 		2F397D871948BD6F004CC963 /* mizukiTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F397D861948BD6F004CC963 /* mizukiTests.m */; };
 		2F397D911948BF31004CC963 /* BWRInvoiceConfirmationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F397D901948BF30004CC963 /* BWRInvoiceConfirmationViewController.m */; };
 		2F397D941948C4E7004CC963 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F397D931948C4E7004CC963 /* MobileCoreServices.framework */; };
+		2F7D5CB51964E0EE003BBAB6 /* BWRMyAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7D5CB41964E0EE003BBAB6 /* BWRMyAccount.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -214,6 +215,8 @@
 		2F397D901948BF30004CC963 /* BWRInvoiceConfirmationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRInvoiceConfirmationViewController.m; sourceTree = "<group>"; };
 		2F397D921948BF93004CC963 /* BWRInvoiceConfirmationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWRInvoiceConfirmationViewController.h; sourceTree = "<group>"; };
 		2F397D931948C4E7004CC963 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		2F7D5CB41964E0EE003BBAB6 /* BWRMyAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRMyAccount.m; sourceTree = "<group>"; };
+		2F7D5CB61964E102003BBAB6 /* BWRMyAccount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BWRMyAccount.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -508,6 +511,8 @@
 				2F397D6A1948BD6F004CC963 /* Supporting Files */,
 				2F397D901948BF30004CC963 /* BWRInvoiceConfirmationViewController.m */,
 				2F397D921948BF93004CC963 /* BWRInvoiceConfirmationViewController.h */,
+				2F7D5CB41964E0EE003BBAB6 /* BWRMyAccount.m */,
+				2F7D5CB61964E102003BBAB6 /* BWRMyAccount.h */,
 			);
 			path = mizuki;
 			sourceTree = "<group>";
@@ -648,6 +653,7 @@
 				2BDB2F2819509B7E00AD8F67 /* BWRProcessImage.m in Sources */,
 				2BDB2F1D19509B0B00AD8F67 /* Tesseract.mm in Sources */,
 				2B23A60319589FED0054FB8A /* OpenCV.mm in Sources */,
+				2F7D5CB51964E0EE003BBAB6 /* BWRMyAccount.m in Sources */,
 				2F397D731948BD6F004CC963 /* mizuki.xcdatamodeld in Sources */,
 				2F397D761948BD6F004CC963 /* BWRInvoiceHistoryViewController.m in Sources */,
 				2F397D6D1948BD6F004CC963 /* main.m in Sources */,

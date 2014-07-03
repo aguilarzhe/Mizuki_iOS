@@ -60,6 +60,7 @@
 }
 
 -(void)showSettingsMenu{
+    [self performSegueWithIdentifier:@"showMyAccountSegue" sender:self];
 }
 
 
