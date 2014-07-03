@@ -39,15 +39,8 @@
     //Correo
     tf_correo = [[UITextField alloc] initWithFrame:CGRectMake(50, 150, 200, 31)];
     tf_correo.borderStyle = UITextBorderStyleRoundedRect;
-    //tf_correo.textColor = [UIColor blackColor];
     tf_correo.font = [UIFont systemFontOfSize:17.0];
-    tf_correo.placeholder = @"Correo";  //place holder
-    /*tf_correo.backgroundColor = [UIColor whiteColor];
-     textFieldRounded.autocorrectionType = UITextAutocorrectionTypeNo;
-     textFieldRounded.backgroundColor = [UIColor clearColor];
-     textFieldRounded.keyboardType = UIKeyboardTypeDefault;
-     textFieldRounded.returnKeyType = UIReturnKeyDone;
-     textFieldRounded.clearButtonMode = UITextFieldViewModeWhileEditing;*/
+    tf_correo.placeholder = @"Correo";
     [self.view addSubview:tf_correo];
     
     //Contraseña
@@ -79,10 +72,7 @@
 
 - (void)invoiceDataBillingViewController
 {
-    //[self performSegueWithIdentifier:@"invoiceConfirmationSegue" sender:self];
     BWRInvoiceDataViewController *configurationDataBilling = [[BWRInvoiceDataViewController alloc] initWithDefault: @"¡BIENVENIDO!"];
-    //[self presentViewController: cofigurationDataBilling animated:YES completion:nil];
-    // if you have to use navigation controller then
     configurationDataBilling.view.backgroundColor = [UIColor whiteColor];
     [self.navigationController pushViewController:configurationDataBilling animated:YES];
 }
