@@ -512,12 +512,12 @@
 				2F397D7A1948BD6F004CC963 /* Images.xcassets */,
 				2F397D711948BD6F004CC963 /* mizuki.xcdatamodeld */,
 				2F397D6A1948BD6F004CC963 /* Supporting Files */,
-				2F397D901948BF30004CC963 /* BWRInvoiceConfirmationViewController.m */,
-				2F397D921948BF93004CC963 /* BWRInvoiceConfirmationViewController.h */,
 				2B380A061965E8A300A7FDFE /* BWRInitialConfigurationDataUserViewController.h */,
 				2B380A071965E8A300A7FDFE /* BWRInitialConfigurationDataUserViewController.m */,
 				2B380A091965E93500A7FDFE /* BWRInvoiceDataViewController.h */,
 				2B380A0A1965E93500A7FDFE /* BWRInvoiceDataViewController.m */,
+				2F397D921948BF93004CC963 /* BWRInvoiceConfirmationViewController.h */,
+				2F397D901948BF30004CC963 /* BWRInvoiceConfirmationViewController.m */,
 			);
 			path = mizuki;
 			sourceTree = "<group>";
