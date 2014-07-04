@@ -30,5 +30,6 @@
 
 
 - (BWRInvoiceDataViewController *)initWithDefault: (NSString *)title;
+- (BWRInvoiceDataViewController *)initWithNSDictionary:(NSDictionary *)dictionary title:(NSString *)title;
 
 @end
