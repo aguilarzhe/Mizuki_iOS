@@ -8,22 +8,53 @@
 
 #import <Foundation/Foundation.h>
 #import "BWRMyAccount.h"
+#import "AppDelegate.h"
+#import "Models/BWRRFCInfo.h"
 
-@interface BWRMyAccount () <UITableViewDelegate, UITableViewDataSource>
+@interface BWRMyAccount () <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate>
 @property UITableView *rfcTableView;
 @property UITableView *userInfoTableView;
-@property NSArray *dummyRFCArray;
 @property NSDictionary *dummyUserInfoDictionary;
+@property NSManagedObjectContext *managedObjectContext;
+@property NSFetchedResultsController *fetchedResultsController;
+@property NSUInteger numRowsRFC;
 @end
 
 @implementation BWRMyAccount
 @synthesize rfcTableView, userInfoTableView;
-@synthesize dummyRFCArray, dummyUserInfoDictionary;
+@synthesize dummyUserInfoDictionary;
+@synthesize managedObjectContext, fetchedResultsController;
+@synthesize numRowsRFC;
 
 -(void)viewDidLoad{
     [super viewDidLoad];
     
     [self initializeDummyDataSources];
+    
+    // Core Data
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    managedObjectContext = appDelegate.managedObjectContext;
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"RFCInfo"];
+    
+    NSSortDescriptor *ordenacionPorNombre = [[NSSortDescriptor alloc] initWithKey:@"rfc" ascending:YES];
+    
+    fetchRequest.sortDescriptors = @[ordenacionPorNombre];
+    
+    fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    fetchedResultsController.delegate = self;
+    
+    NSError *fetchingError = nil;
+    
+    if ([fetchedResultsController performFetch:&fetchingError]) {
+        NSLog(@"Recuperación satisfactoria.");
+        id <NSFetchedResultsSectionInfo> sectionInfo = fetchedResultsController.sections[0];
+        numRowsRFC = [sectionInfo numberOfObjects];
+    } else {
+        NSLog(@"Error al recuperar.");
+    }
+    
+    
     
     // Tabla de información de usuario
     UILabel *userInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 60.0f, self.view.frame.size.width, 44.0f)];
@@ -41,7 +72,7 @@
     rfcLabel.text = @"RFC";
     [self.view addSubview:rfcLabel];
     
-    rfcTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, 230.0f, self.view.frame.size.width, (44 * (dummyRFCArray.count + 1))) style:UITableViewStylePlain];
+    rfcTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, 230.0f, self.view.frame.size.width, (44 * (numRowsRFC + 1))) style:UITableViewStylePlain];
     rfcTableView.scrollEnabled = NO;
     rfcTableView.dataSource = self;
     rfcTableView.delegate = self;
@@ -53,8 +84,6 @@
 }
 
 -(void)initializeDummyDataSources{
-    
-    dummyRFCArray = @[@"AUZH900820SI1", @"BAW1234566"];
     NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
     NSString *email, *levelAccount;
     if(!(email = [userDefaults valueForKey:@"Correo"])){
@@ -80,7 +109,7 @@
     NSInteger numberOfRows = 0;
     
     if(tableView == rfcTableView){
-        numberOfRows = [dummyRFCArray count] + 1;
+        numberOfRows = numRowsRFC + 1;
     }else if(tableView == userInfoTableView){
         numberOfRows = [dummyUserInfoDictionary count];
     }
@@ -93,8 +122,9 @@
     
     if(tableView == rfcTableView){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"RFC"];
-        if (indexPath.row < dummyRFCArray.count) {
-            cell.textLabel.text = dummyRFCArray[indexPath.row];
+        if (indexPath.row < numRowsRFC) {
+            BWRRFCInfo *rfcInfo = [fetchedResultsController objectAtIndexPath:indexPath];
+            cell.textLabel.text = rfcInfo.rfc;
         }else{
             cell.textLabel.text = @"Agregar RFC";
         }

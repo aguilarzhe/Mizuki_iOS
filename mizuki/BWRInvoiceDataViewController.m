@@ -8,13 +8,15 @@
 
 #import "BWRInvoiceDataViewController.h"
 #import "BWRInvoiceHistoryViewController.h"
+#import "AppDelegate.h"
+#import "Models/BWRRFCInfo.h"
 
-@interface BWRInvoiceDataViewController ()
-
+@interface BWRInvoiceDataViewController () <NSFetchedResultsControllerDelegate, UITextFieldDelegate>
+@property NSManagedObjectContext *managedObjectContext;
 @end
 
 @implementation BWRInvoiceDataViewController
-
+@synthesize managedObjectContext;
 @synthesize tf_rfc;
 @synthesize tf_nombre;
 @synthesize tf_apaterno;
@@ -28,19 +30,9 @@
 @synthesize tf_ciudad;
 @synthesize tf_localidad;
 @synthesize tf_cp;
-
 @synthesize lb_facturacion;
 @synthesize lb_direccion;
 @synthesize bt_listo;
-
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)createInvoiceData
 {
@@ -58,14 +50,17 @@
     //RFC
     tf_rfc = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
     tf_rfc.borderStyle = UITextBorderStyleRoundedRect;
+    tf_rfc.delegate = self;
     
     //Nombre
     tf_nombre = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
     tf_nombre.borderStyle = UITextBorderStyleRoundedRect;
+    tf_nombre.delegate = self;
     
     //Apellido paterno
     tf_apaterno = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
     tf_apaterno.borderStyle = UITextBorderStyleRoundedRect;
+    tf_apaterno.delegate = self;
     
     //Apellido materno
     tf_amaterno = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
@@ -112,7 +107,7 @@
     tf_cp.borderStyle = UITextBorderStyleRoundedRect;
     
     //Boton Listo
-    bt_listo = [[UIBarButtonItem alloc] initWithTitle:@"Listo" style:UIBarButtonItemStylePlain target:self action:@selector(invoiceHistoryViewController)];
+    bt_listo = [[UIBarButtonItem alloc] initWithTitle:@"Listo" style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
 }
 
 - (BWRInvoiceDataViewController *)initWithDefault: (NSString *)title
@@ -232,6 +227,10 @@
     //Codigo Postal
     [scrollView addSubview:tf_cp];
     
+    // CoreData
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    managedObjectContext = appDelegate.managedObjectContext;
+    
     //Boton Listo
     self.navigationItem.rightBarButtonItem = bt_listo;
     
@@ -245,12 +244,51 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)invoiceHistoryViewController
+- (void)saveInfoRFC
 {
-    BWRInvoiceHistoryViewController *historyViewController = [[BWRInvoiceHistoryViewController alloc] init];
-    historyViewController.view.backgroundColor = [UIColor whiteColor];
-    [self.navigationController pushViewController:historyViewController animated:YES];
+    BWRRFCInfo *rfcInfo = [NSEntityDescription insertNewObjectForEntityForName:@"RFCInfo" inManagedObjectContext:managedObjectContext];
+    
+    if (rfcInfo) {
+        rfcInfo.rfc = tf_rfc.text;
+        rfcInfo.nombre = tf_nombre.text;
+        rfcInfo.apellidoPaterno = tf_apaterno.text;
+        rfcInfo.apellidoMaterno = tf_amaterno.text;
+        rfcInfo.pais = @"MEXICO";
+        rfcInfo.estado = tf_estado.text;
+        rfcInfo.delegacion = tf_delegacion.text;
+        rfcInfo.colonia = tf_colonia.text;
+        rfcInfo.calle = tf_calle.text;
+        rfcInfo.numInterior = tf_noint.text;
+        rfcInfo.numExterior = tf_noext.text;
+        rfcInfo.codigoPostal = tf_cp.text;
+        rfcInfo.ciudad = tf_ciudad.text;
+        rfcInfo.localidad = tf_localidad.text;
+        
+        NSError *error;
+        if ([managedObjectContext save:&error]) {
+            NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+            [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
+            
+            BWRInvoiceHistoryViewController *historyViewController = [[BWRInvoiceHistoryViewController alloc] init];
+            historyViewController.view.backgroundColor = [UIColor whiteColor];
+            [self.navigationController pushViewController:historyViewController animated:YES];
+        }else{
+            NSLog(@"Error guardando elemento en base de datos");
+        }
+    }
+    
 }
 
+#pragma mark - UITextFieldDelegate
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
 
 @end
