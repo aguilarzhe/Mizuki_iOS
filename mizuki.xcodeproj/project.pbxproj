@@ -520,12 +520,10 @@
 				2B380A091965E93500A7FDFE /* BWRInvoiceDataViewController.h */,
 				2B380A0A1965E93500A7FDFE /* BWRInvoiceDataViewController.m */,
 				2F397D921948BF93004CC963 /* BWRInvoiceConfirmationViewController.h */,
-<<<<<<< HEAD
 				2F397D901948BF30004CC963 /* BWRInvoiceConfirmationViewController.m */,
-=======
 				2F7D5CB41964E0EE003BBAB6 /* BWRMyAccount.m */,
 				2F7D5CB61964E102003BBAB6 /* BWRMyAccount.h */,
->>>>>>> AddingMyAccount
+
 			);
 			path = mizuki;
 			sourceTree = "<group>";
