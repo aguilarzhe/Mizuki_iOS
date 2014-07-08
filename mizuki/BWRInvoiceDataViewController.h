@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Models/BWRRFCInfo.h"
 
 @interface BWRInvoiceDataViewController : UIViewController
 
@@ -29,7 +30,7 @@
 @property UIBarButtonItem *bt_listo;
 
 
-- (BWRInvoiceDataViewController *)initWithDefault: (NSString *)title;
-- (BWRInvoiceDataViewController *)initWithNSDictionary:(NSDictionary *)dictionary title:(NSString *)title;
+- (void)initWithDefault: (NSString *)title;
+- (void)initWithBWRRFCInfo:(BWRRFCInfo *)rfcInfo title:(NSString *)title;
 
 @end

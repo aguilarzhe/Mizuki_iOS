@@ -9,13 +9,13 @@
 #import "BWRInvoiceDataViewController.h"
 #import "BWRInvoiceHistoryViewController.h"
 #import "AppDelegate.h"
-#import "Models/BWRRFCInfo.h"
 
 @interface BWRInvoiceDataViewController () <NSFetchedResultsControllerDelegate, UITextFieldDelegate>
 @property NSManagedObjectContext *managedObjectContext;
 @end
 
 @implementation BWRInvoiceDataViewController
+
 @synthesize managedObjectContext;
 @synthesize tf_rfc;
 @synthesize tf_nombre;
@@ -34,6 +34,65 @@
 @synthesize lb_direccion;
 @synthesize bt_listo;
 
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    UIScrollView *scrollView=(UIScrollView *)self.view;
+    CGRect fullScreenRect=[[UIScreen mainScreen] applicationFrame];
+    scrollView=[[UIScrollView alloc] initWithFrame:fullScreenRect];
+    scrollView.contentSize=CGSizeMake(320,740);
+    
+    //Facturacion
+    [scrollView addSubview:lb_facturacion];
+    //RFC
+    [scrollView addSubview:tf_rfc];
+    //Nombre
+    [scrollView addSubview:tf_nombre];
+    //Apellido paterno
+    [scrollView addSubview:tf_apaterno];
+    //Apellido materno
+    [scrollView addSubview:tf_amaterno];
+    //Direccion
+    [scrollView addSubview:lb_direccion];
+    //Calle
+    [scrollView addSubview:tf_calle];
+    //Numero interior
+    [scrollView addSubview:tf_noint];
+    //Numero exterior
+    [scrollView addSubview:tf_noext];
+    //Colonia
+    [scrollView addSubview:tf_colonia];
+    //Delegacion
+    [scrollView addSubview:tf_delegacion];
+    //Estado
+    [scrollView addSubview:tf_estado];
+    //Ciudad
+    [scrollView addSubview:tf_ciudad];
+    //Localidad
+    [scrollView addSubview:tf_localidad];
+    //Codigo Postal
+    [scrollView addSubview:tf_cp];
+    
+    // CoreData
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    managedObjectContext = appDelegate.managedObjectContext;
+    
+    //Boton Listo
+    self.navigationItem.rightBarButtonItem = bt_listo;
+    
+    //SCROLL VIEW
+    self.view=scrollView;
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Inicialitation
 - (void)createInvoiceData
 {
     //Medidas
@@ -108,11 +167,12 @@
     
     //Boton Listo
     bt_listo = [[UIBarButtonItem alloc] initWithTitle:@"Listo" style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
+    
+    self.view.backgroundColor = [UIColor whiteColor];
 }
 
-- (BWRInvoiceDataViewController *)initWithDefault: (NSString *)title
+- (void)initWithDefault: (NSString *)title
 {
-    self = [super init];
     [self createInvoiceData];
     
     //Titulo
@@ -123,9 +183,9 @@
     //Nombre
     tf_nombre.placeholder = @"Nombre";
     //Apellido paterno
-    tf_apaterno.placeholder = @"Apellido Materno";
+    tf_apaterno.placeholder = @"Apellido Paterno";
     //Apellido materno
-    tf_amaterno.placeholder = @"Apellido Paterno";
+    tf_amaterno.placeholder = @"Apellido Materno";
     //Calle
     tf_calle.placeholder = @"Calle";
     //Numero interior
@@ -145,105 +205,45 @@
     //Codigo Postal
     tf_cp.placeholder = @"C.P.";
     
-    return self;
 }
 
-- (BWRInvoiceDataViewController *)initWithNSDictionary:(NSDictionary *)dictionary title:(NSString *)title
+- (void)initWithBWRRFCInfo:(BWRRFCInfo *)rfcInfo title:(NSString *)title
 {
-    self = [super init];
     [self createInvoiceData];
     
     //Titulo
     self.title = title;
     
     //RFC
-    tf_rfc.text = [dictionary objectForKey:@"rfc"];
+    tf_rfc.text = rfcInfo.rfc;
     //Nombre
-    tf_nombre.text = [dictionary objectForKey:@"nombre"];;
+    tf_nombre.text = rfcInfo.nombre;
     //Apellido paterno
-    tf_apaterno.text = [dictionary objectForKey:@"ap_paterno"];;
+    tf_apaterno.text = rfcInfo.apellidoPaterno;
     //Apellido materno
-    tf_amaterno.text = [dictionary objectForKey:@"ap_materno"];;
+    tf_amaterno.text = rfcInfo.apellidoMaterno;
     //Calle
-    tf_calle.text = [dictionary objectForKey:@"calle"];;
+    tf_calle.text = rfcInfo.calle;
     //Numero interior
-    tf_noint.text = [dictionary objectForKey:@"no_interior"];;
+    tf_noint.text = rfcInfo.numInterior;
     //Numero exterior
-    tf_noext.text = [dictionary objectForKey:@"no_exterior"];;
+    tf_noext.text = rfcInfo.numExterior;
     //Colonia
-    tf_colonia.text = [dictionary objectForKey:@"colonia"];;
+    tf_colonia.text = rfcInfo.colonia;
     //Delegacion
-    tf_delegacion.text = [dictionary objectForKey:@"delegacion"];;
+    tf_delegacion.text = rfcInfo.delegacion;
     //Estado
-    tf_estado.text = [dictionary objectForKey:@"estado"];;
+    tf_estado.text = rfcInfo.estado;
     //Ciudad
-    tf_ciudad.text = [dictionary objectForKey:@"ciudad"];;
+    tf_ciudad.text = rfcInfo.ciudad;
     //Localidad
-    tf_localidad.text = [dictionary objectForKey:@"localidad"];;
+    tf_localidad.text = rfcInfo.localidad;
     //Codigo Postal
-    tf_cp.text = [dictionary objectForKey:@"cp"];;
+    tf_cp.text = rfcInfo.codigoPostal;
     
-    return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
-    UIScrollView *scrollView=(UIScrollView *)self.view;
-    CGRect fullScreenRect=[[UIScreen mainScreen] applicationFrame];
-    scrollView=[[UIScrollView alloc] initWithFrame:fullScreenRect];
-    scrollView.contentSize=CGSizeMake(320,740);
-    
-    //Facturacion
-    [scrollView addSubview:lb_facturacion];
-    //RFC
-    [scrollView addSubview:tf_rfc];
-    //Nombre
-    [scrollView addSubview:tf_nombre];
-    //Apellido paterno
-    [scrollView addSubview:tf_apaterno];
-    //Apellido materno
-    [scrollView addSubview:tf_amaterno];
-    //Direccion
-    [scrollView addSubview:lb_direccion];
-    //Calle
-    [scrollView addSubview:tf_calle];
-    //Numero interior
-    [scrollView addSubview:tf_noint];
-    //Numero exterior
-    [scrollView addSubview:tf_noext];
-    //Colonia
-    [scrollView addSubview:tf_colonia];
-    //Delegacion
-    [scrollView addSubview:tf_delegacion];
-    //Estado
-    [scrollView addSubview:tf_estado];
-    //Ciudad
-    [scrollView addSubview:tf_ciudad];
-    //Localidad
-    [scrollView addSubview:tf_localidad];
-    //Codigo Postal
-    [scrollView addSubview:tf_cp];
-    
-    // CoreData
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    managedObjectContext = appDelegate.managedObjectContext;
-    
-    //Boton Listo
-    self.navigationItem.rightBarButtonItem = bt_listo;
-    
-    //SCROLL VIEW
-    self.view=scrollView;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
+#pragma mark - Navigation
 - (void)saveInfoRFC
 {
     BWRRFCInfo *rfcInfo = [NSEntityDescription insertNewObjectForEntityForName:@"RFCInfo" inManagedObjectContext:managedObjectContext];
@@ -269,14 +269,16 @@
             NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
             [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
             
-            BWRInvoiceHistoryViewController *historyViewController = [[BWRInvoiceHistoryViewController alloc] init];
-            historyViewController.view.backgroundColor = [UIColor whiteColor];
-            [self.navigationController pushViewController:historyViewController animated:YES];
+            [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
         }else{
             NSLog(@"Error guardando elemento en base de datos");
         }
     }
-    
+    /*//Temporal
+    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+    [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
+    [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
+    */
 }
 
 #pragma mark - UITextFieldDelegate

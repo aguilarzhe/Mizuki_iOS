@@ -32,7 +32,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     
     self.title = @"¡BIENVENIDO!";
     
@@ -47,20 +46,28 @@
     tf_password = [[UITextField alloc] initWithFrame:CGRectMake(50, 200, 200, 31)];
     tf_password.borderStyle = UITextBorderStyleRoundedRect;
     tf_password.font = [UIFont systemFontOfSize:17.0];
-    tf_password.placeholder = @"Contraseña";  //place holder
+    tf_password.placeholder = @"Contraseña";
     [self.view addSubview:tf_password];
     
-    //Confirmacion contraseña
-    tf_confpassword = [[UITextField alloc] initWithFrame:CGRectMake(50, 250, 200, 31)];
-    tf_confpassword.borderStyle = UITextBorderStyleRoundedRect;
-    tf_confpassword.font = [UIFont systemFontOfSize:17.0];
-    tf_confpassword.placeholder = @"Confirmacion de contraseña";  //place holder
-    [self.view addSubview:tf_confpassword];
+    //Comprobando si no es la primera vez de la aplicacion
+    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+    
+    if(!([userDefaults valueForKey:@"Correo"] && [userDefaults valueForKey:@"rfc"])){
+        bt_siguiente = [[UIBarButtonItem alloc] initWithTitle:@"Siguiente" style:UIBarButtonItemStylePlain target:self action:@selector(invoiceDataViewController)];
+        
+        //Confirmacion contraseña
+        tf_confpassword = [[UITextField alloc] initWithFrame:CGRectMake(50, 250, 200, 31)];
+        tf_confpassword.borderStyle = UITextBorderStyleRoundedRect;
+        tf_confpassword.font = [UIFont systemFontOfSize:17.0];
+        tf_confpassword.placeholder = @"Confirmacion de contraseña";
+        [self.view addSubview:tf_confpassword];
+        
+    }else{
+        bt_siguiente = [[UIBarButtonItem alloc] initWithTitle:@"Siguiente" style:UIBarButtonItemStylePlain target:self action:@selector(invoiceHistoryViewController)];
+    }
     
     //Boton siguiente
-    bt_siguiente = [[UIBarButtonItem alloc] initWithTitle:@"Siguiente" style:UIBarButtonItemStylePlain target:self action:@selector(invoiceDataBillingViewController)];
     self.navigationItem.rightBarButtonItem = bt_siguiente;
-    
     
 }
 
@@ -70,11 +77,27 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)invoiceDataBillingViewController
+#pragma mark - Navigation
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    BWRInvoiceDataViewController *configurationDataBilling = [[BWRInvoiceDataViewController alloc] initWithDefault: @"¡BIENVENIDO!"];
-    configurationDataBilling.view.backgroundColor = [UIColor whiteColor];
-    [self.navigationController pushViewController:configurationDataBilling animated:YES];
+    if([[segue identifier] isEqualToString:@"invoiceDataSegue"]){
+        BWRInvoiceDataViewController *configurationInvoiceData = [segue destinationViewController];
+        [configurationInvoiceData initWithDefault:@"¡BIENVENIDO!"];
+    }
+}
+
+- (void)invoiceDataViewController
+{
+    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+    [userDefaults setValue:tf_correo.text forKey:@"Correo"];
+    
+    [self performSegueWithIdentifier:@"invoiceDataSegue" sender:self];
+}
+
+- (void)invoiceHistoryViewController
+{
+    [self performSegueWithIdentifier:@"invoiceCompleteDataSegue" sender:self];
 }
 
 
