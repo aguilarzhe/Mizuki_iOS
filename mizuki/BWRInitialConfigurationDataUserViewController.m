@@ -63,7 +63,7 @@
         [self.view addSubview:tf_confpassword];
         
     }else{
-        bt_siguiente = [[UIBarButtonItem alloc] initWithTitle:@"Siguiente" style:UIBarButtonItemStylePlain target:self action:@selector(invoiceHistoryViewController)];
+        bt_siguiente = [[UIBarButtonItem alloc] initWithTitle:@"Login" style:UIBarButtonItemStylePlain target:self action:@selector(invoiceHistoryViewController)];
     }
     
     //Boton siguiente
@@ -98,8 +98,9 @@
 - (void)invoiceHistoryViewController
 {
     //Temporal
-    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-    [userDefaults setValue:nil forKey:@"Correo"];
+    /*NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+     [userDefaults setValue:nil forKey:@"Correo"];
+     [userDefaults setValue:nil forKey:@"rfc"];*/
     
     [self performSegueWithIdentifier:@"invoiceCompleteDataSegue" sender:self];
 }

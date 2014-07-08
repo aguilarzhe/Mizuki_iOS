@@ -126,6 +126,7 @@
                     </view>
                     <connections>
                         <segue destination="zB4-Id-e2l" kind="push" identifier="editInvoiceDataSegue" id="cyR-pB-I42"/>
+                        <segue destination="zB4-Id-e2l" kind="push" identifier="createInvoiceDataSegue" id="fus-tq-EbD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eR5-Fq-rzi" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -135,6 +136,6 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="GF7-NB-Cas"/>
-        <segue reference="cyR-pB-I42"/>
+        <segue reference="fus-tq-EbD"/>
     </inferredMetricsTieBreakers>
 </document>

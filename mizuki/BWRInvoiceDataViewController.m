@@ -12,11 +12,15 @@
 
 @interface BWRInvoiceDataViewController () <NSFetchedResultsControllerDelegate, UITextFieldDelegate>
 @property NSManagedObjectContext *managedObjectContext;
+@property BOOL opcion;
+@property BWRRFCInfo *updateRFC;
 @end
 
 @implementation BWRInvoiceDataViewController
 
 @synthesize managedObjectContext;
+@synthesize opcion;
+@synthesize updateRFC;
 @synthesize tf_rfc;
 @synthesize tf_nombre;
 @synthesize tf_apaterno;
@@ -176,6 +180,9 @@
 {
     [self createInvoiceData];
     
+    //Crear nuevo rfc en core data
+    opcion = TRUE;
+    
     //Titulo
     self.title = title;
     
@@ -212,6 +219,10 @@
 {
     [self createInvoiceData];
     
+    //No crear nuevo objeto en core data
+    opcion = FALSE;
+    updateRFC = rfcInfo;
+    
     //Titulo
     self.title = title;
     
@@ -247,7 +258,13 @@
 #pragma mark - Navigation
 - (void)saveInfoRFC
 {
-    BWRRFCInfo *rfcInfo = [NSEntityDescription insertNewObjectForEntityForName:@"RFCInfo" inManagedObjectContext:managedObjectContext];
+    BWRRFCInfo *rfcInfo;
+    
+    if(opcion){
+        rfcInfo = [NSEntityDescription insertNewObjectForEntityForName:@"RFCInfo" inManagedObjectContext:managedObjectContext];
+    }else{
+        rfcInfo = updateRFC;
+    }
     
     if (rfcInfo) {
         rfcInfo.rfc = tf_rfc.text;
@@ -276,10 +293,10 @@
         }
     }
     /*//Temporal
-    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-    [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
-    [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
-    */
+     NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+     [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
+     [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
+     */
 }
 
 #pragma mark - UITextFieldDelegate
