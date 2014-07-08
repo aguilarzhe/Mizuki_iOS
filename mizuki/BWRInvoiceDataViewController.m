@@ -109,6 +109,7 @@
     //RFC
     tf_rfc = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
     tf_rfc.borderStyle = UITextBorderStyleRoundedRect;
+    tf_rfc.backgroundColor = [UIColor redColor];
     tf_rfc.delegate = self;
     
     //Nombre
@@ -271,7 +272,7 @@
             
             [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
         }else{
-            NSLog(@"Error guardando elemento en base de datos");
+            NSLog(@"Error guardando elemento en base de datos %@", error);
         }
     }
     /*//Temporal

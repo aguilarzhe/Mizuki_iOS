@@ -97,6 +97,10 @@
 
 - (void)invoiceHistoryViewController
 {
+    //Temporal
+    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+    [userDefaults setValue:nil forKey:@"Correo"];
+    
     [self performSegueWithIdentifier:@"invoiceCompleteDataSegue" sender:self];
 }
 

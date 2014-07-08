@@ -124,13 +124,17 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
+                    <connections>
+                        <segue destination="zB4-Id-e2l" kind="push" identifier="editInvoiceDataSegue" id="cyR-pB-I42"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eR5-Fq-rzi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1726" y="787"/>
+            <point key="canvasLocation" x="1726" y="-361"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="GF7-NB-Cas"/>
+        <segue reference="cyR-pB-I42"/>
     </inferredMetricsTieBreakers>
 </document>
