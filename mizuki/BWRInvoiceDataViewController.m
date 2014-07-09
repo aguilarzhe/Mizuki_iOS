@@ -38,7 +38,7 @@
 {
     //Medidas
     static NSInteger ALTO = 31;
-    static NSInteger ANCHO_LARGO = 200;
+    NSInteger ANCHO_LARGO = 200;
     static NSInteger ANCHO_CHICO = 130;
     static NSInteger PADING = 20;
     NSInteger espaciado = 20;
@@ -65,6 +65,7 @@
     //Apellido materno
     tf_amaterno = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
     tf_amaterno.borderStyle = UITextBorderStyleRoundedRect;
+    tf_amaterno.delegate = self;
     
     //Direccion
     lb_direccion = [[UILabel alloc] initWithFrame:CGRectMake(PADING, espaciado+=60, ANCHO_CHICO, 21)];
@@ -73,41 +74,52 @@
     //Calle
     tf_calle = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
     tf_calle.borderStyle = UITextBorderStyleRoundedRect;
+    tf_calle.delegate = self;
     
     //Numero interior
     tf_noint = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_CHICO, ALTO)];
     tf_noint.borderStyle = UITextBorderStyleRoundedRect;
+    tf_noint.delegate = self,
     
     //Numero exterior
     tf_noext = [[UITextField alloc] initWithFrame:CGRectMake(PADING*2+ANCHO_CHICO, espaciado, ANCHO_CHICO, ALTO)];
     tf_noext.borderStyle = UITextBorderStyleRoundedRect;
+    tf_noext.delegate = self;
     
     //Colonia
     tf_colonia = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
     tf_colonia.borderStyle = UITextBorderStyleRoundedRect;
+    tf_colonia.delegate = self;
     
     //Delegacion
     tf_delegacion = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
     tf_delegacion.borderStyle = UITextBorderStyleRoundedRect;
+    tf_delegacion.delegate = self;
     
     //Estado
     tf_estado = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
     tf_estado.borderStyle = UITextBorderStyleRoundedRect;
+    tf_estado.delegate = self;
     
     //Ciudad
     tf_ciudad = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
     tf_ciudad.borderStyle = UITextBorderStyleRoundedRect;
+    tf_ciudad.delegate = self;
     
     //Localidad
     tf_localidad = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
     tf_localidad.borderStyle = UITextBorderStyleRoundedRect;
+    tf_localidad.delegate = self;
     
     //Codigo Postal
     tf_cp = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_CHICO, ALTO)];
     tf_cp.borderStyle = UITextBorderStyleRoundedRect;
+    tf_cp.delegate = self;
     
     //Boton Listo
     bt_listo = [[UIBarButtonItem alloc] initWithTitle:@"Listo" style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
+    
+    [self setTitle:@"Datos de facturación"];
 }
 
 - (BWRInvoiceDataViewController *)initWithDefault: (NSString *)title
@@ -273,7 +285,20 @@
             historyViewController.view.backgroundColor = [UIColor whiteColor];
             [self.navigationController pushViewController:historyViewController animated:YES];
         }else{
-            NSLog(@"Error guardando elemento en base de datos");
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Datos no válidos" message:@"Verifique los datos." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            
+            NSDictionary *userInfo = error.userInfo;
+            NSError *aux;
+            NSString *validationErrorKey;
+            if ((validationErrorKey = userInfo[@"NSValidationErrorKey"])) {
+                NSLog(@"%@", validationErrorKey);
+                [alertView setMessage:[NSString stringWithFormat:@"Hay un error en %@", validationErrorKey]];
+            }else if((aux = userInfo[@"NSDetailedErrors"][0])){
+                NSLog(@"%@", aux.userInfo[@"NSValidationErrorKey"]);
+                [alertView setMessage:[NSString stringWithFormat:@"Hay un error en %@", aux.userInfo[@"NSValidationErrorKey"]]];
+            }
+            
+            [alertView show];
         }
     }
     
