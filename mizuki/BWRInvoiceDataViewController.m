@@ -9,14 +9,18 @@
 #import "BWRInvoiceDataViewController.h"
 #import "BWRInvoiceHistoryViewController.h"
 #import "AppDelegate.h"
-#import "Models/BWRRFCInfo.h"
 
 @interface BWRInvoiceDataViewController () <NSFetchedResultsControllerDelegate, UITextFieldDelegate>
 @property NSManagedObjectContext *managedObjectContext;
+@property BOOL opcion;
+@property BWRRFCInfo *updateRFC;
 @end
 
 @implementation BWRInvoiceDataViewController
+
 @synthesize managedObjectContext;
+@synthesize opcion;
+@synthesize updateRFC;
 @synthesize tf_rfc;
 @synthesize tf_nombre;
 @synthesize tf_apaterno;
@@ -30,213 +34,69 @@
 @synthesize tf_ciudad;
 @synthesize tf_localidad;
 @synthesize tf_cp;
-@synthesize lb_facturacion;
 @synthesize lb_direccion;
 @synthesize bt_listo;
 
-- (void)createInvoiceData
+
+- (void)viewDidLoad
 {
+    [super viewDidLoad];
+    
     //Medidas
     static NSInteger ALTO = 31;
     NSInteger ANCHO_LARGO = 200;
     static NSInteger ANCHO_CHICO = 130;
     static NSInteger PADING = 20;
     NSInteger espaciado = 20;
-    
-    //Facturacion
-    lb_facturacion = [[UILabel alloc] initWithFrame:CGRectMake(PADING, espaciado, 270, 21)];
-    lb_facturacion.text = @"DATOS DE FACTURACIÓN";
-    
-    //RFC
-    tf_rfc = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
-    tf_rfc.borderStyle = UITextBorderStyleRoundedRect;
-    tf_rfc.delegate = self;
-    
-    //Nombre
-    tf_nombre = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
-    tf_nombre.borderStyle = UITextBorderStyleRoundedRect;
-    tf_nombre.delegate = self;
-    
-    //Apellido paterno
-    tf_apaterno = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
-    tf_apaterno.borderStyle = UITextBorderStyleRoundedRect;
-    tf_apaterno.delegate = self;
-    
-    //Apellido materno
-    tf_amaterno = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
-    tf_amaterno.borderStyle = UITextBorderStyleRoundedRect;
-    tf_amaterno.delegate = self;
-    
-    //Direccion
-    lb_direccion = [[UILabel alloc] initWithFrame:CGRectMake(PADING, espaciado+=60, ANCHO_CHICO, 21)];
-    lb_direccion.text = @"Dirección";
-    
-    //Calle
-    tf_calle = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
-    tf_calle.borderStyle = UITextBorderStyleRoundedRect;
-    tf_calle.delegate = self;
-    
-    //Numero interior
-    tf_noint = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_CHICO, ALTO)];
-    tf_noint.borderStyle = UITextBorderStyleRoundedRect;
-    tf_noint.delegate = self,
-    
-    //Numero exterior
-    tf_noext = [[UITextField alloc] initWithFrame:CGRectMake(PADING*2+ANCHO_CHICO, espaciado, ANCHO_CHICO, ALTO)];
-    tf_noext.borderStyle = UITextBorderStyleRoundedRect;
-    tf_noext.delegate = self;
-    
-    //Colonia
-    tf_colonia = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
-    tf_colonia.borderStyle = UITextBorderStyleRoundedRect;
-    tf_colonia.delegate = self;
-    
-    //Delegacion
-    tf_delegacion = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
-    tf_delegacion.borderStyle = UITextBorderStyleRoundedRect;
-    tf_delegacion.delegate = self;
-    
-    //Estado
-    tf_estado = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
-    tf_estado.borderStyle = UITextBorderStyleRoundedRect;
-    tf_estado.delegate = self;
-    
-    //Ciudad
-    tf_ciudad = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
-    tf_ciudad.borderStyle = UITextBorderStyleRoundedRect;
-    tf_ciudad.delegate = self;
-    
-    //Localidad
-    tf_localidad = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
-    tf_localidad.borderStyle = UITextBorderStyleRoundedRect;
-    tf_localidad.delegate = self;
-    
-    //Codigo Postal
-    tf_cp = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_CHICO, ALTO)];
-    tf_cp.borderStyle = UITextBorderStyleRoundedRect;
-    tf_cp.delegate = self;
-    
-    //Boton Listo
-    bt_listo = [[UIBarButtonItem alloc] initWithTitle:@"Listo" style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
-    
-    [self setTitle:@"Datos de facturación"];
-}
-
-- (BWRInvoiceDataViewController *)initWithDefault: (NSString *)title
-{
-    self = [super init];
-    [self createInvoiceData];
-    
-    //Titulo
-    self.title = title;
-    
-    //RFC
-    tf_rfc.placeholder = @"RFC";
-    //Nombre
-    tf_nombre.placeholder = @"Nombre";
-    //Apellido paterno
-    tf_apaterno.placeholder = @"Apellido Materno";
-    //Apellido materno
-    tf_amaterno.placeholder = @"Apellido Paterno";
-    //Calle
-    tf_calle.placeholder = @"Calle";
-    //Numero interior
-    tf_noint.placeholder = @"No Interior";
-    //Numero exterior
-    tf_noext.placeholder = @"No Exterior";
-    //Colonia
-    tf_colonia.placeholder = @"Colonia";
-    //Delegacion
-    tf_delegacion.placeholder = @"Delegación";
-    //Estado
-    tf_estado.placeholder = @"Estado";
-    //Ciudad
-    tf_ciudad.placeholder = @"Ciudad";
-    //Localidad
-    tf_localidad.placeholder = @"Localidad";
-    //Codigo Postal
-    tf_cp.placeholder = @"C.P.";
-    
-    return self;
-}
-
-- (BWRInvoiceDataViewController *)initWithNSDictionary:(NSDictionary *)dictionary title:(NSString *)title
-{
-    self = [super init];
-    [self createInvoiceData];
-    
-    //Titulo
-    self.title = title;
-    
-    //RFC
-    tf_rfc.text = [dictionary objectForKey:@"rfc"];
-    //Nombre
-    tf_nombre.text = [dictionary objectForKey:@"nombre"];;
-    //Apellido paterno
-    tf_apaterno.text = [dictionary objectForKey:@"ap_paterno"];;
-    //Apellido materno
-    tf_amaterno.text = [dictionary objectForKey:@"ap_materno"];;
-    //Calle
-    tf_calle.text = [dictionary objectForKey:@"calle"];;
-    //Numero interior
-    tf_noint.text = [dictionary objectForKey:@"no_interior"];;
-    //Numero exterior
-    tf_noext.text = [dictionary objectForKey:@"no_exterior"];;
-    //Colonia
-    tf_colonia.text = [dictionary objectForKey:@"colonia"];;
-    //Delegacion
-    tf_delegacion.text = [dictionary objectForKey:@"delegacion"];;
-    //Estado
-    tf_estado.text = [dictionary objectForKey:@"estado"];;
-    //Ciudad
-    tf_ciudad.text = [dictionary objectForKey:@"ciudad"];;
-    //Localidad
-    tf_localidad.text = [dictionary objectForKey:@"localidad"];;
-    //Codigo Postal
-    tf_cp.text = [dictionary objectForKey:@"cp"];;
-    
-    return self;
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    NSInteger ANCHO_LARGO = anchoPantalla-(2*PADING);
+    NSInteger ANCHO_CHICO = (ANCHO_LARGO/2)-(PADING/2);
     
     UIScrollView *scrollView=(UIScrollView *)self.view;
     CGRect fullScreenRect=[[UIScreen mainScreen] applicationFrame];
     scrollView=[[UIScrollView alloc] initWithFrame:fullScreenRect];
     scrollView.contentSize=CGSizeMake(320,740);
     
-    //Facturacion
-    [scrollView addSubview:lb_facturacion];
     //RFC
+    tf_rfc.frame = CGRectMake(PADING, espaciado, ANCHO_LARGO, ALTO);
     [scrollView addSubview:tf_rfc];
     //Nombre
+    tf_nombre.frame = CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
     [scrollView addSubview:tf_nombre];
     //Apellido paterno
+    tf_apaterno.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
     [scrollView addSubview:tf_apaterno];
     //Apellido materno
+    tf_amaterno.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
     [scrollView addSubview:tf_amaterno];
     //Direccion
+    lb_direccion.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
     [scrollView addSubview:lb_direccion];
     //Calle
+    tf_calle.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
     [scrollView addSubview:tf_calle];
     //Numero interior
+    tf_noint.frame =CGRectMake(PADING, espaciado+=40, ANCHO_CHICO, ALTO);
     [scrollView addSubview:tf_noint];
     //Numero exterior
+    tf_noext.frame =CGRectMake(PADING*2+ANCHO_CHICO, espaciado, ANCHO_CHICO, ALTO);
     [scrollView addSubview:tf_noext];
     //Colonia
+    tf_colonia.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
     [scrollView addSubview:tf_colonia];
     //Delegacion
+    tf_delegacion.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
     [scrollView addSubview:tf_delegacion];
     //Estado
+    tf_estado.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
     [scrollView addSubview:tf_estado];
     //Ciudad
+    tf_ciudad.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
     [scrollView addSubview:tf_ciudad];
     //Localidad
+    tf_localidad.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
     [scrollView addSubview:tf_localidad];
     //Codigo Postal
+    tf_cp.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
     [scrollView addSubview:tf_cp];
     
     // CoreData
@@ -256,9 +116,170 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Inicialitation
+- (void)createInvoiceData
+{
+    //RFC
+    tf_rfc = [[UITextField alloc] init];
+    tf_rfc.borderStyle = UITextBorderStyleRoundedRect;
+    //tf_rfc.backgroundColor = [UIColor redColor];
+    tf_rfc.delegate = self;
+    //Nombre
+    tf_nombre = [[UITextField alloc] init];
+    tf_nombre.borderStyle = UITextBorderStyleRoundedRect;
+    tf_nombre.delegate = self;
+    //Apellido paterno
+    tf_apaterno = [[UITextField alloc] init];
+    tf_apaterno.borderStyle = UITextBorderStyleRoundedRect;
+    tf_apaterno.delegate = self;
+    //Apellido materno
+    tf_amaterno = [[UITextField alloc] init];
+    tf_amaterno.borderStyle = UITextBorderStyleRoundedRect;
+    tf_amaterno.delegate = self;
+    
+    //Direccion
+    lb_direccion = [[UILabel alloc] init];
+    lb_direccion.text = @"Dirección";
+    //Calle
+    tf_calle = [[UITextField alloc] init];
+    tf_calle.borderStyle = UITextBorderStyleRoundedRect;
+    tf_calle.delegate = self;
+    
+    //Numero interior
+    tf_noint = [[UITextField alloc] init];
+    tf_noint.borderStyle = UITextBorderStyleRoundedRect;
+    tf_noint.delegate = self,
+    
+    //Numero exterior
+    tf_noext = [[UITextField alloc] init];
+    tf_noext.borderStyle = UITextBorderStyleRoundedRect;
+    tf_noext.delegate = self;
+    
+    //Colonia
+    tf_colonia = [[UITextField alloc] init];
+    tf_colonia.borderStyle = UITextBorderStyleRoundedRect;
+    tf_colonia.delegate = self;
+    
+    //Delegacion
+    tf_delegacion = [[UITextField alloc] init];
+    tf_delegacion.borderStyle = UITextBorderStyleRoundedRect;
+    tf_delegacion.delegate = self;
+    
+    //Estado
+    tf_estado = [[UITextField alloc] init];
+    tf_estado.borderStyle = UITextBorderStyleRoundedRect;
+    tf_estado.delegate = self;
+    
+    //Ciudad
+    tf_ciudad = [[UITextField alloc] init];
+    tf_ciudad.borderStyle = UITextBorderStyleRoundedRect;
+    tf_ciudad.delegate = self;
+    
+    //Localidad
+    tf_localidad = [[UITextField alloc] init];
+    tf_localidad.borderStyle = UITextBorderStyleRoundedRect;
+    tf_localidad.delegate = self;
+    
+    //Codigo Postal
+    tf_cp = [[UITextField alloc] init];
+    tf_cp.borderStyle = UITextBorderStyleRoundedRect;
+    tf_cp.delegate = self;
+    
+    //Boton Listo
+    bt_listo = [[UIBarButtonItem alloc] initWithTitle:@"Listo" style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
+    
+    [self setTitle:@"Datos de facturación"];
+}
+
+- (void)initWithDefault: (NSString *)title
+{
+    [self createInvoiceData];
+    
+    //Crear nuevo rfc en core data
+    opcion = TRUE;
+    
+    //Titulo
+    self.title = title;
+    
+    //RFC
+    tf_rfc.placeholder = @"RFC";
+    //Nombre
+    tf_nombre.placeholder = @"Nombre";
+    //Apellido paterno
+    tf_apaterno.placeholder = @"Apellido Paterno";
+    //Apellido materno
+    tf_amaterno.placeholder = @"Apellido Materno";
+    //Calle
+    tf_calle.placeholder = @"Calle";
+    //Numero interior
+    tf_noint.placeholder = @"No Interior";
+    //Numero exterior
+    tf_noext.placeholder = @"No Exterior";
+    //Colonia
+    tf_colonia.placeholder = @"Colonia";
+    //Delegacion
+    tf_delegacion.placeholder = @"Delegación";
+    //Estado
+    tf_estado.placeholder = @"Estado";
+    //Ciudad
+    tf_ciudad.placeholder = @"Ciudad";
+    //Localidad
+    tf_localidad.placeholder = @"Localidad";
+    //Codigo Postal
+    tf_cp.placeholder = @"C.P.";
+    
+}
+
+- (void)initWithBWRRFCInfo:(BWRRFCInfo *)rfcInfo title:(NSString *)title
+{
+    [self createInvoiceData];
+    
+    //No crear nuevo objeto en core data
+    opcion = FALSE;
+    updateRFC = rfcInfo;
+    
+    //Titulo
+    self.title = title;
+    
+    //RFC
+    tf_rfc.text = rfcInfo.rfc;
+    //Nombre
+    tf_nombre.text = rfcInfo.nombre;
+    //Apellido paterno
+    tf_apaterno.text = rfcInfo.apellidoPaterno;
+    //Apellido materno
+    tf_amaterno.text = rfcInfo.apellidoMaterno;
+    //Calle
+    tf_calle.text = rfcInfo.calle;
+    //Numero interior
+    tf_noint.text = rfcInfo.numInterior;
+    //Numero exterior
+    tf_noext.text = rfcInfo.numExterior;
+    //Colonia
+    tf_colonia.text = rfcInfo.colonia;
+    //Delegacion
+    tf_delegacion.text = rfcInfo.delegacion;
+    //Estado
+    tf_estado.text = rfcInfo.estado;
+    //Ciudad
+    tf_ciudad.text = rfcInfo.ciudad;
+    //Localidad
+    tf_localidad.text = rfcInfo.localidad;
+    //Codigo Postal
+    tf_cp.text = rfcInfo.codigoPostal;
+    
+}
+
+#pragma mark - Navigation
 - (void)saveInfoRFC
 {
-    BWRRFCInfo *rfcInfo = [NSEntityDescription insertNewObjectForEntityForName:@"RFCInfo" inManagedObjectContext:managedObjectContext];
+    BWRRFCInfo *rfcInfo;
+    
+    if(opcion){
+        rfcInfo = [NSEntityDescription insertNewObjectForEntityForName:@"RFCInfo" inManagedObjectContext:managedObjectContext];
+    }else{
+        rfcInfo = updateRFC;
+    }
     
     if (rfcInfo) {
         rfcInfo.rfc = tf_rfc.text;
@@ -281,9 +302,7 @@
             NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
             [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
             
-            BWRInvoiceHistoryViewController *historyViewController = [[BWRInvoiceHistoryViewController alloc] init];
-            historyViewController.view.backgroundColor = [UIColor whiteColor];
-            [self.navigationController pushViewController:historyViewController animated:YES];
+            [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
         }else{
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Datos no válidos" message:@"Verifique los datos." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
             
@@ -301,7 +320,6 @@
             [alertView show];
         }
     }
-    
 }
 
 #pragma mark - UITextFieldDelegate

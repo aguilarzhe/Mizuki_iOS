@@ -8,23 +8,29 @@
 
 #import <Foundation/Foundation.h>
 #import "BWRMyAccount.h"
+#import "BWRInvoiceDataViewController.h"
 #import "AppDelegate.h"
 #import "Models/BWRRFCInfo.h"
 
 @interface BWRMyAccount () <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate>
+@property UIActionSheet *rfcActionSheet;
 @property UITableView *rfcTableView;
 @property UITableView *userInfoTableView;
 @property NSDictionary *dummyUserInfoDictionary;
 @property NSManagedObjectContext *managedObjectContext;
 @property NSFetchedResultsController *fetchedResultsController;
 @property NSUInteger numRowsRFC;
+@property BWRRFCInfo *rfcActual;
+
 @end
 
 @implementation BWRMyAccount
+@synthesize rfcActionSheet;
 @synthesize rfcTableView, userInfoTableView;
 @synthesize dummyUserInfoDictionary;
 @synthesize managedObjectContext, fetchedResultsController;
 @synthesize numRowsRFC;
+@synthesize rfcActual;
 
 -(void)viewDidLoad{
     [super viewDidLoad];
@@ -32,28 +38,7 @@
     [self initializeDummyDataSources];
     
     // Core Data
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    managedObjectContext = appDelegate.managedObjectContext;
-    
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"RFCInfo"];
-    
-    NSSortDescriptor *ordenacionPorNombre = [[NSSortDescriptor alloc] initWithKey:@"rfc" ascending:YES];
-    
-    fetchRequest.sortDescriptors = @[ordenacionPorNombre];
-    
-    fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:nil cacheName:nil];
-    fetchedResultsController.delegate = self;
-    
-    NSError *fetchingError = nil;
-    
-    if ([fetchedResultsController performFetch:&fetchingError]) {
-        NSLog(@"Recuperación satisfactoria.");
-        id <NSFetchedResultsSectionInfo> sectionInfo = fetchedResultsController.sections[0];
-        numRowsRFC = [sectionInfo numberOfObjects];
-    } else {
-        NSLog(@"Error al recuperar.");
-    }
-    
+    [self loadCoreData];
     
     
     // Tabla de información de usuario
@@ -95,7 +80,7 @@
         [userDefaults setValue:@"Premium" forKey:@"Tipo cuenta"];
         levelAccount = [userDefaults valueForKey:@"Tipo cuenta"];
     }
-
+    
     
     dummyUserInfoDictionary = [[NSDictionary alloc]initWithObjects:@[email, levelAccount] forKeys:@[@"Correo", @"Tipo cuenta"]];
     
@@ -105,6 +90,7 @@
 
 
 #pragma mark - UITableViewDataSource
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     NSInteger numberOfRows = 0;
     
@@ -133,9 +119,116 @@
         cell.textLabel.text = [dummyUserInfoDictionary allKeys][indexPath.row];
         cell.detailTextLabel.text = dummyUserInfoDictionary[cell.textLabel.text];
     }
-
+    
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(tableView == rfcTableView){
+        //Mostrar opciones para RFC
+        if (indexPath.row < numRowsRFC) {
+            rfcActual = [fetchedResultsController objectAtIndexPath:indexPath];
+            
+            rfcActionSheet = [[UIActionSheet alloc] initWithTitle:@"Opciones RFC" delegate:self cancelButtonTitle:@"Cancelar" destructiveButtonTitle:nil otherButtonTitles:@"Seleccionar",@"Editar",@"Eliminar", nil];
+            
+            [rfcActionSheet showInView:self.view];
+            //Agregar un nuevo rfc
+        }else{
+            if(numRowsRFC<5){
+                [self performSegueWithIdentifier:@"createInvoiceDataSegue" sender:self];
+            }else{
+                NSLog(@"No se pueden tener más de 5 rfc");
+            }
+        }
+    }
+}
+
+#pragma mark - UIActionSheetDelegate
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+    
+    switch (buttonIndex) {
+        case 0://Establecer un RFC para facturación
+            [userDefaults setValue:rfcActual.rfc forKey:@"rfc"];
+            NSLog(@"RFC Seleccionado para facturación: %@", [userDefaults valueForKey:@"rfc"]);
+            break;
+        case 1://Editar un RFC
+            [self performSegueWithIdentifier:@"editInvoiceDataSegue" sender:self];
+            break;
+        case 2://Eliminar un RFC
+            [self delateRFC];
+            break;
+        default:
+            break;
+    }
+}
+
+#pragma mark - Navigation
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if([[segue identifier] isEqualToString:@"editInvoiceDataSegue"]){
+        BWRInvoiceDataViewController *editInvoiceData = [segue destinationViewController];
+        [editInvoiceData initWithBWRRFCInfo:rfcActual title:@"Datos de Facturación"];
+    }else{
+        BWRInvoiceDataViewController *createInvoiceData = [segue destinationViewController];
+        [createInvoiceData initWithDefault:@"Datos de Facturación"];
+    }
+}
+
+#pragma mark - EditData
+
+- (void)delateRFC
+{
+    if(numRowsRFC>1){
+        
+        NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+        if ([[userDefaults valueForKey:@"rfc"] isEqualToString:rfcActual.rfc]) {
+            [userDefaults setValue:@"Sin asignar" forKey:@"rfc"];
+        }
+        
+        [managedObjectContext deleteObject:rfcActual];
+        NSError *error = nil;
+        if (![managedObjectContext save:&error]) {
+            NSLog(@"Can't Delete! %@ %@", error, [error localizedDescription]);
+            return;
+        }
+        
+        [self loadCoreData];
+        [rfcTableView reloadData];
+        
+    }else{
+        NSLog(@"Can't Delete. Debe de haber al menos un RFC");
+    }
+    
+}
+
+- (void)loadCoreData
+{
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    managedObjectContext = appDelegate.managedObjectContext;
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"RFCInfo"];
+    
+    NSSortDescriptor *ordenacionPorNombre = [[NSSortDescriptor alloc] initWithKey:@"rfc" ascending:YES];
+    
+    fetchRequest.sortDescriptors = @[ordenacionPorNombre];
+    
+    fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    fetchedResultsController.delegate = self;
+    
+    NSError *fetchingError = nil;
+    
+    if ([fetchedResultsController performFetch:&fetchingError]) {
+        NSLog(@"Recuperación satisfactoria.");
+        id <NSFetchedResultsSectionInfo> sectionInfo = fetchedResultsController.sections[0];
+        numRowsRFC = [sectionInfo numberOfObjects];
+    } else {
+        NSLog(@"Error al recuperar.");
+    }
+    
+}
 
 @end

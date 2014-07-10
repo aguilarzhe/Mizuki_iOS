@@ -19,10 +19,14 @@
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <navigationItem key="navigationItem" id="AGG-v5-wMW"/>
+                    <connections>
+                        <segue destination="zB4-Id-e2l" kind="push" identifier="invoiceDataSegue" id="GoA-VB-Kl5"/>
+                        <segue destination="BYZ-38-t0r" kind="push" identifier="invoiceCompleteDataSegue" id="1bn-Hq-Tis"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WKt-Ia-2LX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="629" y="-395"/>
+            <point key="canvasLocation" x="483" y="-385"/>
         </scene>
         <!--Invoice Data View Controller-->
         <scene sceneID="Jpl-KL-4iu">
@@ -38,10 +42,14 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
+                    <navigationItem key="navigationItem" id="3FU-He-wa8"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="push" identifier="invoiceHistorySegue" id="GF7-NB-Cas"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nEK-Bm-Je9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1194" y="-385"/>
+            <point key="canvasLocation" x="1086" y="-373"/>
         </scene>
         <!--Invoice History View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -65,7 +73,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="559" y="183"/>
+            <point key="canvasLocation" x="1093" y="233"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="OXi-Gn-ci7">
@@ -81,7 +89,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vQw-x9-HTV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-50" y="177"/>
+            <point key="canvasLocation" x="-132" y="-385"/>
         </scene>
         <!--Invoice Confirmation View Controller-->
         <scene sceneID="tiu-BV-KrH">
@@ -100,7 +108,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fAW-hQ-d43" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1156.5" y="183"/>
+            <point key="canvasLocation" x="1726" y="233"/>
         </scene>
         <!--My Account-->
         <scene sceneID="nDm-xd-fQ1">
@@ -116,10 +124,19 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
+                    <navigationItem key="navigationItem" id="j2h-Bh-024"/>
+                    <connections>
+                        <segue destination="zB4-Id-e2l" kind="push" identifier="editInvoiceDataSegue" id="cyR-pB-I42"/>
+                        <segue destination="zB4-Id-e2l" kind="push" identifier="createInvoiceDataSegue" id="fus-tq-EbD"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eR5-Fq-rzi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1149.75" y="789"/>
+            <point key="canvasLocation" x="1726" y="-361"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="fus-tq-EbD"/>
+        <segue reference="1bn-Hq-Tis"/>
+    </inferredMetricsTieBreakers>
 </document>
