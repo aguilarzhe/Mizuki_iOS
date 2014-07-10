@@ -43,10 +43,9 @@
     [super viewDidLoad];
     
     //Medidas
-    static NSInteger ALTO = 31;
-    NSInteger ANCHO_LARGO = 200;
-    static NSInteger ANCHO_CHICO = 130;
-    static NSInteger PADING = 20;
+    NSInteger anchoPantalla = self.view.frame.size.width;
+    NSInteger ALTO = 31;
+    NSInteger PADING = 20;
     NSInteger espaciado = 20;
     NSInteger ANCHO_LARGO = anchoPantalla-(2*PADING);
     NSInteger ANCHO_CHICO = (ANCHO_LARGO/2)-(PADING/2);
@@ -188,7 +187,7 @@
     //Boton Listo
     bt_listo = [[UIBarButtonItem alloc] initWithTitle:@"Listo" style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
     
-    [self setTitle:@"Datos de facturación"];
+    self.view.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)initWithDefault: (NSString *)title
