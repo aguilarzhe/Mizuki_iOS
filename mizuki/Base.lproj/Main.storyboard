@@ -124,6 +124,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
+                    <navigationItem key="navigationItem" id="j2h-Bh-024"/>
                     <connections>
                         <segue destination="zB4-Id-e2l" kind="push" identifier="editInvoiceDataSegue" id="cyR-pB-I42"/>
                         <segue destination="zB4-Id-e2l" kind="push" identifier="createInvoiceDataSegue" id="fus-tq-EbD"/>
@@ -135,7 +136,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="GF7-NB-Cas"/>
         <segue reference="fus-tq-EbD"/>
+        <segue reference="1bn-Hq-Tis"/>
     </inferredMetricsTieBreakers>
 </document>

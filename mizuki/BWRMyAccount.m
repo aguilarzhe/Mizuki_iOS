@@ -130,7 +130,7 @@
         if (indexPath.row < numRowsRFC) {
             rfcActual = [fetchedResultsController objectAtIndexPath:indexPath];
             
-            rfcActionSheet = [[UIActionSheet alloc] initWithTitle:@"Opciones RFC" delegate:self cancelButtonTitle:@"Cancelar" destructiveButtonTitle:nil otherButtonTitles:@"Seleccionar",@"Editar", nil];
+            rfcActionSheet = [[UIActionSheet alloc] initWithTitle:@"Opciones RFC" delegate:self cancelButtonTitle:@"Cancelar" destructiveButtonTitle:nil otherButtonTitles:@"Seleccionar",@"Editar",@"Eliminar", nil];
             
             [rfcActionSheet showInView:self.view];
             //Agregar un nuevo rfc
@@ -144,47 +144,21 @@
     }
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if(tableView == rfcTableView){
-        if(numRowsRFC>1 && indexPath.row!=numRowsRFC){
-            BWRRFCInfo *rfcInfo = [fetchedResultsController objectAtIndexPath:indexPath];
-            
-            NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-            if ([[userDefaults valueForKey:@"rfc"] isEqualToString:rfcInfo.rfc]) {
-                [userDefaults setValue:@"Sin asignar" forKey:@"rfc"];
-            }
-            
-            [managedObjectContext deleteObject:rfcInfo];
-            NSError *error = nil;
-            if (![managedObjectContext save:&error]) {
-                NSLog(@"Can't Delete! %@ %@", error, [error localizedDescription]);
-                return;
-            }
-            
-            [self loadCoreData];
-            [rfcTableView reloadData];
-            
-        }else{
-            NSLog(@"Can't Delete. Debe de haber al menos un RFC");
-        }
-    }
-}
-
 #pragma mark - UIActionSheetDelegate
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
     
     switch (buttonIndex) {
-        case 0:
-            //Establecer un RFC para facturación
+        case 0://Establecer un RFC para facturación
             [userDefaults setValue:rfcActual.rfc forKey:@"rfc"];
             NSLog(@"RFC Seleccionado para facturación: %@", [userDefaults valueForKey:@"rfc"]);
             break;
-        case 1:
-            //Editar un RFC
+        case 1://Editar un RFC
             [self performSegueWithIdentifier:@"editInvoiceDataSegue" sender:self];
+            break;
+        case 2://Eliminar un RFC
+            [self delateRFC];
             break;
         default:
             break;
@@ -205,6 +179,31 @@
 }
 
 #pragma mark - EditData
+
+- (void)delateRFC
+{
+    if(numRowsRFC>1){
+        
+        NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+        if ([[userDefaults valueForKey:@"rfc"] isEqualToString:rfcActual.rfc]) {
+            [userDefaults setValue:@"Sin asignar" forKey:@"rfc"];
+        }
+        
+        [managedObjectContext deleteObject:rfcActual];
+        NSError *error = nil;
+        if (![managedObjectContext save:&error]) {
+            NSLog(@"Can't Delete! %@ %@", error, [error localizedDescription]);
+            return;
+        }
+        
+        [self loadCoreData];
+        [rfcTableView reloadData];
+        
+    }else{
+        NSLog(@"Can't Delete. Debe de haber al menos un RFC");
+    }
+    
+}
 
 - (void)loadCoreData
 {

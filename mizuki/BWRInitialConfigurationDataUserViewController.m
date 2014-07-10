@@ -35,15 +35,22 @@
     
     self.title = @"¡BIENVENIDO!";
     
+    //Medidas
+    NSInteger anchoPantalla = self.view.frame.size.width;
+    NSInteger ALTO = 31;
+    NSInteger PADING = 20;
+    NSInteger espaciado = 100;
+    NSInteger ANCHO_LARGO = anchoPantalla-(2*PADING);
+    
     //Correo
-    tf_correo = [[UITextField alloc] initWithFrame:CGRectMake(50, 150, 200, 31)];
+    tf_correo = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado, ANCHO_LARGO, ALTO)];
     tf_correo.borderStyle = UITextBorderStyleRoundedRect;
     tf_correo.font = [UIFont systemFontOfSize:17.0];
     tf_correo.placeholder = @"Correo";
     [self.view addSubview:tf_correo];
     
     //Contraseña
-    tf_password = [[UITextField alloc] initWithFrame:CGRectMake(50, 200, 200, 31)];
+    tf_password = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
     tf_password.borderStyle = UITextBorderStyleRoundedRect;
     tf_password.font = [UIFont systemFontOfSize:17.0];
     tf_password.placeholder = @"Contraseña";
@@ -56,7 +63,7 @@
         bt_siguiente = [[UIBarButtonItem alloc] initWithTitle:@"Siguiente" style:UIBarButtonItemStylePlain target:self action:@selector(invoiceDataViewController)];
         
         //Confirmacion contraseña
-        tf_confpassword = [[UITextField alloc] initWithFrame:CGRectMake(50, 250, 200, 31)];
+        tf_confpassword = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
         tf_confpassword.borderStyle = UITextBorderStyleRoundedRect;
         tf_confpassword.font = [UIFont systemFontOfSize:17.0];
         tf_confpassword.placeholder = @"Confirmacion de contraseña";
