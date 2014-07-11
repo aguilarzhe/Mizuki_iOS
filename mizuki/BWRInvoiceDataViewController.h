@@ -25,7 +25,6 @@
 @property UITextField *tf_localidad;
 @property UITextField *tf_cp;
 
-@property UILabel *lb_facturacion;
 @property UILabel *lb_direccion;
 @property UIBarButtonItem *bt_listo;
 

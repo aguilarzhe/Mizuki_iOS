@@ -54,6 +54,7 @@
     tf_password.borderStyle = UITextBorderStyleRoundedRect;
     tf_password.font = [UIFont systemFontOfSize:17.0];
     tf_password.placeholder = @"Contraseña";
+    tf_password.secureTextEntry = YES;
     [self.view addSubview:tf_password];
     
     //Comprobando si no es la primera vez de la aplicacion
@@ -67,6 +68,7 @@
         tf_confpassword.borderStyle = UITextBorderStyleRoundedRect;
         tf_confpassword.font = [UIFont systemFontOfSize:17.0];
         tf_confpassword.placeholder = @"Confirmacion de contraseña";
+        tf_confpassword.secureTextEntry = YES;
         [self.view addSubview:tf_confpassword];
         
     }else{

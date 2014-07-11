@@ -278,8 +278,13 @@
         
         NSError *error;
         if ([managedObjectContext save:&error]) {
-            NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-            [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
+            if ([self.title isEqualToString:@"¡BIENVENIDO!"]) {
+                NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+                [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
+                [userDefaults setBool:TRUE forKey:@"Notificaciones"];
+                [userDefaults setBool:TRUE forKey:@"Sonido"];
+                [userDefaults setBool:TRUE forKey:@"GuardarFotos"];
+            }
             
             [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
         }else{
