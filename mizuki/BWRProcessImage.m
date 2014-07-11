@@ -31,15 +31,15 @@
 {
     Tesseract* tesseract = [[Tesseract alloc] initWithDataPath:@"tessdata" language:@"spa"];
     OpenCV *opencv = [[OpenCV alloc] init];
-    UIImage *image_result = [UIImage imageNamed:@"starbucks_con_dobles.jpg"];
+    //UIImage *image_result = [UIImage imageNamed:@"starbucks_con_dobles.jpg"];
     
     if(!processImage){
         return @"Error";
     }
     
     //Mejorar la imagen
-    //UIImage *image_erode = [opencv generateDilateImageFromUIImage:processImage];
-    UIImage *image_erode = [opencv generateDilateImageFromUIImage:image_result];
+    UIImage *image_erode = [opencv generateDilateImageFromUIImage:processImage];
+    //UIImage *image_erode = [opencv generateDilateImageFromUIImage:image_result];
     processImage = [opencv generateBinaryImageFromUIImage:image_erode];
     
     //Reconocer texto
@@ -69,7 +69,7 @@ UIImage * gs_convert_image (UIImage * src_img) {
                                                   src_img.size.height,
                                                   8, d_bytesPerRow,
                                                   d_colorSpace,
-                                                  kCGImageAlphaNoneSkipFirst);
+                                                  (CGBitmapInfo)kCGImageAlphaNoneSkipFirst);
     
     UIGraphicsPushContext(context);
     // These next two lines 'flip' the drawing so it doesn't appear upside-down.

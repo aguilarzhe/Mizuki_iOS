@@ -12,7 +12,7 @@
 #import "AppDelegate.h"
 #import "Models/BWRRFCInfo.h"
 
-@interface BWRMyAccount () <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate>
+@interface BWRMyAccount () <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, UIActionSheetDelegate>
 @property UIActionSheet *rfcActionSheet;
 @property UITableView *rfcTableView;
 @property UITableView *userInfoTableView;
@@ -198,7 +198,7 @@
         
         [self loadCoreData];
         [rfcTableView reloadData];
-        
+        [rfcTableView setContentSize:CGSizeMake(self.view.frame.size.width, (44 * numRowsRFC))];
     }else{
         NSLog(@"Can't Delete. Debe de haber al menos un RFC");
     }
