@@ -111,9 +111,10 @@
     
     NSNumber *notificaciones = [[NSNumber alloc] initWithBool:[userDefaults boolForKey:@"Notificaciones"]];
     NSNumber *sonido = [[NSNumber alloc] initWithBool:[userDefaults boolForKey:@"Sonido"]];
-    NSNumber *guardarFoto = [[NSNumber alloc] initWithBool:[userDefaults boolForKey:@"GuardarFotos"]];
+    NSNumber *guardarFoto = [[NSNumber alloc] initWithBool:[userDefaults boolForKey:@"Guardar Fotos"]];
+    NSNumber *conexion = [[NSNumber alloc] initWithBool:[userDefaults boolForKey:@"Solo wifi"]];
     
-    confInfoDictionary = [[NSDictionary alloc]initWithObjects:@[notificaciones, sonido, guardarFoto] forKeys:@[@"Notificaciones", @"Sonido", @"GuardarFotos"]];
+    confInfoDictionary = [[NSDictionary alloc]initWithObjects:@[notificaciones, sonido, guardarFoto, conexion] forKeys:@[@"Notificaciones", @"Sonido", @"Guardar Fotos", @"Solo wifi"]];
 }
 
 #pragma mark - UITableViewDelegate
@@ -143,6 +144,10 @@
         if (indexPath.row < numRowsRFC) {
             BWRRFCInfo *rfcInfo = [fetchedResultsController objectAtIndexPath:indexPath];
             cell.textLabel.text = rfcInfo.rfc;
+            NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+            if ([[userDefaults valueForKey:@"rfc"] isEqualToString:rfcInfo.rfc]) {
+                cell.textLabel.textColor = [UIColor greenColor];
+            }
         }else{
             cell.textLabel.text = @"Agregar RFC";
         }
@@ -198,6 +203,7 @@
         
         NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
         [userDefaults setBool:switcher.on forKey:[confInfoDictionary allKeys][indexPath.row]];
+        NSLog(@"La configuración %@ ahora tiene el valor %hhd", [confInfoDictionary allKeys][indexPath.row], switcher.on);
     }
 }
 
@@ -213,6 +219,7 @@
         case 1://Establecer un RFC para facturación
             [userDefaults setValue:rfcActual.rfc forKey:@"rfc"];
             NSLog(@"RFC Seleccionado para facturación: %@", [userDefaults valueForKey:@"rfc"]);
+            [rfcTableView reloadData];
             break;
         case 2://Editar un RFC
             [self performSegueWithIdentifier:@"editInvoiceDataSegue" sender:self];
