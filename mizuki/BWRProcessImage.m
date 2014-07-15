@@ -31,16 +31,19 @@
 {
     Tesseract* tesseract = [[Tesseract alloc] initWithDataPath:@"tessdata" language:@"spa"];
     OpenCV *opencv = [[OpenCV alloc] init];
-    UIImage *image_result = [UIImage imageNamed:@"starbucks_con_dobles.jpg"];
+    //UIImage *image_result = [UIImage imageNamed:@"starbucks_con_dobles.jpg"];
     
     if(!processImage){
         return @"Error";
     }
     
     //Mejorar la imagen
-    //UIImage *image_erode = [opencv generateDilateImageFromUIImage:processImage];
-    UIImage *image_erode = [opencv generateDilateImageFromUIImage:image_result];
-    processImage = [opencv generateBinaryImageFromUIImage:image_erode];
+    processImage = [opencv improveImageFromUIImage:processImage];
+    //processImage = [opencv improveImageFromUIImage:image_result];
+    
+    if(!processImage){
+        return @"Imagen demasiado obscura o demasiado clara";
+    }
     
     //Reconocer texto
     [tesseract setImage: processImage];
@@ -50,7 +53,6 @@
     
     //Liberar memoria
     tesseract = nil; //deallocate and free all memory
-    
     
     return result;
     

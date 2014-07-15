@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Models/BWRRFCInfo.h"
 
 @interface BWRInvoiceDataViewController : UIViewController
 
@@ -24,12 +25,11 @@
 @property UITextField *tf_localidad;
 @property UITextField *tf_cp;
 
-@property UILabel *lb_facturacion;
 @property UILabel *lb_direccion;
 @property UIBarButtonItem *bt_listo;
 
 
-- (BWRInvoiceDataViewController *)initWithDefault: (NSString *)title;
-- (BWRInvoiceDataViewController *)initWithNSDictionary:(NSDictionary *)dictionary title:(NSString *)title;
+- (void)initWithDefault: (NSString *)title;
+- (void)initWithBWRRFCInfo:(BWRRFCInfo *)rfcInfo title:(NSString *)title;
 
 @end
