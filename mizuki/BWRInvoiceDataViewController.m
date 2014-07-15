@@ -158,12 +158,13 @@
     tf_colonia = [[UITextField alloc] init];
     tf_colonia.borderStyle = UITextBorderStyleRoundedRect;
     tf_colonia.delegate = self;
-    
+
     //Delegacion
     tf_delegacion = [[UITextField alloc] init];
     tf_delegacion.borderStyle = UITextBorderStyleRoundedRect;
     tf_delegacion.delegate = self;
     
+
     //Estado
     tf_estado = [[UITextField alloc] init];
     tf_estado.borderStyle = UITextBorderStyleRoundedRect;
@@ -188,6 +189,12 @@
     bt_listo = [[UIBarButtonItem alloc] initWithTitle:@"Listo" style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
     
     self.view.backgroundColor = [UIColor whiteColor];
+    tf_cp.delegate = self;
+    
+    //Boton Listo
+    bt_listo = [[UIBarButtonItem alloc] initWithTitle:@"Listo" style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
+    
+    [self setTitle:@"Datos de facturación"];
 }
 
 - (void)initWithDefault: (NSString *)title
@@ -293,7 +300,7 @@
         rfcInfo.ciudad = tf_ciudad.text;
         rfcInfo.localidad = tf_localidad.text;
         
-        NSError *error;
+        NSError *error = nil;
         if ([managedObjectContext save:&error]) {
             if ([self.title isEqualToString:@"¡BIENVENIDO!"]) {
                 NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
@@ -306,6 +313,7 @@
             
             [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
         }else{
+            NSLog(@"Error guardando elemento en base de datos %@", error);
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Datos no válidos" message:@"Verifique los datos." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
             
             NSDictionary *userInfo = error.userInfo;

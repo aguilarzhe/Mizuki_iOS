@@ -152,7 +152,7 @@
     
     uint8_t* pixelPtr = (uint8_t*)mat_gray.data;
     int histogram[256]={0};
-    double frec_acumulada[256]={0};
+    //double frec_acumulada[256]={0};
     double media = 0;
     int num_pixeles = mat_gray.cols*mat_gray.rows;
     
