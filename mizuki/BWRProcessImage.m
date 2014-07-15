@@ -51,7 +51,6 @@
     //Liberar memoria
     tesseract = nil; //deallocate and free all memory
     
-    
     return result;
     
 }

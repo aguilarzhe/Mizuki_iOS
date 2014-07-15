@@ -231,14 +231,11 @@
 
 - (void)initWithBWRRFCInfo:(BWRRFCInfo *)rfcInfo title:(NSString *)title
 {
-    [self createInvoiceData];
+    [self initWithDefault:title];
     
     //No crear nuevo objeto en core data
     opcion = FALSE;
     updateRFC = rfcInfo;
-    
-    //Titulo
-    self.title = title;
     
     //RFC
     tf_rfc.text = rfcInfo.rfc;
@@ -298,8 +295,14 @@
         
         NSError *error;
         if ([managedObjectContext save:&error]) {
-            NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-            [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
+            if ([self.title isEqualToString:@"¡BIENVENIDO!"]) {
+                NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+                [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
+                [userDefaults setBool:TRUE forKey:@"Notificaciones"];
+                [userDefaults setBool:TRUE forKey:@"Sonido"];
+                [userDefaults setBool:TRUE forKey:@"Guardar Fotos"];
+                [userDefaults setBool:TRUE forKey:@"Solo wifi"];
+            }
             
             [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
         }else{

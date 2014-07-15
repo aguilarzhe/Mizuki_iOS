@@ -140,5 +140,73 @@
     
 }
 
+- (UIImage *)improveImageFromUIImage: (UIImage *) image{
+    
+    cv::Mat mat_original = [self cvMatFromUIImage:image];
+    cv::Mat mat_gray = mat_original.clone();
+    cv::Mat mat_binaria = mat_original.clone();
+    cv::Mat mat_dilate = mat_original.clone();
+    
+    //Escala de grises
+    cvtColor(mat_original, mat_gray, CV_RGB2GRAY);
+    
+    uint8_t* pixelPtr = (uint8_t*)mat_gray.data;
+    int histogram[256]={0};
+    double frec_acumulada[256]={0};
+    double media = 0;
+    int num_pixeles = mat_gray.cols*mat_gray.rows;
+    
+    //Calculando Histograma
+    for(int filas = 0; filas < mat_gray.rows; filas++)
+    {
+        for(int colum = 0; colum < mat_gray.cols; colum++)
+        {
+            histogram[pixelPtr[filas*mat_gray.cols + colum]]+=1;
+            //NSLog(@"Valor: %d", pixelPtr[filas*mat_gray.cols + colum]);
+        }
+    }
+    
+    //Calculando media
+    for( int indice = 0; indice < 256; indice++ ){
+        media += (indice*histogram[indice]);
+        //printf("%d, ", histogram[indice]);
+    }
+    media = media / num_pixeles;
+    NSLog(@"Media: %f", media);
+    
+    //Parametros de dilatacion y binarizacion segun media
+    int tam_mascara = 0;
+    int rango_inf = 0;
+    
+    if (media<=60) {
+        return nil;
+    }else if(media>60 && media<=100){
+        tam_mascara = 3;
+        rango_inf = 70;
+    }else if(media>100 && media<=170){
+        tam_mascara = 5;
+        rango_inf = 100;
+    }else if(media>170 && media <=230){
+        tam_mascara = 7;
+        rango_inf = 130;
+    }else{
+        return nil;
+    }
+    
+    //Dilatacion
+    cv::Mat element = getStructuringElement(cv::MORPH_CROSS, cv::Size(tam_mascara, tam_mascara));
+    erode(mat_gray, mat_dilate, element);
+    
+    //Binarizacion
+    threshold(mat_dilate, mat_binaria, rango_inf, 255, CV_THRESH_BINARY);
+    
+    //Liberar memoria
+    mat_original.release();
+    mat_dilate.release();
+    mat_gray.release();
+    
+    return [self UIImageFromCVMat:mat_binaria];
+}
+
 
 @end
