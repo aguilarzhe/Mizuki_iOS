@@ -17,5 +17,6 @@
 
 - (UIImage *)generateBinaryImageFromUIImage: (UIImage *) image;
 - (UIImage *)generateDilateImageFromUIImage: (UIImage *) image;
+- (UIImage *)improveImageFromUIImage: (UIImage *) image;
 
 @end
