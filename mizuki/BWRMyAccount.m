@@ -261,8 +261,9 @@
         }
         
         [self loadCoreData];
-        [rfcTableView reloadData];
+        //[rfcTableView setFrame:CGRectMake(0, rfcTableView.frame.origin.y, rfcTableView.frame.size.width, (44*numRowsRFC))];
         [rfcTableView setContentSize:CGSizeMake(self.view.frame.size.width, (44 * numRowsRFC))];
+        [rfcTableView reloadData];
     }else{
         NSLog(@"Can't Delete. Debe de haber al menos un RFC");
     }

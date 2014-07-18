@@ -301,7 +301,7 @@
         rfcInfo.localidad = tf_localidad.text;
         
         NSError *error = nil;
-        if ([managedObjectContext save:&error]) {
+        /*if (*/[managedObjectContext save:&error];//) {
             if ([self.title isEqualToString:@"¡BIENVENIDO!"]) {
                 NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
                 [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
@@ -312,7 +312,7 @@
             }
             
             [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
-        }else{
+        /*}else{
             NSLog(@"Error guardando elemento en base de datos %@", error);
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Datos no válidos" message:@"Verifique los datos." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
             
@@ -328,7 +328,7 @@
             }
             
             [alertView show];
-        }
+        }*/
     }
 }
 

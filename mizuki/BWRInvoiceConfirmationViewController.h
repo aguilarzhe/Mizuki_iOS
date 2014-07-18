@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "BWRProcessImage.h"
 
-@interface BWRInvoiceConfirmationViewController : UIViewController
+@interface BWRInvoiceConfirmationViewController : UIViewController <UIActionSheetDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate>
 @property NSString *invoiceText;
 @property UIImage *invoiceImage;
 

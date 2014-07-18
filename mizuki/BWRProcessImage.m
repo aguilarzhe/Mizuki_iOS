@@ -40,6 +40,7 @@
     //Mejorar la imagen
     processImage = [opencv improveImageFromUIImage:processImage];
     //processImage = [opencv improveImageFromUIImage:image_result];
+    //processImage = [opencv blurFilterImageFromUIImage:processImage];
     
     if(!processImage){
         return @"Imagen demasiado obscura o demasiado clara";

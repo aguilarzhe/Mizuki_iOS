@@ -18,5 +18,6 @@
 - (UIImage *)generateBinaryImageFromUIImage: (UIImage *) image;
 - (UIImage *)generateDilateImageFromUIImage: (UIImage *) image;
 - (UIImage *)improveImageFromUIImage: (UIImage *) image;
+- (UIImage *)blurFilterImageFromUIImage: (UIImage *) image;
 
 @end
