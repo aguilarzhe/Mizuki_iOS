@@ -14,7 +14,8 @@
 @property NSString *campoFormulario;
 @property NSString *tipoCampoFormulario;
 @property NSArray *valueCampoTicket;
-@property NSString *seleccionValue;
+@property NSString *selectionValue;
+@property NSString *dataSource;
 @property UIView *viewTicketElement;
 
 -(BWRTicketViewElement *)initWithDictionary: (NSDictionary *) ticketElement;

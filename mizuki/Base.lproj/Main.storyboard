@@ -105,6 +105,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
+                    <connections>
+                        <segue destination="SsD-YA-AO4" kind="show" identifier="invoiceWebViewSegue" id="fOi-nm-YhW"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fAW-hQ-d43" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -133,6 +136,25 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eR5-Fq-rzi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1726" y="-361"/>
+        </scene>
+        <!--Wev Invoice View Controller-->
+        <scene sceneID="lrb-rr-Lpg">
+            <objects>
+                <viewController id="SsD-YA-AO4" customClass="WevInvoiceViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="erV-YE-Dxi"/>
+                        <viewControllerLayoutGuide type="bottom" id="L5X-vz-oCt"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="bqG-5I-Alf">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eqv-Bf-IRG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2378" y="233"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

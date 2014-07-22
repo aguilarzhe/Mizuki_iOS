@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "AppDelegate.h"
 #import "BWRInvoiceConfirmationViewController.h"
+#import "WevInvoiceViewController.h"
 #import "BWRTicketViewElement.h"
 #import "BWRRFCInfo.h"
 
@@ -161,9 +162,12 @@
     ticketDataPageControl.pageIndicatorTintColor = [UIColor colorWithWhite:0.92 alpha:1.0];
     [self.view addSubview:ticketDataPageControl];
     
+    //Boton enviar
+    UIBarButtonItem *bt_enviar = [[UIBarButtonItem alloc] initWithTitle:@"Enviar" style:UIBarButtonItemStylePlain target:self action:@selector(goToWebview)];
+    self.navigationItem.rightBarButtonItem = bt_enviar;
+    
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
     self.title = @"Confirmación de factura";
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:nil];
     [self performSelectorInBackground:@selector(processImage) withObject:nil]; // Modificar por GCD
      
 }
@@ -242,7 +246,7 @@
         BWRTicketViewElement *ticketElement = [ticketViewElementsArray objectAtIndex:index];
         cell.textLabel.text = [ticketElement.valueCampoTicket objectAtIndex:indexPath.row];
         
-        if([cell.textLabel.text isEqualToString:ticketElement.seleccionValue]){
+        if([cell.textLabel.text isEqualToString:ticketElement.selectionValue]){
             cell.textLabel.textColor = [UIColor blueColor];
         }
         
@@ -280,7 +284,7 @@
             index++;
         }
         BWRTicketViewElement *ticketElement = [ticketViewElementsArray objectAtIndex:index];
-        ticketElement.seleccionValue = [ticketElement.valueCampoTicket objectAtIndex:indexPath.row];
+        ticketElement.selectionValue = [ticketElement.valueCampoTicket objectAtIndex:indexPath.row];
         [tableView reloadData];
     }
 }
@@ -300,25 +304,46 @@
                                                  @{
                                                      @"campo_ticket": @"string",
                                                      @"mascara_ticket": @"string",
-                                                     @"campo_formulario": @"string",
+                                                     @"campo_formulario": @"ctl00_Main_RegistroClienteTicket1_txtRFC",
                                                      @"tipo_campo_formulario": @"textbox",
-                                                     @"value_campo_ticket": @[@"Nombre"]
+                                                     @"value_campo_ticket": @[@"rfc"],
+                                                      @"data_source": @"userInfo"
+                                                     },
+                                                 
+                                                 /*@{
+                                                     @"campo_ticket": @"string",
+                                                     @"mascara_ticket": @"string",
+                                                     @"campo_formulario": @"string",
+                                                     @"tipo_campo_formulario": @"combobox",
+                                                     @"value_campo_ticket": @[@"Hola",@"Adios",@"Que tal"],
+                                                     @"data_source": @"ticketInfo"
+                                                     },*/
+                                                 
+                                                 @{
+                                                     @"campo_ticket": @"string",
+                                                     @"mascara_ticket": @"string",
+                                                     @"campo_formulario": @"ctl00_Main_RegistroClienteTicket1_txtTicket",
+                                                     @"tipo_campo_formulario": @"textbox",
+                                                     @"value_campo_ticket": @[@"Ticket"],
+                                                     @"data_source": @"ticketInfo"
                                                      },
                                                  
                                                  @{
                                                      @"campo_ticket": @"string",
                                                      @"mascara_ticket": @"string",
-                                                     @"campo_formulario": @"string",
-                                                     @"tipo_campo_formulario": @"combobox",
-                                                     @"value_campo_ticket": @[@"Hola",@"Adios",@"Que tal"]
+                                                     @"campo_formulario": @"ctl00_Main_RegistroClienteTicket1_txtTienda",
+                                                     @"tipo_campo_formulario": @"textbox",
+                                                     @"value_campo_ticket": @[@"Tienda"],
+                                                     @"data_source": @"ticketInfo"
                                                      },
                                                  
                                                  @{
                                                      @"campo_ticket": @"string",
                                                      @"mascara_ticket": @"string",
-                                                     @"campo_formulario": @"string",
-                                                     @"tipo_campo_formulario": @"combobox",
-                                                     @"value_campo_ticket": @[@"Ave",@"Pez"]
+                                                     @"campo_formulario": @"ctl00_Main_RegistroClienteTicket1_txtDate",
+                                                     @"tipo_campo_formulario": @"textbox",
+                                                     @"value_campo_ticket": @[@"Fecha"],
+                                                     @"data_source": @"ticketInfo"
                                                      }
                                                  ]};
     NSArray *regrasArray = [[NSArray alloc] initWithArray:[elementsDictionary valueForKey:@"reglas"]];
@@ -332,6 +357,8 @@
         espaciado = espaciado + (ALTO * [ticketViewElement.valueCampoTicket count]) +10;
     }
     
+    [self updateViewsWhitSelectedRFC];
+    
 }
 
 #pragma mark - UIActionSheetDelegate
@@ -342,6 +369,7 @@
         BWRRFCInfo *rfcInfo = [fetchedResults objectAtIndex:buttonIndex];
         [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
         [rfcTableView reloadData];
+        [self updateViewsWhitSelectedRFC];
     }
 }
 
@@ -445,6 +473,78 @@
     return cell;
 }
 
+#pragma mark - Navegation
+- (void)goToWebview{
+    
+    for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
+        if ([viewElement.viewTicketElement isKindOfClass:[UITextField class]]) {
+            viewElement.selectionValue = ((UITextField *)viewElement.viewTicketElement).text;
+        }
+    }
+    
+    if([self validationInvoiceData]){
+        [self performSegueWithIdentifier:@"invoiceWebViewSegue" sender:self];
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if([[segue identifier] isEqualToString:@"invoiceWebViewSegue"]){
+        WevInvoiceViewController *webViewInvoiceData = [segue destinationViewController];
+        webViewInvoiceData.ticketViewElementsArray = ticketViewElementsArray;
+    }
+}
+
+- (BOOL) validationInvoiceData{
+    
+    NSError *error = NULL;
+    
+    /*for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
+        if ([viewElement.viewTicketElement isKindOfClass:[UITextField class]]) {
+            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:viewElement.mascaraTicket options:NSRegularExpressionCaseInsensitive error:&error];
+            NSUInteger numberOfMatches = [regex numberOfMatchesInString:viewElement.selectionValue options:0
+                                                             range:NSMakeRange(0, [viewElement.selectionValue length])];
+            if(numberOfMatches==0){
+                NSLog(@"Error en el campo: %@", [viewElement.valueCampoTicket objectAtIndex:0]);
+                return FALSE;
+            }
+        }
+    }*/
+    return TRUE;
+}
+
+- (void) updateViewsWhitSelectedRFC {
+    
+    //Obtener elemento rfc de la base
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext = appDelegate.managedObjectContext;
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"RFCInfo"];
+    NSError *fetchingError = nil;
+    NSArray *fetchedResults = [managedObjectContext executeFetchRequest:fetchRequest error:&fetchingError];
+    
+    if (!fetchingError) {
+        NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+        BWRRFCInfo *rfcActual;
+        for (BWRRFCInfo *rfcInfo in fetchedResults){
+            if ([[userDefaults valueForKey:@"rfc"] isEqualToString:rfcInfo.rfc]) {
+                rfcActual = rfcInfo;
+            }else{
+                return;
+            }
+        }
+    
+        //Colocar campo en elemento visual
+        for (BWRTicketViewElement *viewElement in ticketViewElementsArray){
+            if([viewElement.dataSource isEqualToString:@"userInfo"]){
+                ((UITextField *)viewElement.viewTicketElement).text = [rfcActual valueForKey:[viewElement.valueCampoTicket objectAtIndex:0]];
+                NSLog(@"Valor de %@ es %@", viewElement.dataSource, ((UITextField *)viewElement.viewTicketElement).text);
+            }
+        }
+    }else{
+        NSLog(@"No se recuperaron datos de la base");
+    }
+}
 
 
 

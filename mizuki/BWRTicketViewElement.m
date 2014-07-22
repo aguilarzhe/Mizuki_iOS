@@ -16,9 +16,9 @@
 
 @implementation BWRTicketViewElement
 
-@synthesize campoFormulario, campoTicket, mascaraTicket, tipoCampoFormulario;
+@synthesize campoFormulario, campoTicket, mascaraTicket, tipoCampoFormulario, dataSource;
 @synthesize valueCampoTicket;
-@synthesize seleccionValue;
+@synthesize selectionValue;
 @synthesize viewTicketElement;
 
 -(BWRTicketViewElement *)initWithDictionary: (NSDictionary *) ticketElement{
@@ -30,7 +30,8 @@
     campoFormulario = [ticketElement valueForKey:@"campo_formulario"];
     tipoCampoFormulario = [ticketElement valueForKey:@"tipo_campo_formulario"];
     valueCampoTicket = [[NSArray alloc] initWithArray:[ticketElement valueForKey:@"value_campo_ticket"]];
-    seleccionValue = [valueCampoTicket objectAtIndex:0];
+    dataSource = [ticketElement valueForKey:@"data_source"];
+    selectionValue = [valueCampoTicket objectAtIndex:0];
     
     return self;
 }
@@ -40,7 +41,7 @@
     //Si es textbox
     if ([tipoCampoFormulario isEqualToString:@"textbox"]) {
         UITextField *campoTextField = [[UITextField alloc] initWithFrame:CGRectMake(x, y, width, height)];
-        campoTextField.placeholder = seleccionValue;
+        campoTextField.placeholder = selectionValue;
         campoTextField.borderStyle = UITextBorderStyleRoundedRect;
         campoTextField.delegate = viewDelegate;
         viewTicketElement = campoTextField;
