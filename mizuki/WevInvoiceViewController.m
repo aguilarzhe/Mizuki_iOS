@@ -19,6 +19,7 @@
 
 @synthesize ticketViewElementsArray;
 @synthesize invoiceWebView;
+@synthesize companyURL;
 
 - (void)viewDidLoad
 {
@@ -29,9 +30,7 @@
     
     
     //load url into webview
-    NSString *strURL = @"https://alsea.interfactura.com/RegistroDocumento.aspx?opc=Starbucks";
-    NSURL *url = [NSURL URLWithString:strURL];
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:companyURL];
     [invoiceWebView loadRequest:urlRequest];
     
     [self.view addSubview:invoiceWebView];

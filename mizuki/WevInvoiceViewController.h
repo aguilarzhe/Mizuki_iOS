@@ -11,5 +11,6 @@
 @interface WevInvoiceViewController : UIViewController <UIWebViewDelegate>
 
 @property NSMutableArray *ticketViewElementsArray;
+@property NSURL *companyURL;
 
 @end
