@@ -27,11 +27,23 @@
     self.title = @"¡BIENVENIDO!";
     
     //Medidas
-    NSInteger anchoPantalla = self.view.frame.size.width;
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    NSInteger anchoPantalla;
     NSInteger ALTO = 31;
     NSInteger PADING = 20;
     NSInteger espaciado = 100;
-    NSInteger ANCHO_LARGO = anchoPantalla-(2*PADING);
+    NSInteger ANCHO_LARGO;
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && (orientation == UIDeviceOrientationLandscapeLeft || orientation == UIDeviceOrientationLandscapeRight)) {
+            anchoPantalla = self.view.frame.size.width / 2;
+        UIImageView *logoImage = [[UIImageView alloc] initWithFrame:CGRectMake(anchoPantalla + PADING, 60, anchoPantalla - (PADING*2), self.view.frame.size.height - 120)];
+        logoImage.image = [UIImage imageNamed:@"bawarelogo.png"];
+        [logoImage setContentMode:UIViewContentModeScaleAspectFit];
+        [self.view addSubview:logoImage];
+    }else {
+        anchoPantalla = self.view.frame.size.width;
+    }
+    ANCHO_LARGO = anchoPantalla-(2*PADING);
     
     //Correo
     tf_correo = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado, ANCHO_LARGO, ALTO)];

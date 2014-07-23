@@ -9,13 +9,14 @@
 #import "BWRInvoiceHistoryViewController.h"
 #import "BWRInvoiceConfirmationViewController.h"
 #import "BWRProcessImage.h"
+#import "BWRMyAccount.h"
 
 @interface BWRInvoiceHistoryViewController ()
 @property UIActionSheet *imageInvoiceActionSheet;
 @property UIImage *invoiceImage;
 @property UITableView *invoiceTableView;
 @property NSMutableArray *invoices;
-@property UIToolbar *toolbar;
+@property UIBarButtonItem *settingsButton;
 @end
 
 @implementation BWRInvoiceHistoryViewController
@@ -23,7 +24,7 @@
 @synthesize invoiceImage;
 @synthesize invoiceTableView;
 @synthesize invoices;
-@synthesize toolbar;
+@synthesize settingsButton;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -32,12 +33,11 @@
     
     self.navigationItem.rightBarButtonItem = imageInvoiceButton;
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
-    
-    toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height -44, self.view.frame.size.width, 44)];
-    UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithTitle:@"Mi cuenta" style:UIBarButtonItemStylePlain target:self action:@selector(showSettingsMenu)];
+
+    self.navigationController.toolbarHidden = NO;
+    settingsButton = [[UIBarButtonItem alloc] initWithTitle:@"Mi cuenta" style:UIBarButtonItemStylePlain target:self action:@selector(showSettingsMenu)];
     UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    [toolbar setItems:@[flexibleItem, settingsButton]];
-    [self.view addSubview:toolbar];
+    self.toolbarItems = @[flexibleItem, settingsButton];
     
     self.title = @"Mis facturas";
 
@@ -52,7 +52,11 @@
 -(void)showImageInvoceActionSheet{
     imageInvoiceActionSheet = [[UIActionSheet alloc] initWithTitle:@"Agregar factura" delegate:self cancelButtonTitle:@"Cancelar" destructiveButtonTitle:nil otherButtonTitles:@"Cámara",@"Galeria",@"Capturar datos", nil];
     
-    [imageInvoiceActionSheet showInView:self.view];
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+        [imageInvoiceActionSheet showInView:self.view];
+    }else if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+        [imageInvoiceActionSheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
+    }
 }
 
 -(void)confirmInvoice{
@@ -60,7 +64,13 @@
 }
 
 -(void)showSettingsMenu{
-    [self performSegueWithIdentifier:@"showMyAccountSegue" sender:self];
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+        [self performSegueWithIdentifier:@"showMyAccountSegue" sender:self];
+    }else if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+        BWRMyAccount *myAccountViewController = [[BWRMyAccount alloc] init];
+        UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:myAccountViewController];
+        [popoverController presentPopoverFromBarButtonItem:settingsButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    }
 }
 
 

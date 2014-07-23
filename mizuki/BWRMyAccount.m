@@ -42,30 +42,30 @@
     
     // Core Data
     [self loadCoreData];
-    
+    int width = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)?self.view.frame.size.width : 320.0f;
     // Tabla de información de usuario
-    UILabel *userInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 0.0f, self.view.frame.size.width, 44.0f)];
+    UILabel *userInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 0.0f, width, 44.0f)];
     userInfoLabel.text = @"Datos de usuario";
     
-    userInfoTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, 40.0f, self.view.frame.size.width, (44 * dummyUserInfoDictionary.count)) style:UITableViewStylePlain];
+    userInfoTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, 40.0f, width, (44 * dummyUserInfoDictionary.count)) style:UITableViewStylePlain];
     userInfoTableView.scrollEnabled = NO;
     userInfoTableView.dataSource = self;
     userInfoTableView.delegate = self;
     
     // Tabla de RFC
-    UILabel *rfcLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 135.0f, 100.0f, 44.0f)];
+    UILabel *rfcLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 135.0f, width, 44.0f)];
     rfcLabel.text = @"RFC";
     
-    rfcTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, 170.0f, self.view.frame.size.width, (44 * (numRowsRFC + 1))) style:UITableViewStylePlain];
+    rfcTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, 170.0f, width, (44 * (numRowsRFC + 1))) style:UITableViewStylePlain];
     rfcTableView.scrollEnabled = NO;
     rfcTableView.dataSource = self;
     rfcTableView.delegate = self;
     
     //Tabla de Configuraciones
-    UILabel *confInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 180.0f+(44 * (numRowsRFC + 1)), self.view.frame.size.width, 44.0f)];
+    UILabel *confInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 180.0f+(44 * (numRowsRFC + 1)), width, 44.0f)];
     confInfoLabel.text = @"Configuración";
     
-    confInfoTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, 220.0f+(44 * (numRowsRFC + 1)), self.view.frame.size.width, (44 * confInfoDictionary.count)) style:UITableViewStylePlain];
+    confInfoTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, 220.0f+(44 * (numRowsRFC + 1)), width, (44 * confInfoDictionary.count)) style:UITableViewStylePlain];
     confInfoTableView.scrollEnabled = NO;
     confInfoTableView.dataSource = self;
     confInfoTableView.delegate = self;
@@ -86,6 +86,7 @@
     // Configuración de vista
     self.view=scrollView;
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cerrar sesión" style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
     self.title = @"Mi cuenta";
 }
 
@@ -146,7 +147,7 @@
             cell.textLabel.text = rfcInfo.rfc;
             NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
             if ([[userDefaults valueForKey:@"rfc"] isEqualToString:rfcInfo.rfc]) {
-                cell.textLabel.textColor = [UIColor greenColor];
+                cell.textLabel.textColor = [UIColor blueColor];
             }
         }else{
             cell.textLabel.text = @"Agregar RFC";
@@ -174,6 +175,10 @@
 - (void) switchChanged:(id)sender {
     UISwitch* switchControl = sender;
     [switchControl setOn:!switchControl.on animated:YES];
+}
+
+-(void) logout{
+    // TODO: Implement logout
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
