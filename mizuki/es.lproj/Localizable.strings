@@ -1,0 +1,27 @@
+/* 
+  Localizable.strings
+  mizuki
+
+  Created by Efrén Aguilar on 7/23/14.
+  Copyright (c) 2014 Baware S.A. de C.V. All rights reserved.
+*/
+
+"Mis facturas" = "Mis facturas";
+"Mi cuenta" = "Mi cuenta";
+
+"Agregar factura" = "Agregar factura";
+"Cámara" = "Cámara";
+"Galeria" = "Galeria";
+"Capturar datos" = "Capturar datos";
+
+// BWRMyAccountViewController
+"Datos de usuario" = "Datos de usuario";
+"Correo" = "Correo";
+"Tipo cuenta" = "Tipo cuenta";
+"Agregar RFC" = "Agregar RFC";
+
+"Configuración" = "Configuración";
+"Guardar fotos" = "Guardar fotos";
+"Solo wifi" = "Sólo WIFI";
+"Notificaciones" = "Notificaciones";
+"Sonido" = "Sonido";

@@ -32,6 +32,7 @@
 		2F397D911948BF31004CC963 /* BWRInvoiceConfirmationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F397D901948BF30004CC963 /* BWRInvoiceConfirmationViewController.m */; };
 		2F397D941948C4E7004CC963 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F397D931948C4E7004CC963 /* MobileCoreServices.framework */; };
 		2F3CFAC3197F71B4009428C9 /* bawarelogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F3CFAC2197F71B4009428C9 /* bawarelogo.png */; };
+		2F5E380C19804BBE00189A8F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F5E380E19804BBE00189A8F /* Localizable.strings */; };
 		2F7D5CB51964E0EE003BBAB6 /* BWRMyAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7D5CB41964E0EE003BBAB6 /* BWRMyAccountViewController.m */; };
 		2F84BE2B196AF3C3002E4DB1 /* BWRRFCInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F84BE2A196AF3C3002E4DB1 /* BWRRFCInfo.m */; };
 /* End PBXBuildFile section */
@@ -230,6 +231,8 @@
 		2F397D921948BF93004CC963 /* BWRInvoiceConfirmationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWRInvoiceConfirmationViewController.h; sourceTree = "<group>"; };
 		2F397D931948C4E7004CC963 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		2F3CFAC2197F71B4009428C9 /* bawarelogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bawarelogo.png; sourceTree = "<group>"; };
+		2F5E380D19804BBE00189A8F /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2F5E380F19804BC000189A8F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2F7D5CB41964E0EE003BBAB6 /* BWRMyAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRMyAccountViewController.m; sourceTree = "<group>"; };
 		2F7D5CB61964E102003BBAB6 /* BWRMyAccountViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BWRMyAccountViewController.h; sourceTree = "<group>"; };
 		2F84BE2A196AF3C3002E4DB1 /* BWRRFCInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BWRRFCInfo.m; path = Models/BWRRFCInfo.m; sourceTree = "<group>"; };
@@ -538,6 +541,7 @@
 				2F7D5CB41964E0EE003BBAB6 /* BWRMyAccountViewController.m */,
 				2F7D5CB61964E102003BBAB6 /* BWRMyAccountViewController.h */,
 				2F84BE2D196AF3F4002E4DB1 /* Models */,
+				2F5E380E19804BBE00189A8F /* Localizable.strings */,
 			);
 			path = mizuki;
 			sourceTree = "<group>";
@@ -673,6 +677,7 @@
 				2BDB2F1E19509B0B00AD8F67 /* LICENSE in Resources */,
 				2BDB2F2519509B3900AD8F67 /* tessdata in Resources */,
 				2B1D89441950B38200C5A5A3 /* starbucks_liso.jpg in Resources */,
+				2F5E380C19804BBE00189A8F /* Localizable.strings in Resources */,
 				2F397D791948BD6F004CC963 /* Main.storyboard in Resources */,
 				2B1D89461950B3C300C5A5A3 /* starbucks_con_dobles.jpg in Resources */,
 				2F397D7B1948BD6F004CC963 /* Images.xcassets in Resources */,
@@ -735,6 +740,15 @@
 				2F397D781948BD6F004CC963 /* Base */,
 			);
 			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		2F5E380E19804BBE00189A8F /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2F5E380D19804BBE00189A8F /* es */,
+				2F5E380F19804BC000189A8F /* en */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

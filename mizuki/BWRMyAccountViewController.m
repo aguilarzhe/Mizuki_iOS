@@ -45,7 +45,7 @@
     int width = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)?self.view.frame.size.width : 320.0f;
     // Tabla de información de usuario
     UILabel *userInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 0.0f, width, 44.0f)];
-    userInfoLabel.text = @"Datos de usuario";
+    userInfoLabel.text = NSLocalizedString(@"Datos de usuario", nil);
     
     userInfoTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, 40.0f, width, (44 * dummyUserInfoDictionary.count)) style:UITableViewStylePlain];
     userInfoTableView.scrollEnabled = NO;
@@ -63,7 +63,7 @@
     
     //Tabla de Configuraciones
     UILabel *confInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 180.0f+(44 * (numRowsRFC + 1)), width, 44.0f)];
-    confInfoLabel.text = @"Configuración";
+    confInfoLabel.text = NSLocalizedString(@"Configuración", nil);
     
     confInfoTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, 220.0f+(44 * (numRowsRFC + 1)), width, (44 * confInfoDictionary.count)) style:UITableViewStylePlain];
     confInfoTableView.scrollEnabled = NO;
@@ -87,7 +87,7 @@
     self.view=scrollView;
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cerrar sesión" style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
-    self.title = @"Mi cuenta";
+    self.title = NSLocalizedString(@"Mi cuenta", nil);
 }
 
 -(void)initializeDummyDataSources{
@@ -115,7 +115,7 @@
     NSNumber *guardarFoto = [[NSNumber alloc] initWithBool:[userDefaults boolForKey:@"Guardar Fotos"]];
     NSNumber *conexion = [[NSNumber alloc] initWithBool:[userDefaults boolForKey:@"Solo wifi"]];
     
-    confInfoDictionary = [[NSDictionary alloc]initWithObjects:@[notificaciones, sonido, guardarFoto, conexion] forKeys:@[@"Notificaciones", @"Sonido", @"Guardar Fotos", @"Solo wifi"]];
+    confInfoDictionary = [[NSDictionary alloc]initWithObjects:@[notificaciones, sonido, guardarFoto, conexion] forKeys:@[@"Notificaciones", @"Sonido", @"Guardar fotos", @"Solo wifi"]];
 }
 
 #pragma mark - UITableViewDelegate
@@ -139,6 +139,7 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = nil;
+    NSString *key;
     
     if(tableView == rfcTableView){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"RFC"];
@@ -150,19 +151,21 @@
                 cell.textLabel.textColor = [UIColor blueColor];
             }
         }else{
-            cell.textLabel.text = @"Agregar RFC";
+            cell.textLabel.text = NSLocalizedString(@"Agregar RFC", nil);
         }
     }else if(tableView == userInfoTableView){
+        key = [dummyUserInfoDictionary allKeys][indexPath.row];
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"USERINFO"];
-        cell.textLabel.text = [dummyUserInfoDictionary allKeys][indexPath.row];
-        cell.detailTextLabel.text = dummyUserInfoDictionary[cell.textLabel.text];
+        cell.textLabel.text = NSLocalizedString(key, nil);
+        cell.detailTextLabel.text = dummyUserInfoDictionary[key];
     }else if(tableView == confInfoTableView){
+        key = [confInfoDictionary allKeys][indexPath.row];
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"CONFIG"];
-        cell.textLabel.text = [confInfoDictionary allKeys][indexPath.row];
+        cell.textLabel.text = NSLocalizedString(key, nil);
         
         UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
         [switchView addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
-        if([confInfoDictionary[cell.textLabel.text] boolValue])
+        if([confInfoDictionary[key] boolValue])
             [switchView setOn:YES animated:NO];
         else
             [switchView setOn:NO animated:NO];

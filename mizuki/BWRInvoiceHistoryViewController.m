@@ -35,11 +35,11 @@
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
     self.navigationController.toolbarHidden = NO;
-    settingsButton = [[UIBarButtonItem alloc] initWithTitle:@"Mi cuenta" style:UIBarButtonItemStylePlain target:self action:@selector(showSettingsMenu)];
+    settingsButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Mi cuenta", nil) style:UIBarButtonItemStylePlain target:self action:@selector(showSettingsMenu)];
     UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     self.toolbarItems = @[flexibleItem, settingsButton];
     
-    self.title = @"Mis facturas";
+    self.title = NSLocalizedString(@"Mis facturas", nil);
 
 }
 
@@ -50,7 +50,7 @@
 }
 
 -(void)showImageInvoceActionSheet{
-    imageInvoiceActionSheet = [[UIActionSheet alloc] initWithTitle:@"Agregar factura" delegate:self cancelButtonTitle:@"Cancelar" destructiveButtonTitle:nil otherButtonTitles:@"Cámara",@"Galeria",@"Capturar datos", nil];
+    imageInvoiceActionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Agregar factura", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Cancelar", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Cámara", nil), NSLocalizedString(@"Galeria", nil), NSLocalizedString(@"Capturar datos", nil), nil];
     
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
         [imageInvoiceActionSheet showInView:self.view];
