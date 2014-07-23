@@ -7,6 +7,6 @@
 //
 #import <UIKit/UIKit.h>
 
-@interface BWRMyAccount : UIViewController
+@interface BWRMyAccountViewController : UIViewController
 
 @end

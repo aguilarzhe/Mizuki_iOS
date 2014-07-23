@@ -32,7 +32,7 @@
 		2F397D911948BF31004CC963 /* BWRInvoiceConfirmationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F397D901948BF30004CC963 /* BWRInvoiceConfirmationViewController.m */; };
 		2F397D941948C4E7004CC963 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F397D931948C4E7004CC963 /* MobileCoreServices.framework */; };
 		2F3CFAC3197F71B4009428C9 /* bawarelogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 2F3CFAC2197F71B4009428C9 /* bawarelogo.png */; };
-		2F7D5CB51964E0EE003BBAB6 /* BWRMyAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7D5CB41964E0EE003BBAB6 /* BWRMyAccount.m */; };
+		2F7D5CB51964E0EE003BBAB6 /* BWRMyAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7D5CB41964E0EE003BBAB6 /* BWRMyAccountViewController.m */; };
 		2F84BE2B196AF3C3002E4DB1 /* BWRRFCInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F84BE2A196AF3C3002E4DB1 /* BWRRFCInfo.m */; };
 /* End PBXBuildFile section */
 
@@ -230,8 +230,8 @@
 		2F397D921948BF93004CC963 /* BWRInvoiceConfirmationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWRInvoiceConfirmationViewController.h; sourceTree = "<group>"; };
 		2F397D931948C4E7004CC963 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		2F3CFAC2197F71B4009428C9 /* bawarelogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bawarelogo.png; sourceTree = "<group>"; };
-		2F7D5CB41964E0EE003BBAB6 /* BWRMyAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRMyAccount.m; sourceTree = "<group>"; };
-		2F7D5CB61964E102003BBAB6 /* BWRMyAccount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BWRMyAccount.h; sourceTree = "<group>"; };
+		2F7D5CB41964E0EE003BBAB6 /* BWRMyAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRMyAccountViewController.m; sourceTree = "<group>"; };
+		2F7D5CB61964E102003BBAB6 /* BWRMyAccountViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BWRMyAccountViewController.h; sourceTree = "<group>"; };
 		2F84BE2A196AF3C3002E4DB1 /* BWRRFCInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BWRRFCInfo.m; path = Models/BWRRFCInfo.m; sourceTree = "<group>"; };
 		2F84BE2C196AF3DE002E4DB1 /* BWRRFCInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BWRRFCInfo.h; path = Models/BWRRFCInfo.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -535,8 +535,8 @@
 				2B380A0A1965E93500A7FDFE /* BWRInvoiceDataViewController.m */,
 				2F397D921948BF93004CC963 /* BWRInvoiceConfirmationViewController.h */,
 				2F397D901948BF30004CC963 /* BWRInvoiceConfirmationViewController.m */,
-				2F7D5CB41964E0EE003BBAB6 /* BWRMyAccount.m */,
-				2F7D5CB61964E102003BBAB6 /* BWRMyAccount.h */,
+				2F7D5CB41964E0EE003BBAB6 /* BWRMyAccountViewController.m */,
+				2F7D5CB61964E102003BBAB6 /* BWRMyAccountViewController.h */,
 				2F84BE2D196AF3F4002E4DB1 /* Models */,
 			);
 			path = mizuki;
@@ -702,7 +702,7 @@
 				2BDB2F2819509B7E00AD8F67 /* BWRProcessImage.m in Sources */,
 				2BDB2F1D19509B0B00AD8F67 /* Tesseract.mm in Sources */,
 				2B23A60319589FED0054FB8A /* OpenCV.mm in Sources */,
-				2F7D5CB51964E0EE003BBAB6 /* BWRMyAccount.m in Sources */,
+				2F7D5CB51964E0EE003BBAB6 /* BWRMyAccountViewController.m in Sources */,
 				2B4496101976E47E00BFDBDB /* BWRTicketViewElement.m in Sources */,
 				2F397D731948BD6F004CC963 /* mizuki.xcdatamodeld in Sources */,
 				2F397D761948BD6F004CC963 /* BWRInvoiceHistoryViewController.m in Sources */,

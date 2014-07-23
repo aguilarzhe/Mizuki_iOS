@@ -7,12 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BWRMyAccount.h"
+#import "BWRMyAccountViewController.h"
 #import "BWRInvoiceDataViewController.h"
 #import "AppDelegate.h"
 #import "Models/BWRRFCInfo.h"
 
-@interface BWRMyAccount () <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, UIActionSheetDelegate>
+@interface BWRMyAccountViewController () <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, UIActionSheetDelegate>
 @property UIActionSheet *rfcActionSheet;
 @property UITableView *rfcTableView;
 @property UITableView *userInfoTableView;
@@ -26,7 +26,7 @@
 
 @end
 
-@implementation BWRMyAccount
+@implementation BWRMyAccountViewController
 @synthesize rfcActionSheet;
 @synthesize rfcTableView, userInfoTableView, confInfoTableView;
 @synthesize dummyUserInfoDictionary, confInfoDictionary;

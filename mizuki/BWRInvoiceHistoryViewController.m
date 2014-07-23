@@ -9,7 +9,7 @@
 #import "BWRInvoiceHistoryViewController.h"
 #import "BWRInvoiceConfirmationViewController.h"
 #import "BWRProcessImage.h"
-#import "BWRMyAccount.h"
+#import "BWRMyAccountViewController.h"
 
 @interface BWRInvoiceHistoryViewController ()
 @property UIActionSheet *imageInvoiceActionSheet;
@@ -67,7 +67,7 @@
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
         [self performSegueWithIdentifier:@"showMyAccountSegue" sender:self];
     }else if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        BWRMyAccount *myAccountViewController = [[BWRMyAccount alloc] init];
+        BWRMyAccountViewController *myAccountViewController = [[BWRMyAccountViewController alloc] init];
         UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:myAccountViewController];
         [popoverController presentPopoverFromBarButtonItem:settingsButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     }
