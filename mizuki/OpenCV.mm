@@ -152,7 +152,7 @@
     
     uint8_t* pixelPtr = (uint8_t*)mat_gray.data;
     int histogram[256]={0};
-    double frec_acumulada[256]={0};
+    //double frec_acumulada[256]={0};
     double media = 0;
     int num_pixeles = mat_gray.cols*mat_gray.rows;
     
@@ -206,6 +206,20 @@
     mat_gray.release();
     
     return [self UIImageFromCVMat:mat_binaria];
+}
+
+- (UIImage *)blurFilterImageFromUIImage: (UIImage *) image{
+    
+    cv::Mat mat_original = [self cvMatFromUIImage:image];
+    cv::Mat mat_blur = mat_original.clone();
+    
+    //Filtro blur
+    blur(mat_original, mat_blur, cv::Size(5,5));
+    
+    //Liberar memoria
+    mat_original.release();
+    
+    return [self UIImageFromCVMat:mat_blur];
 }
 
 

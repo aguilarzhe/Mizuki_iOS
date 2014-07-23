@@ -43,16 +43,9 @@
     [super viewDidLoad];
     
     //Medidas
-<<<<<<< HEAD
     NSInteger anchoPantalla = self.view.frame.size.width;
     NSInteger ALTO = 31;
     NSInteger PADING = 20;
-=======
-    static NSInteger ALTO = 31;
-    NSInteger ANCHO_LARGO = 200;
-    static NSInteger ANCHO_CHICO = 130;
-    static NSInteger PADING = 20;
->>>>>>> FETCH_HEAD
     NSInteger espaciado = 20;
     NSInteger ANCHO_LARGO = anchoPantalla-(2*PADING);
     NSInteger ANCHO_CHICO = (ANCHO_LARGO/2)-(PADING/2);
@@ -141,94 +134,67 @@
     //Apellido materno
     tf_amaterno = [[UITextField alloc] init];
     tf_amaterno.borderStyle = UITextBorderStyleRoundedRect;
-<<<<<<< HEAD
-=======
     tf_amaterno.delegate = self;
     
->>>>>>> FETCH_HEAD
     //Direccion
     lb_direccion = [[UILabel alloc] init];
     lb_direccion.text = @"Dirección";
     //Calle
     tf_calle = [[UITextField alloc] init];
     tf_calle.borderStyle = UITextBorderStyleRoundedRect;
-<<<<<<< HEAD
-=======
     tf_calle.delegate = self;
     
->>>>>>> FETCH_HEAD
     //Numero interior
     tf_noint = [[UITextField alloc] init];
     tf_noint.borderStyle = UITextBorderStyleRoundedRect;
-<<<<<<< HEAD
-=======
     tf_noint.delegate = self,
     
->>>>>>> FETCH_HEAD
     //Numero exterior
     tf_noext = [[UITextField alloc] init];
     tf_noext.borderStyle = UITextBorderStyleRoundedRect;
-<<<<<<< HEAD
-=======
     tf_noext.delegate = self;
     
->>>>>>> FETCH_HEAD
     //Colonia
     tf_colonia = [[UITextField alloc] init];
     tf_colonia.borderStyle = UITextBorderStyleRoundedRect;
-<<<<<<< HEAD
-=======
     tf_colonia.delegate = self;
-    
->>>>>>> FETCH_HEAD
+
     //Delegacion
     tf_delegacion = [[UITextField alloc] init];
     tf_delegacion.borderStyle = UITextBorderStyleRoundedRect;
-<<<<<<< HEAD
-=======
     tf_delegacion.delegate = self;
     
->>>>>>> FETCH_HEAD
+
     //Estado
     tf_estado = [[UITextField alloc] init];
     tf_estado.borderStyle = UITextBorderStyleRoundedRect;
-<<<<<<< HEAD
-=======
     tf_estado.delegate = self;
     
->>>>>>> FETCH_HEAD
     //Ciudad
     tf_ciudad = [[UITextField alloc] init];
     tf_ciudad.borderStyle = UITextBorderStyleRoundedRect;
-<<<<<<< HEAD
-=======
     tf_ciudad.delegate = self;
     
->>>>>>> FETCH_HEAD
     //Localidad
     tf_localidad = [[UITextField alloc] init];
     tf_localidad.borderStyle = UITextBorderStyleRoundedRect;
-<<<<<<< HEAD
-=======
     tf_localidad.delegate = self;
     
->>>>>>> FETCH_HEAD
     //Codigo Postal
     tf_cp = [[UITextField alloc] init];
     tf_cp.borderStyle = UITextBorderStyleRoundedRect;
-<<<<<<< HEAD
+    tf_cp.delegate = self;
+    
     //Boton Listo
     bt_listo = [[UIBarButtonItem alloc] initWithTitle:@"Listo" style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
     
     self.view.backgroundColor = [UIColor whiteColor];
-=======
     tf_cp.delegate = self;
     
     //Boton Listo
     bt_listo = [[UIBarButtonItem alloc] initWithTitle:@"Listo" style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
     
     [self setTitle:@"Datos de facturación"];
->>>>>>> FETCH_HEAD
 }
 
 - (void)initWithDefault: (NSString *)title
@@ -334,8 +300,8 @@
         rfcInfo.ciudad = tf_ciudad.text;
         rfcInfo.localidad = tf_localidad.text;
         
-        NSError *error;
-        if ([managedObjectContext save:&error]) {
+        NSError *error = nil;
+        /*if (*/[managedObjectContext save:&error];//) {
             if ([self.title isEqualToString:@"¡BIENVENIDO!"]) {
                 NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
                 [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
@@ -346,10 +312,8 @@
             }
             
             [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
-        }else{
-<<<<<<< HEAD
+        /*}else{
             NSLog(@"Error guardando elemento en base de datos %@", error);
-=======
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Datos no válidos" message:@"Verifique los datos." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
             
             NSDictionary *userInfo = error.userInfo;
@@ -364,8 +328,7 @@
             }
             
             [alertView show];
->>>>>>> FETCH_HEAD
-        }
+        }*/
     }
 }
 
