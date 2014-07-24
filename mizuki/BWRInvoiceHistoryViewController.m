@@ -29,7 +29,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    UIBarButtonItem *imageInvoiceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showImageInvoceActionSheet)];
+    UIBarButtonItem *imageInvoiceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showImageInvoceActionSheet:)];
     
     self.navigationItem.rightBarButtonItem = imageInvoiceButton;
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
@@ -40,7 +40,6 @@
     self.toolbarItems = @[flexibleItem, settingsButton];
     
     self.title = NSLocalizedString(@"Mis facturas", nil);
-
 }
 
 
@@ -49,13 +48,13 @@
 
 }
 
--(void)showImageInvoceActionSheet{
+-(void)showImageInvoceActionSheet:(id)sender{
     imageInvoiceActionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Agregar factura", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Cancelar", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Cámara", nil), NSLocalizedString(@"Galeria", nil), NSLocalizedString(@"Capturar datos", nil), nil];
-    
+
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
         [imageInvoiceActionSheet showInView:self.view];
     }else if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        [imageInvoiceActionSheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
+        [imageInvoiceActionSheet showFromBarButtonItem:sender animated:NO];
     }
 }
 
@@ -118,6 +117,7 @@
             break;
     }
 }
+
 
 #pragma mark - UIImagePickerControllerDelegate
 -(void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info

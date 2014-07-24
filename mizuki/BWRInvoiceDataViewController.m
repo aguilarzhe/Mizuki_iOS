@@ -302,6 +302,7 @@
         
         NSError *error = nil;
         /*if (*/[managedObjectContext save:&error];//) {
+
             if ([self.title isEqualToString:@"¡BIENVENIDO!"]) {
                 NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
                 [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
@@ -329,6 +330,7 @@
             
             [alertView show];
         }*/
+
     }
 }
 
