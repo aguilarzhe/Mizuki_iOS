@@ -8,6 +8,7 @@
 
 #import "WevInvoiceViewController.h"
 #import "BWRTicketViewElement.h"
+#import "BWRInvoiceTicketPage.h"
 
 @interface WevInvoiceViewController ()
 
@@ -17,9 +18,10 @@
 
 @implementation WevInvoiceViewController
 
-@synthesize ticketViewElementsArray;
+@synthesize invoicePagesArray;
 @synthesize invoiceWebView;
 @synthesize companyURL;
+@synthesize actualPage;
 
 - (void)viewDidLoad
 {
@@ -46,10 +48,25 @@
 
 - (void) webViewDidFinishLoad:(UIWebView *)webView
 {
-    for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
-        NSString *javaScript = [NSString stringWithFormat:@"javascript:(function() {document.getElementById('%@').value = '%@';})()", viewElement.campoFormulario, viewElement.selectionValue];
-        if(
-           [invoiceWebView stringByEvaluatingJavaScriptFromString:javaScript]){
+    //Obtener elementos de la pagina actual
+    BWRInvoiceTicketPage *invoicePage = [invoicePagesArray objectAtIndex:actualPage];
+    //NSLog(@"page %d rules: %@", actualPage, invoicePage.rules);
+    for(BWRTicketViewElement *viewElement in invoicePage.rules){
+        
+        NSString *javaScript;
+        //Si es el boton
+        if ([viewElement.dataSource isEqualToString:@"submit"]) {
+            self.actualPage++;
+            javaScript = [NSString stringWithFormat:@"javascript:(function() {document.%@.submit();})()", viewElement.campoFormulario];
+        }
+        
+        //Si es otro campo
+        else{
+            NSLog(@"Elemento %@ valor: %@", viewElement.campoTicket, viewElement.selectionValue);
+            javaScript = [NSString stringWithFormat:@"javascript:(function() {document.getElementById('%@').value = '%@';})()", viewElement.campoFormulario, viewElement.selectionValue];
+        }
+        
+        if([invoiceWebView stringByEvaluatingJavaScriptFromString:javaScript]){
             NSLog(@"Java Script ejecutado");
         }else{
             NSLog(@"Java Script FALLO");

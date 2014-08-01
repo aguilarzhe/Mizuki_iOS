@@ -10,6 +10,7 @@
 @interface BWRTicketViewElement : NSObject
 
 @property NSString *campoTicket;
+@property NSString *campoRegex;
 @property NSString *mascaraTicket;
 @property NSString *campoFormulario;
 @property NSString *tipoCampoFormulario;

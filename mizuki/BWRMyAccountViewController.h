@@ -7,6 +7,6 @@
 //
 #import <UIKit/UIKit.h>
 
-@interface BWRMyAccountViewController : UIViewController
+@interface BWRMyAccountViewController : UIViewController <UITextFieldDelegate>
 
 @end

@@ -23,6 +23,8 @@
 @property NSFetchedResultsController *fetchedResultsController;
 @property NSUInteger numRowsRFC;
 @property BWRRFCInfo *rfcActual;
+/***********TEMPORAL*/
+@property UITextField *textField;
 
 @end
 
@@ -83,12 +85,38 @@
     [scrollView addSubview:confInfoLabel];
     [scrollView addSubview:confInfoTableView];
     
+    /********************* TEMPORAL*/
+    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+    
+    _textField = [[UITextField alloc] initWithFrame:CGRectMake(0.0f, 310.0f+(44 * [confInfoDictionary count]), width, 44 )];
+    _textField.borderStyle = UITextBorderStyleRoundedRect;
+    _textField.delegate = self;
+    _textField.text = [userDefaults valueForKey:@"ipServidor"];
+    [scrollView addSubview:_textField];
+    /********************/
+    
     // Configuración de vista
     self.view=scrollView;
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cerrar sesión" style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
     self.title = NSLocalizedString(@"Mi cuenta", nil);
 }
+
+/************************* TEMPORAL********/
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+    [userDefaults setValue:textField.text forKey:@"ipServidor"];
+    NSLog(@"IP SERVIDOR: %@", textField.text);
+    [textField resignFirstResponder];
+    return YES;
+}
+/***********************/
 
 -(void)initializeDummyDataSources{
     NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
@@ -115,7 +143,7 @@
     NSNumber *guardarFoto = [[NSNumber alloc] initWithBool:[userDefaults boolForKey:@"Guardar Fotos"]];
     NSNumber *conexion = [[NSNumber alloc] initWithBool:[userDefaults boolForKey:@"Solo wifi"]];
     
-    confInfoDictionary = [[NSDictionary alloc]initWithObjects:@[notificaciones, sonido, guardarFoto, conexion] forKeys:@[@"Notificaciones", @"Sonido", @"Guardar fotos", @"Solo wifi"]];
+    confInfoDictionary = [[NSDictionary alloc]initWithObjects:@[notificaciones, sonido, guardarFoto, conexion] forKeys:@[@"Notificaciones", @"Sonido", @"Guardar Fotos", @"Solo wifi"]];
 }
 
 #pragma mark - UITableViewDelegate
@@ -254,26 +282,33 @@
 
 - (void)delateRFC
 {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error RFC" message:@"Verifique los datos." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    
     if(numRowsRFC>1){
         
         NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-        if ([[userDefaults valueForKey:@"rfc"] isEqualToString:rfcActual.rfc]) {
-            [userDefaults setValue:@"Sin asignar" forKey:@"rfc"];
-        }
+        if (![[userDefaults valueForKey:@"rfc"] isEqualToString:rfcActual.rfc]) {
+            
+            [managedObjectContext deleteObject:rfcActual];
+            NSError *error = nil;
+            if (![managedObjectContext save:&error]) {
+                NSLog(@"Can't Delete! %@ %@", error, [error localizedDescription]);
+                [alertView setMessage:[NSString stringWithFormat:@"Can't Delete! %@ %@", error, [error localizedDescription]]];
+                return;
+            }
         
-        [managedObjectContext deleteObject:rfcActual];
-        NSError *error = nil;
-        if (![managedObjectContext save:&error]) {
-            NSLog(@"Can't Delete! %@ %@", error, [error localizedDescription]);
+            [self loadCoreData];
+            //[rfcTableView setFrame:CGRectMake(0, rfcTableView.frame.origin.y, rfcTableView.frame.size.width, (44*numRowsRFC))];
+            [rfcTableView setContentSize:CGSizeMake(self.view.frame.size.width, (44 * numRowsRFC))];
+            [rfcTableView reloadData];
+            
+        }else{
+            [alertView setMessage:@"El rfc a eliminar es el seleccionado para facturar. Seleccione otro para poder eliminarlo"];
             return;
         }
-        
-        [self loadCoreData];
-        //[rfcTableView setFrame:CGRectMake(0, rfcTableView.frame.origin.y, rfcTableView.frame.size.width, (44*numRowsRFC))];
-        [rfcTableView setContentSize:CGSizeMake(self.view.frame.size.width, (44 * numRowsRFC))];
-        [rfcTableView reloadData];
     }else{
         NSLog(@"Can't Delete. Debe de haber al menos un RFC");
+        [alertView setMessage:@"Can't Delete. Debe de haber al menos un RFC"];
     }
     
 }

@@ -26,5 +26,29 @@
 @dynamic ciudad;
 @dynamic localidad;
 
+-(NSString *)getFormValueWhitProperty: (NSString *)property{
+    NSString *value;
+    
+    if([property isEqualToString:@"nombres"]){
+        value=self.nombre;
+    }
+    else if([property isEqualToString:@"apellidos"]){
+        value = [NSString stringWithFormat:@"%@ %@",self.apellidoPaterno, self.apellidoMaterno];
+    }
+    else if([property isEqualToString:@"razonsocial"]){
+        value = [NSString stringWithFormat:@"%@ %@ %@", self.nombre, self.apellidoPaterno, self.apellidoMaterno];
+    }
+    else if ([property isEqualToString:@"homoclave"]){
+        
+    }else if ([property isEqualToString:@"email"]){
+        NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+        value = [userDefaults valueForKey:@"Correo"];
+    }
+    else {
+        value=[self valueForKey:property];
+    }
+    
+    return value;
+}
 
 @end

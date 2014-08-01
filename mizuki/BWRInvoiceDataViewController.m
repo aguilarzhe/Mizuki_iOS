@@ -302,14 +302,17 @@
         
         NSError *error = nil;
         /*if (*/[managedObjectContext save:&error];//) {
-
-            if ([self.title isEqualToString:@"¡BIENVENIDO!"]) {
-                NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+            NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+            if (![userDefaults valueForKey:@"rfc"]) {
                 [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
                 [userDefaults setBool:TRUE forKey:@"Notificaciones"];
                 [userDefaults setBool:TRUE forKey:@"Sonido"];
                 [userDefaults setBool:TRUE forKey:@"Guardar Fotos"];
                 [userDefaults setBool:TRUE forKey:@"Solo wifi"];
+                
+                /************ TEMPORAL*/
+                [userDefaults setValue:@"192.168.1.77" forKey:@"ipServidor"];
+                //***********************
             }
             
             [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];

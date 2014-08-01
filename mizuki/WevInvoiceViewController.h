@@ -10,8 +10,9 @@
 
 @interface WevInvoiceViewController : UIViewController <UIWebViewDelegate>
 
-@property NSMutableArray *ticketViewElementsArray;
+@property NSMutableArray *invoicePagesArray;
 @property NSURL *companyURL;
+@property NSInteger actualPage;
 
 
 @end

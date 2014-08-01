@@ -11,15 +11,16 @@
 #import "BWRInvoiceConfirmationViewController.h"
 #import "WevInvoiceViewController.h"
 #import "BWRTicketViewElement.h"
+#import "BWRInvoiceTicketPage.h"
 #import "BWRRFCInfo.h"
 
 @interface BWRInvoiceConfirmationViewController ()
+@property NSString *tiendaURL;
+@property NSMutableArray *invoicePagesArray;
 //Page1
 @property UIImageView *invoiceImageView;
 //Page2
 @property NSMutableArray *ticketViewElementsArray;
-
-@property NSString *tiendaURL;
 @property NSArray *fetchedResults;
 @property NSMutableArray *completeStringsArray;
 @property UIActionSheet *rfcActionSheet;
@@ -111,7 +112,7 @@
     //Scroll View
     ticketScrollView=[[UIScrollView alloc] initWithFrame:CGRectMake(0, 160, anchoPantalla-10, largoPantalla-100)];
     ticketScrollView.contentSize=CGSizeMake(anchoPantalla,largoPantalla);
-    ticketScrollView.hidden = YES;
+    ticketScrollView.hidden = NO;
     
     
     
@@ -187,6 +188,35 @@
 
 }
 
+#pragma mark - ConfirmationViewControllerSources
+
+- (void) processRecognition{
+    while ([invoiceLabel.text isEqualToString:@"Procesando"]);
+    
+    [self performSelectorOnMainThread:@selector(invoiceDataRecognition) withObject:nil waitUntilDone:YES];
+}
+
+
+- (void) invoiceDataRecognition {
+    
+    for (BWRTicketViewElement *viewElement in ticketViewElementsArray){
+        if ([viewElement.viewTicketElement isKindOfClass:[UITextField class]]) {
+            if([viewElement.dataSource isEqualToString:@"ticket_info"]){
+                NSError *error = nil;
+                NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:viewElement.campoRegex options:NSRegularExpressionCaseInsensitive error:&error];
+                NSTextCheckingResult *match = [regex firstMatchInString:invoiceLabel.text options:0
+                                                                  range:NSMakeRange(0, [invoiceLabel.text length])];
+                
+                if (match) {
+                    ((UITextField *)viewElement.viewTicketElement).text = [invoiceLabel.text substringWithRange:match.range];
+                }else{
+                    ((UITextField *)viewElement.viewTicketElement).text = [NSString stringWithFormat:@"%@ no reconocido", viewElement.selectionValue];
+                }
+            }
+        }
+    }
+}
+
 -(void)processImage{
     BWRProcessImage *processImage = [[BWRProcessImage alloc] initWithImage:invoiceImageView.image];
     NSString *invoiceTextAux = [processImage processRecognitionOCR];
@@ -198,6 +228,51 @@
 {
     self.invoiceText = text;
     invoiceLabel.text = text;
+}
+
+- (BOOL) validationInvoiceData{
+    
+    for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
+        if ([viewElement.viewTicketElement isKindOfClass:[UITextField class]]) {
+            if([viewElement.dataSource isEqualToString:@"ticket_info"]){
+                
+                NSError *error = NULL;
+                NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:viewElement.mascaraTicket options:NSRegularExpressionCaseInsensitive error:&error];
+                NSTextCheckingResult *match = [regex firstMatchInString:((UITextField *)viewElement.viewTicketElement).text  options:0 range:NSMakeRange(0, [((UITextField *)viewElement.viewTicketElement).text length])];
+                
+                if (match){
+                    ((UITextField *)viewElement.viewTicketElement).text = [((UITextField *)viewElement.viewTicketElement).text substringWithRange:match.range];
+                }else{
+                    NSLog(@"Error en el campo: %@", viewElement.campoTicket);//[viewElement.valueCampoTicket objectAtIndex:0]);
+                    UIAlertView *alertView = [[UIAlertView alloc]init];
+                    [alertView setMessage:[NSString stringWithFormat:@"Error en el campo: %@", viewElement.campoTicket]];//[viewElement.valueCampoTicket objectAtIndex:0]]];
+                    return FALSE;
+                }
+            }
+        }
+    }
+    return TRUE;
+}
+
+- (void) updateViewsWhitSelectedRFC {
+    //Obtener elemento rfc del arreglo
+    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+    BWRRFCInfo *rfcActual;
+    for (BWRRFCInfo *rfcInfo in fetchedResults){
+        if ([[userDefaults valueForKey:@"rfc"] isEqualToString:rfcInfo.rfc]) {
+            rfcActual = rfcInfo;
+        }else{
+            return;
+        }
+    }
+    //NSLog(@"Array %@", ticketViewElementsArray);
+    //Colocar campo en elemento visual
+    for (BWRTicketViewElement *viewElement in ticketViewElementsArray){
+        if([viewElement.dataSource isEqualToString:@"user_info"]){
+            viewElement.selectionValue = [rfcActual getFormValueWhitProperty:viewElement.campoTicket];
+            NSLog(@"Valor de %@ es %@", viewElement.campoTicket, viewElement.selectionValue);
+        }
+    }
 }
 
 #pragma mark - UITableViewDataSource
@@ -234,7 +309,7 @@
         cell.textLabel.text = [userDefaults valueForKey:@"rfc"];
     }else if (tableView == completeTableView){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Complete"];
-        cell.textLabel.text = [completeStringsArray objectAtIndex:indexPath.row];
+        cell.textLabel.text = [[completeStringsArray objectAtIndex:indexPath.row] valueForKey:@"name"];
     }else{
         //Buscando tableView
         NSInteger index = 0;
@@ -272,11 +347,10 @@
         [rfcActionSheet showInView:self.view];
             
     }else if(tableView == completeTableView){
-        empresaTextField.text = [completeStringsArray objectAtIndex:indexPath.row];
-        
+        empresaTextField.text = [[completeStringsArray objectAtIndex:indexPath.row] valueForKey:@"name"];
+        //NSLog(@"ID: %@",  [[completeStringsArray objectAtIndex:indexPath.row] valueForKey:@"id"]);
         completeTableView.hidden = YES;
-        [self createTicketViewElemetsWhitDictionary];
-
+        [self createTicketViewElemetsWhitId: [[[completeStringsArray objectAtIndex:indexPath.row] valueForKey:@"id"] intValue]];
         [self performSelectorInBackground:@selector(processRecognition) withObject:nil];
         
     }else{
@@ -295,7 +369,7 @@
 }
 
 
--(void)createTicketViewElemetsWhitDictionary {
+-(void)createTicketViewElemetsWhitId: (NSInteger)identificador {
     
     //Medidas
     NSInteger anchoPantalla = self.view.frame.size.width;
@@ -305,66 +379,43 @@
     NSInteger ANCHO_LARGO = anchoPantalla-(2*PADING);
     
     //Obtener diccionario
-    _tiendaURL = @"https://alsea.interfactura.com/RegistroDocumento.aspx?opc=Starbucks";
-    NSDictionary *elementsDictionary = @{@"reglas": @[
-                                                 @{
-                                                     @"campo_ticket": @"RFC",
-                                                     @"mascara_ticket": @".*",
-                                                     @"campo_formulario": @"ctl00_Main_RegistroClienteTicket1_txtRFC",
-                                                     @"tipo_campo_formulario": @"textbox",
-                                                     @"value_campo_ticket": @[@"rfc"],
-                                                      @"data_source": @"userInfo"
-                                                     },
-                                                 
-                                                 /*@{
-                                                     @"campo_ticket": @"string",
-                                                     @"mascara_ticket": @"string",
-                                                     @"campo_formulario": @"string",
-                                                     @"tipo_campo_formulario": @"combobox",
-                                                     @"value_campo_ticket": @[@"Hola",@"Adios",@"Que tal"],
-                                                     @"data_source": @"ticketInfo"
-                                                     },*/
-                                                 
-                                                 @{
-                                                     @"campo_ticket": @"Ticket : \\d{9}",
-                                                     @"mascara_ticket": @"\\d{9}",
-                                                     @"campo_formulario": @"ctl00_Main_RegistroClienteTicket1_txtTicket",
-                                                     @"tipo_campo_formulario": @"textbox",
-                                                     @"value_campo_ticket": @[@"Ticket"],
-                                                     @"data_source": @"ticketInfo"
-                                                     },
-                                                 
-                                                 @{
-                                                     @"campo_ticket": @"Tienda : \\d{5}",
-                                                     @"mascara_ticket": @"\\d{5}",
-                                                     @"campo_formulario": @"ctl00_Main_RegistroClienteTicket1_txtTienda",
-                                                     @"tipo_campo_formulario": @"textbox",
-                                                     @"value_campo_ticket": @[@"Tienda"],
-                                                     @"data_source": @"ticketInfo"
-                                                     },
-                                                 
-                                                 @{
-                                                     @"campo_ticket": @"Fecha : \\d{2}-\\d{2}-\\d{4}",
-                                                     @"mascara_ticket": @"\\d{2}-\\d{2}-\\d{4}",
-                                                     @"campo_formulario": @"ctl00_Main_RegistroClienteTicket1_txtDate",
-                                                     @"tipo_campo_formulario": @"textbox",
-                                                     @"value_campo_ticket": @[@"Fecha"],
-                                                     @"data_source": @"ticketInfo"
-                                                     }
-                                                 ]};
-    NSArray *regrasArray = [[NSArray alloc] initWithArray:[elementsDictionary valueForKey:@"reglas"]];
+    _invoicePagesArray = [[NSMutableArray alloc] init];
+    NSArray *rulesBlockArray = [self viewElementsWithCompany:identificador];
     ticketScrollView.hidden=NO;
     
-    for(NSDictionary *ticketElement in regrasArray){
-        BWRTicketViewElement *ticketViewElement = [[BWRTicketViewElement alloc] initWithDictionary:ticketElement];
-        [ticketViewElement createViewWithRect:PADING y:espaciado width:ANCHO_LARGO height:ALTO*[ticketViewElement.valueCampoTicket count] delegate:self];
-        [ticketViewElementsArray addObject:ticketViewElement];
-        [ticketScrollView addSubview:ticketViewElement.viewTicketElement];
-        espaciado = espaciado + (ALTO * [ticketViewElement.valueCampoTicket count]) +10;
+    //Recorrer rules_block
+    for(NSDictionary *pageDictionary in rulesBlockArray){
+        
+        BWRInvoiceTicketPage *invoicePage = [[BWRInvoiceTicketPage alloc] initWithData:[pageDictionary valueForKey:@"name"] pageNumber:[pageDictionary valueForKey:@"page_num"]];
+        NSArray *rulesArray = [pageDictionary valueForKey:@"rules"];
+            
+        //Recorrer rules
+        for(NSDictionary *ticketElement in rulesArray){
+            BWRTicketViewElement *ticketViewElement = [[BWRTicketViewElement alloc] initWithDictionary:ticketElement];
+            
+            //Dato de usuario
+            if([ticketViewElement.dataSource isEqualToString:@"user_info"]){
+                // [ticketViewElement createViewWithRect:0 y:0 width:0 height:0 delegate:self];
+                [ticketViewElementsArray addObject:ticketViewElement];
+                
+            //Dato de ticket
+            }else if([ticketViewElement.dataSource isEqualToString:@"ticket_info"]){
+                [ticketViewElement createViewWithRect:PADING y:espaciado width:ANCHO_LARGO height:ALTO/**[ticketViewElement.valueCampoTicket count]*/ delegate:self];
+                [ticketViewElementsArray addObject:ticketViewElement];
+                [ticketScrollView addSubview:ticketViewElement.viewTicketElement];
+                espaciado = espaciado + (ALTO /** [ticketViewElement.valueCampoTicket count]*/) +10;
+            }/*else{
+                [ticketViewElement createViewWithRect:0 y:0 width:0 height:0 delegate:self];
+            }*/
+            
+            [invoicePage.rules addObject:ticketViewElement];
+            
+        }
+        //NSLog(@"Elementos page: %@", invoicePage.rules);
+        [_invoicePagesArray addObject:invoicePage];
+        
     }
-    
-    [self updateViewsWhitSelectedRFC];
-    
+    //NSLog(@"Paginas arreglo ********************: %@", _invoicePagesArray);
 }
 
 #pragma mark - UIActionSheetDelegate
@@ -375,7 +426,6 @@
         BWRRFCInfo *rfcInfo = [fetchedResults objectAtIndex:buttonIndex];
         [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
         [rfcTableView reloadData];
-        [self updateViewsWhitSelectedRFC];
     }
 }
 
@@ -393,9 +443,11 @@
 }
 
 - (void)searchAutocompleteEntriesWithSubstring:(NSString *)substring {
-    
+
     NSMutableArray *temporalArray = [[NSMutableArray alloc] initWithArray:completeStringsArray];
-    [completeStringsArray removeAllObjects];
+    if([completeStringsArray count]!=0) {
+        [completeStringsArray removeAllObjects];
+    }
     
     //Eliminar elementos del scrollview
     NSArray *subviews = [ticketScrollView subviews];
@@ -405,22 +457,23 @@
         [ticketViewElementsArray removeAllObjects];
     }
     ticketScrollView.hidden = YES;
-    
+
     if ([substring length]==3) {
         //Solicitar arreglo de strings
-        [completeStringsArray addObject:[NSString stringWithFormat:@"%@%@",substring,@"primer"]];
-        [completeStringsArray addObject:[NSString stringWithFormat:@"%@%@",substring,@"segundo"]];
-        [completeStringsArray addObject:[NSString stringWithFormat:@"%@%@",substring,@"segmento"]];
-        
-        [completeTableView setFrame:CGRectMake(0, completeTableView.frame.origin.y, completeTableView.frame.size.width, 44*[completeStringsArray count])];
-        [completeTableView setContentSize:CGSizeMake(self.view.frame.size.width, (44 * [completeStringsArray count]))];
+        [self companyListWithSubstring:substring];
+    
+        if([completeStringsArray count]!=0){
+            [completeTableView setFrame:CGRectMake(0, completeTableView.frame.origin.y, completeTableView.frame.size.width, 44*[completeStringsArray count])];
+            [completeTableView setContentSize:CGSizeMake(self.view.frame.size.width, (44 * [completeStringsArray count]))];
+        }
     }
     
-    else if ([substring length]>3){
-        for(NSString *curString in temporalArray) {
+    else if ([substring length]>3 && [completeStringsArray count]!=0){
+        for(NSDictionary *curDictionary in temporalArray) {
+            NSString *curString = [curDictionary valueForKey:@"name"];
             NSRange substringRange = [curString rangeOfString:substring];
             if (substringRange.location != NSNotFound) {
-                [completeStringsArray addObject:curString];
+                [completeStringsArray addObject:curDictionary];
             }
         }
         
@@ -484,11 +537,16 @@
     
     if([self validationInvoiceData] && !([invoiceLabel.text isEqualToString:@"Procesando"])){
         
+        //Colocar el texto del text field en el campo selectionValue
         for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
-            if ([viewElement.viewTicketElement isKindOfClass:[UITextField class]]) {
+            if ([viewElement.viewTicketElement isKindOfClass:[UITextField class]] && [viewElement.dataSource isEqualToString:@"ticket_info"]) {
                 viewElement.selectionValue = ((UITextField *)viewElement.viewTicketElement).text;
             }
         }
+        
+        //Colocar los campos del rfc user_info
+        [self updateViewsWhitSelectedRFC];
+        
         [self performSegueWithIdentifier:@"invoiceWebViewSegue" sender:self];
     }
 }
@@ -497,88 +555,56 @@
 {
     if([[segue identifier] isEqualToString:@"invoiceWebViewSegue"]){
         WevInvoiceViewController *webViewInvoiceData = [segue destinationViewController];
-        webViewInvoiceData.ticketViewElementsArray = ticketViewElementsArray;
+        webViewInvoiceData.invoicePagesArray = _invoicePagesArray;
         webViewInvoiceData.companyURL = [NSURL URLWithString:_tiendaURL];
+        webViewInvoiceData.actualPage = 0;
     }
-}
-
-#pragma mark - ConfirmationViewControllerSources
-- (BOOL) validationInvoiceData{
-    
-    for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
-        if ([viewElement.viewTicketElement isKindOfClass:[UITextField class]]) {
-            if(![viewElement.dataSource isEqualToString:@"userInfo"]){
-            
-                NSError *error = NULL;
-                NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:viewElement.mascaraTicket options:NSRegularExpressionCaseInsensitive error:&error];
-                NSTextCheckingResult *match = [regex firstMatchInString:((UITextField *)viewElement.viewTicketElement).text  options:0 range:NSMakeRange(0, [((UITextField *)viewElement.viewTicketElement).text length])];
-            
-                if (match){
-                    ((UITextField *)viewElement.viewTicketElement).text = [((UITextField *)viewElement.viewTicketElement).text substringWithRange:match.range];
-                }else{
-                    NSLog(@"Error en el campo: %@", [viewElement.valueCampoTicket objectAtIndex:0]);
-                    return FALSE;
-                }
-            }
-        }
-    }
-    return TRUE;
-}
-
-- (void) updateViewsWhitSelectedRFC {
-    //Obtener elemento rfc del arreglo
-    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-    BWRRFCInfo *rfcActual;
-    for (BWRRFCInfo *rfcInfo in fetchedResults){
-        if ([[userDefaults valueForKey:@"rfc"] isEqualToString:rfcInfo.rfc]) {
-            rfcActual = rfcInfo;
-        }else{
-            return;
-        }
-    }
-    
-    //Colocar campo en elemento visual
-    for (BWRTicketViewElement *viewElement in ticketViewElementsArray){
-        if([viewElement.dataSource isEqualToString:@"userInfo"]){
-            ((UITextField *)viewElement.viewTicketElement).text = [rfcActual valueForKey:[viewElement.valueCampoTicket objectAtIndex:0]];
-            NSLog(@"Valor de %@ es %@", viewElement.dataSource, ((UITextField *)viewElement.viewTicketElement).text);
-        }
-    }
-}
-
-- (void) invoiceDataRecognition {
-    
-    for (BWRTicketViewElement *viewElement in ticketViewElementsArray){
-        if ([viewElement.viewTicketElement isKindOfClass:[UITextField class]]) {
-            if(![viewElement.dataSource isEqualToString:@"userInfo"]){
-                NSError *error = nil;
-                NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:viewElement.campoTicket options:NSRegularExpressionCaseInsensitive error:&error];
-                NSTextCheckingResult *match = [regex firstMatchInString:invoiceLabel.text options:0
-                                                              range:NSMakeRange(0, [invoiceLabel.text length])];
-            
-                if (match) {
-                    ((UITextField *)viewElement.viewTicketElement).text = [invoiceLabel.text substringWithRange:match.range];
-                }else{
-                    ((UITextField *)viewElement.viewTicketElement).text = [NSString stringWithFormat:@"%@ no reconocido", viewElement.selectionValue];
-                }
-            }
-        }
-    }
-}
-
-- (void) processRecognition{
-    while ([invoiceLabel.text isEqualToString:@"Procesando"]);
-    
-    [self performSelectorOnMainThread:@selector(invoiceDataRecognition) withObject:nil waitUntilDone:YES];
 }
 
 #pragma mark - Jason Messages
 - (void) companyListWithSubstring: (NSString *)substring{
-  //return NSArray
+    
+    //********************* TEMPORAL
+    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+    //******************************
+   
+    NSData *dataCompany = [self downloadDataOfURL:[NSString stringWithFormat:@"http://%@:3000/company?indicio=%@",[userDefaults valueForKey:@"ipServidor"],substring]];
+    if (dataCompany != nil)
+    {
+        completeStringsArray = [NSJSONSerialization JSONObjectWithData:dataCompany options:0
+                                                                   error:NULL];
+        //NSLog(@"Array %@ de companies = %@", [dataCompany accessibilityValue], completeStringsArray);
+    }
+    //NSLog(@"Array %@ de companies = %@", [dataCompany accessibilityValue], completeStringsArray);
 }
 
-- (void) viewElementsWithCompany: (NSString *)company{
-    //return NSDictionary
+- (NSArray *) viewElementsWithCompany: (NSInteger)idCompany{
+    
+    //********************* TEMPORAL
+    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+    //******************************
+    
+    NSData *dataCompany = [self downloadDataOfURL:[NSString stringWithFormat:@"http://%@:3000/company/%d",[userDefaults valueForKey:@"ipServidor"], idCompany]];
+    
+    if (dataCompany != nil)
+    {
+        NSDictionary *companyDataDictionary = [NSJSONSerialization JSONObjectWithData:dataCompany options:0
+                                                                 error:NULL];
+        _tiendaURL = [companyDataDictionary valueForKey:@"url"];
+        //NSLog(@"id: %d url: %@ reglas: %@", idCompany, _tiendaURL, [companyDataDictionary valueForKey:@"rules_block"]);
+        return [companyDataDictionary valueForKey:@"rules_block"];
+    }
+    return nil;
+}
+
+-(NSData *)downloadDataOfURL:(NSString *)urlString
+{
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
+    NSData *data = [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:nil error:nil];
+    //NSLog(@"Data : %@", [data accessibilityValue]);
+    
+    return data;
 }
 
 
