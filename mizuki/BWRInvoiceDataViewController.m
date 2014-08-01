@@ -50,7 +50,7 @@
     NSInteger ANCHO_LARGO;
     NSInteger ANCHO_CHICO;
     
-    if (self.modalPresentationStyle == UIModalPresentationPopover || self.modalPresentationStyle == UIModalPresentationFullScreen){
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
         ANCHO_LARGO = 270;
         ANCHO_CHICO = 120;
     }else{
@@ -107,7 +107,7 @@
     [scrollView addSubview:tf_cp];
     
     
-    if (self.modalPresentationStyle == UIModalPresentationPopover || self.modalPresentationStyle == UIModalPresentationFullScreen){
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
         UIButton *listoButton = [UIButton buttonWithType:UIButtonTypeSystem];
         [listoButton setTitle:@"Guardar" forState:UIControlStateNormal];
         [listoButton addTarget:self action:@selector(saveInfoRFC) forControlEvents:UIControlEventTouchUpInside];
@@ -331,7 +331,7 @@
                 [userDefaults setValue:@"192.168.1.77" forKey:@"ipServidor"];
                 //***********************
             }
-        if (self.modalPresentationStyle == UIModalPresentationPopover || self.modalPresentationStyle == UIModalPresentationFullScreen || self.modalPresentationStyle == UIModalPresentationOverCurrentContext){
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
             [self dismissViewControllerAnimated:YES completion:nil];
         }else{
             [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
