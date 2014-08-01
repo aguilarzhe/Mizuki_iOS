@@ -225,7 +225,15 @@
             //Agregar un nuevo rfc
         }else{
             if(numRowsRFC<5){
-                [self performSegueWithIdentifier:@"createInvoiceDataSegue" sender:self];
+                if (self.modalPresentationStyle == UIModalPresentationPopover){
+                    BWRInvoiceDataViewController *createInvoiceData = [[BWRInvoiceDataViewController alloc] init];
+                    [createInvoiceData initWithDefault:@"Datos de Facturación"];
+                    createInvoiceData.modalPresentationStyle=UIModalPresentationOverCurrentContext;
+
+                    [self presentViewController:createInvoiceData animated:YES completion:nil];
+                }else{
+                    [self performSegueWithIdentifier:@"createInvoiceDataSegue" sender:self];
+                }
             }else{
                 NSLog(@"No se pueden tener más de 5 rfc");
             }
