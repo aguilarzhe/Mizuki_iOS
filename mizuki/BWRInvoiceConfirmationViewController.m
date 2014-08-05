@@ -18,7 +18,10 @@
 @property UIImageView *invoiceImageView;
 //Page2
 @property NSMutableArray *ticketViewElementsArray;
+<<<<<<< HEAD
 
+=======
+>>>>>>> integration_config
 @property NSString *tiendaURL;
 @property NSArray *fetchedResults;
 @property NSMutableArray *completeStringsArray;
@@ -276,7 +279,10 @@
         
         completeTableView.hidden = YES;
         [self createTicketViewElemetsWhitDictionary];
+<<<<<<< HEAD
 
+=======
+>>>>>>> integration_config
         [self performSelectorInBackground:@selector(processRecognition) withObject:nil];
         
     }else{
@@ -489,6 +495,10 @@
                 viewElement.selectionValue = ((UITextField *)viewElement.viewTicketElement).text;
             }
         }
+<<<<<<< HEAD
+=======
+        
+>>>>>>> integration_config
         [self performSegueWithIdentifier:@"invoiceWebViewSegue" sender:self];
     }
 }
@@ -537,6 +547,20 @@
         }
     }
     
+<<<<<<< HEAD
+=======
+    //Obtener elemento rfc del arreglo
+    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+    BWRRFCInfo *rfcActual;
+    for (BWRRFCInfo *rfcInfo in fetchedResults){
+        if ([[userDefaults valueForKey:@"rfc"] isEqualToString:rfcInfo.rfc]) {
+            rfcActual = rfcInfo;
+        }else{
+            return;
+        }
+    }
+    
+>>>>>>> integration_config
     //Colocar campo en elemento visual
     for (BWRTicketViewElement *viewElement in ticketViewElementsArray){
         if([viewElement.dataSource isEqualToString:@"userInfo"]){

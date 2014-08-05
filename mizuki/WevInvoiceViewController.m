@@ -31,7 +31,10 @@
     
     //load url into webview
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:companyURL];
+<<<<<<< HEAD
 
+=======
+>>>>>>> integration_config
     [invoiceWebView loadRequest:urlRequest];
     
     [self.view addSubview:invoiceWebView];
