@@ -3,7 +3,7 @@
 //  Webview
 //
 //  Created by Carolina Mora on 18/07/14.
-//  Copyright (c) 2014 Carolina Mora. All rights reserved.
+//  Copyright (c) 2014 Baware SA de CV. All rights reserved.
 //
 
 #import "WevInvoiceViewController.h"
@@ -42,35 +42,32 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
 }
 
-
+#pragma mark - UIWebViewDelegate
 - (void) webViewDidFinishLoad:(UIWebView *)webView
 {
-    //Obtener elementos de la pagina actual
+    NSMutableString *javascript = [[NSMutableString alloc] initWithString:@"javascript:(function() {\n"];
+    // Get actual page elements
     BWRInvoiceTicketPage *invoicePage = [invoicePagesArray objectAtIndex:actualPage];
-    //NSLog(@"page %d rules: %@", actualPage, invoicePage.rules);
+
     for(BWRTicketViewElement *viewElement in invoicePage.rules){
-        
-        NSString *javaScript;
-        //Si es el boton
-        if ([viewElement.dataSource isEqualToString:@"submit"]) {
+        if ([viewElement.tipoCampoFormulario isEqualToString:@"submit"]) {
             self.actualPage++;
-            javaScript = [NSString stringWithFormat:@"javascript:(function() {document.%@.submit();})()", viewElement.campoFormulario];
-        }
-        
-        //Si es otro campo
-        else{
-            NSLog(@"Elemento %@ valor: %@", viewElement.campoTicket, viewElement.selectionValue);
-            javaScript = [NSString stringWithFormat:@"javascript:(function() {document.getElementById('%@').value = '%@';})()", viewElement.campoFormulario, viewElement.selectionValue];
-        }
-        
-        if([invoiceWebView stringByEvaluatingJavaScriptFromString:javaScript]){
-            NSLog(@"Java Script ejecutado");
+            [javascript appendFormat:@"document.getElementById('%@').click();\n", viewElement.campoFormulario];
         }else{
-            NSLog(@"Java Script FALLO");
+            NSLog(@"Elemento %@ valor: %@", viewElement.campoTicket, viewElement.selectionValue);
+            [javascript appendFormat:@"document.getElementById('%@').value = '%@';\n", viewElement.campoFormulario, viewElement.selectionValue];
         }
+    }
+    
+    [javascript appendString:@"})()"];
+    NSLog(@"%@", javascript);
+    if([invoiceWebView stringByEvaluatingJavaScriptFromString:javascript]){
+        NSLog(@"Java Script ejecutado");
+    }else{
+        NSLog(@"Java Script FALLO");
     }
 }
 
