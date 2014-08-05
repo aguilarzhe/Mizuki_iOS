@@ -12,9 +12,5 @@
 
 @property NSMutableArray *ticketViewElementsArray;
 @property NSURL *companyURL;
-<<<<<<< HEAD
-
-=======
->>>>>>> integration_config
 
 @end

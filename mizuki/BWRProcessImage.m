@@ -31,22 +31,15 @@
 {
     Tesseract* tesseract = [[Tesseract alloc] initWithDataPath:@"tessdata" language:@"spa"];
     OpenCV *opencv = [[OpenCV alloc] init];
-    UIImage *image_result = [UIImage imageNamed:@"starbucks_con_dobles.jpg"];
     
     if(!processImage){
         return @"Error";
     }
     
     //Mejorar la imagen
-<<<<<<< HEAD
-
     processImage = [opencv improveImageFromUIImage:processImage];
     //processImage = [opencv improveImageFromUIImage:image_result];
-=======
-    //processImage = [opencv improveImageFromUIImage:processImage];
-    processImage = [opencv improveImageFromUIImage:image_result];
-    //processImage = [opencv blurFilterImageFromUIImage:processImage];
->>>>>>> integration_config
+
     
     if(!processImage){
         return @"Imagen demasiado obscura o demasiado clara";
