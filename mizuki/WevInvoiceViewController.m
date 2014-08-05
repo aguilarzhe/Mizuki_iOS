@@ -33,7 +33,6 @@
     
     //load url into webview
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:companyURL];
-
     [invoiceWebView loadRequest:urlRequest];
     
     [self.view addSubview:invoiceWebView];
@@ -47,30 +46,39 @@
 
 
 - (void) webViewDidFinishLoad:(UIWebView *)webView
+//-(void) webInvoiceDataLoad
 {
     //Obtener elementos de la pagina actual
     BWRInvoiceTicketPage *invoicePage = [invoicePagesArray objectAtIndex:actualPage];
-    //NSLog(@"page %d rules: %@", actualPage, invoicePage.rules);
     for(BWRTicketViewElement *viewElement in invoicePage.rules){
         
         NSString *javaScript;
         //Si es el boton
-        if ([viewElement.dataSource isEqualToString:@"submit"]) {
+        if ([viewElement.tipoCampoFormulario isEqualToString:@"submit"]) {
             self.actualPage++;
-            javaScript = [NSString stringWithFormat:@"javascript:(function() {document.%@.submit();})()", viewElement.campoFormulario];
+            //javaScript = [NSString stringWithFormat:@"javascript:(function() {document.%@.submit();})()", viewElement.campoFormulario];
+            javaScript = [NSString stringWithFormat:@"javascript:(function() {document.getElementById('%@').click()})()", viewElement.campoFormulario];
+            /*NSURL *urlClick = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"javascript:document.getElementById(\"%@\").click()", viewElement.campoFormulario]];
+            NSURLRequest *urlRequest = [NSURLRequest requestWithURL:urlClick];
+            [invoiceWebView loadRequest:urlRequest];*/
         }
         
         //Si es otro campo
         else{
             NSLog(@"Elemento %@ valor: %@", viewElement.campoTicket, viewElement.selectionValue);
             javaScript = [NSString stringWithFormat:@"javascript:(function() {document.getElementById('%@').value = '%@';})()", viewElement.campoFormulario, viewElement.selectionValue];
+            
         }
         
-        if([invoiceWebView stringByEvaluatingJavaScriptFromString:javaScript]){
-            NSLog(@"Java Script ejecutado");
+        //Ejecutando Javascript
+        NSString *result;
+        if((result =[invoiceWebView stringByEvaluatingJavaScriptFromString:javaScript])!=nil){
+            NSLog(@"Java Script ejecutado : %@", result);
         }else{
             NSLog(@"Java Script FALLO");
         }
+        
+        
     }
 }
 
