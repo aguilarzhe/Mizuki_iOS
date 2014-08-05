@@ -12,6 +12,8 @@
 
 @interface BWRProcessImage : NSObject
 
+@property UIImage *processImage;
+
 -(BWRProcessImage *)initWithImage:(UIImage *)imageReceived;
 -(NSString *)processRecognitionOCR;
 

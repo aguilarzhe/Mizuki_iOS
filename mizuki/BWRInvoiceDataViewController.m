@@ -47,8 +47,16 @@
     NSInteger ALTO = 31;
     NSInteger PADING = 20;
     NSInteger espaciado = 20;
-    NSInteger ANCHO_LARGO = anchoPantalla-(2*PADING);
-    NSInteger ANCHO_CHICO = (ANCHO_LARGO/2)-(PADING/2);
+    NSInteger ANCHO_LARGO;
+    NSInteger ANCHO_CHICO;
+    
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+        ANCHO_LARGO = 270;
+        ANCHO_CHICO = 120;
+    }else{
+        ANCHO_LARGO = anchoPantalla-(2*PADING);
+        ANCHO_CHICO = (ANCHO_LARGO/2)-(PADING/2);
+    }
     
     UIScrollView *scrollView=(UIScrollView *)self.view;
     CGRect fullScreenRect=[[UIScreen mainScreen] applicationFrame];
@@ -97,6 +105,15 @@
     //Codigo Postal
     tf_cp.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
     [scrollView addSubview:tf_cp];
+    
+    
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+        UIButton *listoButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        [listoButton setTitle:@"Guardar" forState:UIControlStateNormal];
+        [listoButton addTarget:self action:@selector(saveInfoRFC) forControlEvents:UIControlEventTouchUpInside];
+        listoButton.frame = CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
+        [scrollView addSubview:listoButton];
+    }
     
     // CoreData
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
@@ -302,17 +319,24 @@
         
         NSError *error = nil;
         /*if (*/[managedObjectContext save:&error];//) {
-
-            if ([self.title isEqualToString:@"¡BIENVENIDO!"]) {
-                NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+            NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+            if (![userDefaults valueForKey:@"rfc"]) {
                 [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
                 [userDefaults setBool:TRUE forKey:@"Notificaciones"];
                 [userDefaults setBool:TRUE forKey:@"Sonido"];
                 [userDefaults setBool:TRUE forKey:@"Guardar Fotos"];
                 [userDefaults setBool:TRUE forKey:@"Solo wifi"];
+                
+                /************ TEMPORAL*/
+                [userDefaults setValue:@"192.168.1.77" forKey:@"ipServidor"];
+                //***********************
             }
-            
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }else{
             [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
+        }
+        
         /*}else{
             NSLog(@"Error guardando elemento en base de datos %@", error);
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Datos no válidos" message:@"Verifique los datos." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];

@@ -11,7 +11,6 @@
 
 @interface BWRProcessImage ()
 
-@property UIImage *processImage;
 
 @end
 

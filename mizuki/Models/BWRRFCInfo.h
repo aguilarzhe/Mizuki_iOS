@@ -24,4 +24,7 @@
 @property (nonatomic, retain) NSString *codigoPostal;
 @property (nonatomic, retain) NSString *ciudad;
 @property (nonatomic, retain) NSString *localidad;
+
+-(NSString *)getFormValueWhitProperty: (NSString *)property;
+
 @end
