@@ -88,7 +88,7 @@
     /********************* TEMPORAL*/
     NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
     
-    _textField = [[UITextField alloc] initWithFrame:CGRectMake(0.0f, 310.0f+(44 * [confInfoDictionary count]), width, 44 )];
+    _textField = [[UITextField alloc] initWithFrame:CGRectMake(0.0f, 220.0f+(44 * ([confInfoDictionary count]+numRowsRFC + 1)), width, 44 )];
     _textField.borderStyle = UITextBorderStyleRoundedRect;
     _textField.delegate = self;
     _textField.text = [userDefaults valueForKey:@"ipServidor"];

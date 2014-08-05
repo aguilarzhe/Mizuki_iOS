@@ -33,7 +33,6 @@
     
     //load url into webview
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:companyURL];
-
     [invoiceWebView loadRequest:urlRequest];
     
     [self.view addSubview:invoiceWebView];
@@ -47,6 +46,7 @@
 
 #pragma mark - UIWebViewDelegate
 - (void) webViewDidFinishLoad:(UIWebView *)webView
+//-(void) webInvoiceDataLoad
 {
     NSMutableString *javascript = [[NSMutableString alloc] initWithString:@"javascript:(function() {\n"];
     // Get actual page elements
@@ -60,6 +60,8 @@
             NSLog(@"Elemento %@ valor: %@", viewElement.campoTicket, viewElement.selectionValue);
             [javascript appendFormat:@"document.getElementById('%@').value = '%@';\n", viewElement.campoFormulario, viewElement.selectionValue];
         }
+        
+        
     }
     
     [javascript appendString:@"})()"];

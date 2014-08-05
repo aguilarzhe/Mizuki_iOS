@@ -220,6 +220,7 @@
 -(void)processImage{
     BWRProcessImage *processImage = [[BWRProcessImage alloc] initWithImage:invoiceImageView.image];
     NSString *invoiceTextAux = [processImage processRecognitionOCR];
+    invoiceImageView.image = processImage.processImage;
     
     [self performSelectorOnMainThread:@selector(buildInterfaceFromText:) withObject:invoiceTextAux waitUntilDone:NO];
 }
@@ -261,8 +262,7 @@
     for (BWRRFCInfo *rfcInfo in fetchedResults){
         if ([[userDefaults valueForKey:@"rfc"] isEqualToString:rfcInfo.rfc]) {
             rfcActual = rfcInfo;
-        }else{
-            return;
+            break;
         }
     }
     //NSLog(@"Array %@", ticketViewElementsArray);
@@ -446,12 +446,13 @@
 
     NSMutableArray *temporalArray = [[NSMutableArray alloc] initWithArray:completeStringsArray];
     if([completeStringsArray count]!=0) {
+        NSLog(@"JUSTO ANTES DEL ERROR elementos: %d arreglo: %@", [completeStringsArray count], completeStringsArray);
         [completeStringsArray removeAllObjects];
     }
     
     //Eliminar elementos del scrollview
     NSArray *subviews = [ticketScrollView subviews];
-    if(subviews){
+    if(subviews!=nil){
         for (UIView *view in subviews)
             [view removeFromSuperview];
         [ticketViewElementsArray removeAllObjects];
@@ -468,7 +469,7 @@
         }
     }
     
-    else if ([substring length]>3 && [completeStringsArray count]!=0){
+    else if ([substring length]>3){
         for(NSDictionary *curDictionary in temporalArray) {
             NSString *curString = [curDictionary valueForKey:@"name"];
             NSRange substringRange = [curString rangeOfString:substring];
@@ -482,7 +483,7 @@
             [completeTableView setContentSize:CGSizeMake(self.view.frame.size.width, (44 * [completeStringsArray count]))];
         }else{
             completeStringsArray = temporalArray;
-            completeTableView.hidden =YES;
+            //completeTableView.hidden =YES;
         }
     }
     
@@ -571,8 +572,8 @@
     NSData *dataCompany = [self downloadDataOfURL:[NSString stringWithFormat:@"http://%@:3000/company?indicio=%@",[userDefaults valueForKey:@"ipServidor"],substring]];
     if (dataCompany != nil)
     {
-        completeStringsArray = [NSJSONSerialization JSONObjectWithData:dataCompany options:0
-                                                                   error:NULL];
+        NSMutableArray *temporal =[[NSMutableArray alloc] initWithArray:[NSJSONSerialization JSONObjectWithData:dataCompany options:0 error:NULL]];
+        completeStringsArray = temporal;
         //NSLog(@"Array %@ de companies = %@", [dataCompany accessibilityValue], completeStringsArray);
     }
     //NSLog(@"Array %@ de companies = %@", [dataCompany accessibilityValue], completeStringsArray);
