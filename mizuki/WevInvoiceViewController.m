@@ -47,31 +47,52 @@
 
 #pragma mark - UIWebViewDelegate
 - (void) webViewDidFinishLoad:(UIWebView *)webView
-//-(void) webInvoiceDataLoad
 {
-    NSMutableString *javascript = [[NSMutableString alloc] initWithString:@"javascript:(function() {\n"];
-    // Get actual page elements
-    BWRInvoiceTicketPage *invoicePage = [invoicePagesArray objectAtIndex:actualPage];
+    //[self performSelectorInBackground:@selector(fillPagesAccordingToService) withObject:nil];
+    [self fillPagesAccordingToService];
+}
 
-    for(BWRTicketViewElement *viewElement in invoicePage.rules){
+- (NSString *) createJavaScriptStringWithRules: (NSArray *)invoicePageRules{
+    
+    NSMutableString *javascript = [[NSMutableString alloc] initWithString:@"javascript:(function() {\n"];
+    
+    for(BWRTicketViewElement *viewElement in invoicePageRules){
         if ([viewElement.tipoCampoFormulario isEqualToString:@"submit"]) {
-            self.actualPage++;
+            //self.actualPage++;
             [javascript appendFormat:@"document.getElementById('%@').click();\n", viewElement.campoFormulario];
         }else{
             NSLog(@"Elemento %@ valor: %@", viewElement.campoTicket, viewElement.selectionValue);
             [javascript appendFormat:@"document.getElementById('%@').value = '%@';\n", viewElement.campoFormulario, viewElement.selectionValue];
         }
-        
-        
     }
     
     [javascript appendString:@"})()"];
     NSLog(@"%@", javascript);
-    if([invoiceWebView stringByEvaluatingJavaScriptFromString:javascript]){
-        NSLog(@"Java Script ejecutado");
-    }else{
-        NSLog(@"Java Script FALLO");
-    }
+    return javascript;
+}
+
+- (void) executeJavaScriptFromWebPageDiv{
+    
+    //for (BWRInvoiceTicketPage *invoicePage in invoicePagesArray){
+    BWRInvoiceTicketPage *invoicePage = [invoicePagesArray objectAtIndex:actualPage];
+        NSString *javascript = [self createJavaScriptStringWithRules:invoicePage.rules];
+        
+        if([invoiceWebView stringByEvaluatingJavaScriptFromString:javascript]){
+            NSLog(@"Java Script ejecutado");
+        }else{
+            NSLog(@"Java Script FALLO");
+        }
+        [NSThread sleepForTimeInterval:10];
+    actualPage++;
+        [self viewDidLoad];
+        
+    //}
+}
+
+-(void) fillPagesAccordingToService {
+    
+    //[self performSelectorOnMainThread:@selector(executeJavaScriptFromWebPageDiv) withObject:nil waitUntilDone:NO];
+    [self executeJavaScriptFromWebPageDiv];
 }
 
 

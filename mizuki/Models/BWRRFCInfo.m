@@ -44,6 +44,9 @@
         NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
         value = [userDefaults valueForKey:@"Correo"];
     }
+    else if ([property isEqualToString:@"clavePais"]){
+        value = @"MX";
+    }
     else {
         value=[self valueForKey:property];
     }

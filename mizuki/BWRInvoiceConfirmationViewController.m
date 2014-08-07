@@ -13,6 +13,7 @@
 #import "BWRTicketViewElement.h"
 #import "BWRInvoiceTicketPage.h"
 #import "BWRRFCInfo.h"
+#import "BWRWebConexion.h"
 
 @interface BWRInvoiceConfirmationViewController ()
 @property NSString *tiendaURL;
@@ -245,8 +246,8 @@
                     ((UITextField *)viewElement.viewTicketElement).text = [((UITextField *)viewElement.viewTicketElement).text substringWithRange:match.range];
                 }else{
                     NSLog(@"Error en el campo: %@", viewElement.campoTicket);//[viewElement.valueCampoTicket objectAtIndex:0]);
-                    UIAlertView *alertView = [[UIAlertView alloc]init];
-                    [alertView setMessage:[NSString stringWithFormat:@"Error en el campo: %@", viewElement.campoTicket]];//[viewElement.valueCampoTicket objectAtIndex:0]]];
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Datos no válidos" message:[NSString stringWithFormat:@"Error en el campo: %@", viewElement.campoTicket] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                    [alertView show];
                     return FALSE;
                 }
             }
@@ -265,7 +266,7 @@
             break;
         }
     }
-    //NSLog(@"Array %@", ticketViewElementsArray);
+   
     //Colocar campo en elemento visual
     for (BWRTicketViewElement *viewElement in ticketViewElementsArray){
         if([viewElement.dataSource isEqualToString:@"user_info"]){
@@ -286,14 +287,7 @@
         numberOfRows = [completeStringsArray count];
     }else{
         //Buscando tableView
-        NSInteger index = 0;
-        for(BWRTicketViewElement *ticketElement in ticketViewElementsArray){
-            if(ticketElement.viewTicketElement == tableView){
-                break;
-            }
-            index++;
-        }
-        BWRTicketViewElement *ticketElement = [ticketViewElementsArray objectAtIndex:index];
+        BWRTicketViewElement *ticketElement = [ticketViewElementsArray objectAtIndex:[self findTableViewTicket:tableView]];
         numberOfRows = [ticketElement.valueCampoTicket count];
     }
     
@@ -303,25 +297,21 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = nil;
     
+    //RFC table
     if(tableView == rfcTableView){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"RFC"];
         NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
         cell.textLabel.text = [userDefaults valueForKey:@"rfc"];
+        
+    //Autocomplete table
     }else if (tableView == completeTableView){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Complete"];
         cell.textLabel.text = [[completeStringsArray objectAtIndex:indexPath.row] valueForKey:@"name"];
-    }else{
-        //Buscando tableView
-        NSInteger index = 0;
-        for(BWRTicketViewElement *ticketElement in ticketViewElementsArray){
-            if(ticketElement.viewTicketElement == tableView){
-                break;
-            }
-            index++;
-        }
         
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[NSString stringWithFormat:@"%@%d",@"Combobox",index]];
-        BWRTicketViewElement *ticketElement = [ticketViewElementsArray objectAtIndex:index];
+    //ViewElement table
+    }else{
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Combobox"];
+        BWRTicketViewElement *ticketElement = [ticketViewElementsArray objectAtIndex:[self findTableViewTicket:tableView]];
         cell.textLabel.text = [ticketElement.valueCampoTicket objectAtIndex:indexPath.row];
         
         if([cell.textLabel.text isEqualToString:ticketElement.selectionValue]){
@@ -335,6 +325,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    //RFC table
     if(tableView == rfcTableView){
 
         rfcActionSheet = [[UIActionSheet alloc] initWithTitle:@"Seleccionar RFC" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
@@ -345,31 +336,35 @@
         }
             
         [rfcActionSheet showInView:self.view];
-            
+    
+    //Autocomplete table
     }else if(tableView == completeTableView){
         empresaTextField.text = [[completeStringsArray objectAtIndex:indexPath.row] valueForKey:@"name"];
-        //NSLog(@"ID: %@",  [[completeStringsArray objectAtIndex:indexPath.row] valueForKey:@"id"]);
         completeTableView.hidden = YES;
-        [self createTicketViewElemetsWhitId: [[[completeStringsArray objectAtIndex:indexPath.row] valueForKey:@"id"] intValue]];
+        [self createTicketViewElemetsWithId: [[[completeStringsArray objectAtIndex:indexPath.row] valueForKey:@"id"] intValue]];
         [self performSelectorInBackground:@selector(processRecognition) withObject:nil];
-        
+    
+    //ViewElement table
     }else{
-        //Buscando tableView
-        NSInteger index = 0;
-        for(BWRTicketViewElement *ticketElement in ticketViewElementsArray){
-            if(ticketElement.viewTicketElement == tableView){
-                break;
-            }
-            index++;
-        }
-        BWRTicketViewElement *ticketElement = [ticketViewElementsArray objectAtIndex:index];
+        BWRTicketViewElement *ticketElement = [ticketViewElementsArray objectAtIndex:[self findTableViewTicket:tableView]];
         ticketElement.selectionValue = [ticketElement.valueCampoTicket objectAtIndex:indexPath.row];
         [tableView reloadData];
     }
 }
 
+-(NSInteger) findTableViewTicket: (UITableView *)tableView {
+    NSInteger index = 0;
+    for(BWRTicketViewElement *ticketElement in ticketViewElementsArray){
+        if(ticketElement.viewTicketElement == tableView){
+            break;
+        }
+        index++;
+    }
+    return index;
+}
 
--(void)createTicketViewElemetsWhitId: (NSInteger)identificador {
+
+-(void)createTicketViewElemetsWithId: (NSInteger)identificador {
     
     //Medidas
     NSInteger anchoPantalla = self.view.frame.size.width;
@@ -379,8 +374,11 @@
     NSInteger ANCHO_LARGO = anchoPantalla-(2*PADING);
     
     //Obtener diccionario
+    NSDictionary *companyDataDictionary = [BWRWebConexion viewElementsWithCompany:identificador];
+    NSArray *rulesBlockArray = [companyDataDictionary valueForKey:@"rules_block"];
+    _tiendaURL = [companyDataDictionary valueForKey:@"url"];
+    
     _invoicePagesArray = [[NSMutableArray alloc] init];
-    NSArray *rulesBlockArray = [self viewElementsWithCompany:identificador];
     ticketScrollView.hidden=NO;
     
     //Recorrer rules_block
@@ -395,7 +393,6 @@
             
             //Dato de usuario
             if([ticketViewElement.dataSource isEqualToString:@"user_info"]){
-                // [ticketViewElement createViewWithRect:0 y:0 width:0 height:0 delegate:self];
                 [ticketViewElementsArray addObject:ticketViewElement];
                 
             //Dato de ticket
@@ -404,18 +401,15 @@
                 [ticketViewElementsArray addObject:ticketViewElement];
                 [ticketScrollView addSubview:ticketViewElement.viewTicketElement];
                 espaciado = espaciado + (ALTO /** [ticketViewElement.valueCampoTicket count]*/) +10;
-            }/*else{
-                [ticketViewElement createViewWithRect:0 y:0 width:0 height:0 delegate:self];
-            }*/
+            }
             
             [invoicePage.rules addObject:ticketViewElement];
             
         }
-        //NSLog(@"Elementos page: %@", invoicePage.rules);
         [_invoicePagesArray addObject:invoicePage];
         
     }
-    //NSLog(@"Paginas arreglo ********************: %@", _invoicePagesArray);
+    
 }
 
 #pragma mark - UIActionSheetDelegate
@@ -461,7 +455,7 @@
 
     if ([substring length]==3) {
         //Solicitar arreglo de strings
-        [self companyListWithSubstring:substring];
+        completeStringsArray = [BWRWebConexion companyListWithSubstring:substring];
     
         if([completeStringsArray count]!=0){
             [completeTableView setFrame:CGRectMake(0, completeTableView.frame.origin.y, completeTableView.frame.size.width, 44*[completeStringsArray count])];
@@ -560,52 +554,6 @@
         webViewInvoiceData.companyURL = [NSURL URLWithString:_tiendaURL];
         webViewInvoiceData.actualPage = 0;
     }
-}
-
-#pragma mark - Jason Messages
-- (void) companyListWithSubstring: (NSString *)substring{
-    
-    //********************* TEMPORAL
-    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-    //******************************
-   
-    NSData *dataCompany = [self downloadDataOfURL:[NSString stringWithFormat:@"http://%@:3000/company?indicio=%@",[userDefaults valueForKey:@"ipServidor"],substring]];
-    if (dataCompany != nil)
-    {
-        NSMutableArray *temporal =[[NSMutableArray alloc] initWithArray:[NSJSONSerialization JSONObjectWithData:dataCompany options:0 error:NULL]];
-        completeStringsArray = temporal;
-        //NSLog(@"Array %@ de companies = %@", [dataCompany accessibilityValue], completeStringsArray);
-    }
-    //NSLog(@"Array %@ de companies = %@", [dataCompany accessibilityValue], completeStringsArray);
-}
-
-- (NSArray *) viewElementsWithCompany: (NSInteger)idCompany{
-    
-    //********************* TEMPORAL
-    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-    //******************************
-    
-    NSData *dataCompany = [self downloadDataOfURL:[NSString stringWithFormat:@"http://%@:3000/company/%d",[userDefaults valueForKey:@"ipServidor"], idCompany]];
-    
-    if (dataCompany != nil)
-    {
-        NSDictionary *companyDataDictionary = [NSJSONSerialization JSONObjectWithData:dataCompany options:0
-                                                                 error:NULL];
-        _tiendaURL = [companyDataDictionary valueForKey:@"url"];
-        //NSLog(@"id: %d url: %@ reglas: %@", idCompany, _tiendaURL, [companyDataDictionary valueForKey:@"rules_block"]);
-        return [companyDataDictionary valueForKey:@"rules_block"];
-    }
-    return nil;
-}
-
--(NSData *)downloadDataOfURL:(NSString *)urlString
-{
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
-    NSData *data = [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:nil error:nil];
-    //NSLog(@"Data : %@", [data accessibilityValue]);
-    
-    return data;
 }
 
 

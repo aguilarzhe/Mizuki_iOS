@@ -302,6 +302,7 @@
             if (![managedObjectContext save:&error]) {
                 NSLog(@"Can't Delete! %@ %@", error, [error localizedDescription]);
                 [alertView setMessage:[NSString stringWithFormat:@"Can't Delete! %@ %@", error, [error localizedDescription]]];
+                [alertView show];
                 return;
             }
         
@@ -312,11 +313,13 @@
             
         }else{
             [alertView setMessage:@"El rfc a eliminar es el seleccionado para facturar. Seleccione otro para poder eliminarlo"];
+            [alertView show];
             return;
         }
     }else{
         NSLog(@"Can't Delete. Debe de haber al menos un RFC");
         [alertView setMessage:@"Can't Delete. Debe de haber al menos un RFC"];
+        [alertView show];
     }
     
 }

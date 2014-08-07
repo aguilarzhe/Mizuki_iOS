@@ -10,6 +10,7 @@
 		2B1D89441950B38200C5A5A3 /* starbucks_liso.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2B1D89431950B38200C5A5A3 /* starbucks_liso.jpg */; };
 		2B1D89461950B3C300C5A5A3 /* starbucks_con_dobles.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2B1D89451950B3C300C5A5A3 /* starbucks_con_dobles.jpg */; };
 		2B23A60319589FED0054FB8A /* OpenCV.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B23A60219589FED0054FB8A /* OpenCV.mm */; };
+		2B351E6C1991CD84000D8611 /* BWRWebConexion.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B351E6B1991CD84000D8611 /* BWRWebConexion.m */; };
 		2B380A081965E8A300A7FDFE /* BWRInitialConfigurationDataUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B380A071965E8A300A7FDFE /* BWRInitialConfigurationDataUserViewController.m */; };
 		2B380A0B1965E93500A7FDFE /* BWRInvoiceDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B380A0A1965E93500A7FDFE /* BWRInvoiceDataViewController.m */; };
 		2B4496101976E47E00BFDBDB /* BWRTicketViewElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B44960F1976E47E00BFDBDB /* BWRTicketViewElement.m */; };
@@ -54,6 +55,8 @@
 		2B23A60119589FD10054FB8A /* OpenCV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenCV.h; sourceTree = "<group>"; };
 		2B23A60219589FED0054FB8A /* OpenCV.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenCV.mm; sourceTree = "<group>"; };
 		2B23A6041958A0170054FB8A /* mizuki-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mizuki-Prefix.pch"; sourceTree = "<group>"; };
+		2B351E6B1991CD84000D8611 /* BWRWebConexion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRWebConexion.m; sourceTree = "<group>"; };
+		2B351E6D1991CD9A000D8611 /* BWRWebConexion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BWRWebConexion.h; sourceTree = "<group>"; };
 		2B380A061965E8A300A7FDFE /* BWRInitialConfigurationDataUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWRInitialConfigurationDataUserViewController.h; sourceTree = "<group>"; };
 		2B380A071965E8A300A7FDFE /* BWRInitialConfigurationDataUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRInitialConfigurationDataUserViewController.m; sourceTree = "<group>"; };
 		2B380A091965E93500A7FDFE /* BWRInvoiceDataViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWRInvoiceDataViewController.h; sourceTree = "<group>"; };
@@ -543,6 +546,8 @@
 				2F397D901948BF30004CC963 /* BWRInvoiceConfirmationViewController.m */,
 				2F7D5CB41964E0EE003BBAB6 /* BWRMyAccountViewController.m */,
 				2F7D5CB61964E102003BBAB6 /* BWRMyAccountViewController.h */,
+				2B351E6B1991CD84000D8611 /* BWRWebConexion.m */,
+				2B351E6D1991CD9A000D8611 /* BWRWebConexion.h */,
 				2F84BE2D196AF3F4002E4DB1 /* Models */,
 				2F5E380E19804BBE00189A8F /* Localizable.strings */,
 			);
@@ -711,6 +716,7 @@
 				2B380A0B1965E93500A7FDFE /* BWRInvoiceDataViewController.m in Sources */,
 				2F397D911948BF31004CC963 /* BWRInvoiceConfirmationViewController.m in Sources */,
 				2BDB2F2819509B7E00AD8F67 /* BWRProcessImage.m in Sources */,
+				2B351E6C1991CD84000D8611 /* BWRWebConexion.m in Sources */,
 				2BDB2F1D19509B0B00AD8F67 /* Tesseract.mm in Sources */,
 				2B23A60319589FED0054FB8A /* OpenCV.mm in Sources */,
 				2F7D5CB51964E0EE003BBAB6 /* BWRMyAccountViewController.m in Sources */,
