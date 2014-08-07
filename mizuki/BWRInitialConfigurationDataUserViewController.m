@@ -43,7 +43,6 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
     signIn.scopes = @[ @"profile" ];
     signIn.delegate = self;
     [signIn trySilentAuthentication];
-    [self buildInterface];
 }
 
 - (void)didReceiveMemoryWarning
@@ -58,37 +57,23 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
     NSInteger width;
     NSInteger heigth = 31;
     NSInteger padding = 20;
-    NSInteger space;
+    NSInteger space = 65;
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && (orientation == UIDeviceOrientationLandscapeLeft || orientation == UIDeviceOrientationLandscapeRight)) {
-        width = self.view.frame.size.width / 2;
-        space = 60;
-        logoImage.bounds =CGRectMake(width + padding, space, width - (padding*2), self.view.frame.size.height - 120);
+        width = (self.view.frame.size.width / 2) - (2*padding);
+        logoImage.frame =CGRectMake(width + (3 * padding), space, width, width);
     }else {
-        space = 60;
-        width = self.view.frame.size.width;
-        logoImage.bounds = CGRectMake(padding, space, width - (padding*2), width - (padding*2));
+        width = self.view.frame.size.width - ( 2 * padding);
+        logoImage.frame = CGRectMake(padding, space, width, width);
         space += width - (padding*2);
     }
-    width = width-(2*padding);
+    
     logoImage.image = [UIImage imageNamed:@"bawarelogo.png"];
     [logoImage setContentMode:UIViewContentModeScaleAspectFit];
     [self.view addSubview:logoImage];
     
     signInButton = [[GPPSignInButton alloc] initWithFrame:CGRectMake(padding, space, width, heigth)];
     [self.view addSubview:signInButton];
-    
-    //Comprobando si no es la primera vez de la aplicacion
-    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-    
-    if(!([userDefaults valueForKey:@"Correo"] && [userDefaults valueForKey:@"rfc"])){
-        bt_siguiente = [[UIBarButtonItem alloc] initWithTitle:@"Siguiente" style:UIBarButtonItemStylePlain target:self action:@selector(invoiceDataViewController)];
-    }else{
-        bt_siguiente = [[UIBarButtonItem alloc] initWithTitle:@"Login" style:UIBarButtonItemStylePlain target:self action:@selector(invoiceHistoryViewController)];
-    }
-    
-    //Boton siguiente
-    self.navigationItem.rightBarButtonItem = bt_siguiente;
 }
 
 #pragma mark - Navigation
@@ -111,10 +96,6 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
 
 - (void)invoiceHistoryViewController
 {
-    //Temporal
-    /*NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-     [userDefaults setValue:nil forKey:@"Correo"];
-     [userDefaults setValue:nil forKey:@"rfc"];*/
     
     [self performSegueWithIdentifier:@"invoiceCompleteDataSegue" sender:self];
 }
@@ -124,22 +105,10 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
                    error: (NSError *) error {
     NSLog(@"Received error %@ and auth object %@",error, auth);
     if(error == nil){
-        //[self refreshInterfaceBasedOnSignIn];
-        NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-        
-        if(!([userDefaults valueForKey:@"Correo"] && [userDefaults valueForKey:@"rfc"])){
-            [self invoiceDataViewController];
-        }else{
-            [self invoiceHistoryViewController];
-        }
+        [self refreshInterfaceBasedOnSignIn];
     }else{
         NSLog(@"%@", error);
     }
-}
-
-- (void)presentSignInViewController:(UIViewController *)viewController {
-    // This is an example of how you can implement it if your app is navigation-based.
-    [[self navigationController] pushViewController:viewController animated:YES];
 }
 
 -(NSString*)getEmailAddressFromGPPAccount{
@@ -159,9 +128,9 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
         }else{
             [self invoiceHistoryViewController];
         }
-    } else {
-        [self buildInterface];
     }
+    [self buildInterface];
+    
 }
 
 
