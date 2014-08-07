@@ -36,6 +36,22 @@
 		2F5E380C19804BBE00189A8F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2F5E380E19804BBE00189A8F /* Localizable.strings */; };
 		2F7D5CB51964E0EE003BBAB6 /* BWRMyAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F7D5CB41964E0EE003BBAB6 /* BWRMyAccountViewController.m */; };
 		2F84BE2B196AF3C3002E4DB1 /* BWRRFCInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F84BE2A196AF3C3002E4DB1 /* BWRRFCInfo.m */; };
+		2FBAEE051992FC6F004DE362 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBAEE041992FC6F004DE362 /* AddressBook.framework */; };
+		2FBAEE071992FC75004DE362 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBAEE061992FC75004DE362 /* AssetsLibrary.framework */; };
+		2FBAEE091992FC7F004DE362 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBAEE081992FC7F004DE362 /* Foundation.framework */; };
+		2FBAEE0B1992FC87004DE362 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBAEE0A1992FC87004DE362 /* CoreLocation.framework */; };
+		2FBAEE0D1992FC8F004DE362 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBAEE0C1992FC8F004DE362 /* CoreMotion.framework */; };
+		2FBAEE0F1992FC96004DE362 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBAEE0E1992FC96004DE362 /* CoreGraphics.framework */; };
+		2FBAEE111992FC9E004DE362 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBAEE101992FC9E004DE362 /* CoreText.framework */; };
+		2FBAEE131992FCA8004DE362 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBAEE121992FCA8004DE362 /* MediaPlayer.framework */; };
+		2FBAEE151992FCB0004DE362 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBAEE141992FCB0004DE362 /* Security.framework */; };
+		2FBAEE171992FCBE004DE362 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBAEE161992FCBE004DE362 /* SystemConfiguration.framework */; };
+		2FBAEE191992FCCC004DE362 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBAEE181992FCCC004DE362 /* UIKit.framework */; };
+		2FBAEE1D1992FD52004DE362 /* GoogleOpenSource.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBAEE1B1992FD52004DE362 /* GoogleOpenSource.framework */; };
+		2FBAEE1E1992FD52004DE362 /* GooglePlus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBAEE1C1992FD52004DE362 /* GooglePlus.framework */; };
+		2FBAEE201992FD79004DE362 /* GooglePlus.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2FBAEE1F1992FD79004DE362 /* GooglePlus.bundle */; };
+		2FCA2C881993E7E200C008DE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FCA2C871993E7E200C008DE /* AVFoundation.framework */; };
+		2FCA2C8A1993E83D00C008DE /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FCA2C891993E83D00C008DE /* CoreMedia.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -240,6 +256,22 @@
 		2F7D5CB61964E102003BBAB6 /* BWRMyAccountViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BWRMyAccountViewController.h; sourceTree = "<group>"; };
 		2F84BE2A196AF3C3002E4DB1 /* BWRRFCInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BWRRFCInfo.m; path = Models/BWRRFCInfo.m; sourceTree = "<group>"; };
 		2F84BE2C196AF3DE002E4DB1 /* BWRRFCInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BWRRFCInfo.h; path = Models/BWRRFCInfo.h; sourceTree = "<group>"; };
+		2FBAEE041992FC6F004DE362 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		2FBAEE061992FC75004DE362 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		2FBAEE081992FC7F004DE362 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		2FBAEE0A1992FC87004DE362 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		2FBAEE0C1992FC8F004DE362 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		2FBAEE0E1992FC96004DE362 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		2FBAEE101992FC9E004DE362 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		2FBAEE121992FCA8004DE362 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		2FBAEE141992FCB0004DE362 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		2FBAEE161992FCBE004DE362 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		2FBAEE181992FCCC004DE362 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		2FBAEE1B1992FD52004DE362 /* GoogleOpenSource.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleOpenSource.framework; sourceTree = "<group>"; };
+		2FBAEE1C1992FD52004DE362 /* GooglePlus.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GooglePlus.framework; sourceTree = "<group>"; };
+		2FBAEE1F1992FD79004DE362 /* GooglePlus.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GooglePlus.bundle; sourceTree = "<group>"; };
+		2FCA2C871993E7E200C008DE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		2FCA2C891993E83D00C008DE /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -247,8 +279,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FCA2C8A1993E83D00C008DE /* CoreMedia.framework in Frameworks */,
+				2FCA2C881993E7E200C008DE /* AVFoundation.framework in Frameworks */,
+				2FBAEE191992FCCC004DE362 /* UIKit.framework in Frameworks */,
+				2FBAEE171992FCBE004DE362 /* SystemConfiguration.framework in Frameworks */,
+				2FBAEE151992FCB0004DE362 /* Security.framework in Frameworks */,
+				2FBAEE131992FCA8004DE362 /* MediaPlayer.framework in Frameworks */,
+				2FBAEE111992FC9E004DE362 /* CoreText.framework in Frameworks */,
+				2FBAEE0F1992FC96004DE362 /* CoreGraphics.framework in Frameworks */,
+				2FBAEE0D1992FC8F004DE362 /* CoreMotion.framework in Frameworks */,
+				2FBAEE1E1992FD52004DE362 /* GooglePlus.framework in Frameworks */,
+				2FBAEE0B1992FC87004DE362 /* CoreLocation.framework in Frameworks */,
+				2FBAEE091992FC7F004DE362 /* Foundation.framework in Frameworks */,
+				2FBAEE071992FC75004DE362 /* AssetsLibrary.framework in Frameworks */,
+				2FBAEE051992FC6F004DE362 /* AddressBook.framework in Frameworks */,
 				2BDB2E7E195099FC00AD8F67 /* libstdc++.6.0.9.dylib in Frameworks */,
 				2F397D941948C4E7004CC963 /* MobileCoreServices.framework in Frameworks */,
+				2FBAEE1D1992FD52004DE362 /* GoogleOpenSource.framework in Frameworks */,
 				2BDB2F2219509B0B00AD8F67 /* libtesseract_all.a in Frameworks */,
 				2B73652D1975DE6900726BCC /* opencv2.framework in Frameworks */,
 				2BDB2F2119509B0B00AD8F67 /* liblept.a in Frameworks */,
@@ -497,8 +544,21 @@
 		2F397D5E1948BD6E004CC963 = {
 			isa = PBXGroup;
 			children = (
-				2BDB2E7D195099FC00AD8F67 /* libstdc++.6.0.9.dylib */,
+				2FCA2C891993E83D00C008DE /* CoreMedia.framework */,
+				2FCA2C871993E7E200C008DE /* AVFoundation.framework */,
+				2FBAEE181992FCCC004DE362 /* UIKit.framework */,
+				2FBAEE161992FCBE004DE362 /* SystemConfiguration.framework */,
+				2FBAEE141992FCB0004DE362 /* Security.framework */,
+				2FBAEE121992FCA8004DE362 /* MediaPlayer.framework */,
+				2FBAEE101992FC9E004DE362 /* CoreText.framework */,
+				2FBAEE0E1992FC96004DE362 /* CoreGraphics.framework */,
+				2FBAEE0C1992FC8F004DE362 /* CoreMotion.framework */,
+				2FBAEE0A1992FC87004DE362 /* CoreLocation.framework */,
+				2FBAEE081992FC7F004DE362 /* Foundation.framework */,
+				2FBAEE061992FC75004DE362 /* AssetsLibrary.framework */,
+				2FBAEE041992FC6F004DE362 /* AddressBook.framework */,
 				2F397D931948C4E7004CC963 /* MobileCoreServices.framework */,
+				2BDB2E7D195099FC00AD8F67 /* libstdc++.6.0.9.dylib */,
 				2F397D691948BD6F004CC963 /* mizuki */,
 				2F397D6A1948BD6F004CC963 /* Supporting Files */,
 				2F397D831948BD6F004CC963 /* mizukiTests */,
@@ -518,6 +578,7 @@
 		2F397D691948BD6F004CC963 /* mizuki */ = {
 			isa = PBXGroup;
 			children = (
+				2FBAEE031992FBE8004DE362 /* gpluslogin */,
 				2F3CFAC4197F71F1009428C9 /* images */,
 				2BCEE57A197DC24900E00667 /* WevInvoiceViewController.m */,
 				2BCEE579197DC23C00E00667 /* WevInvoiceViewController.h */,
@@ -596,6 +657,16 @@
 				2BD9F063198993B400C3E5AF /* BWRInvoiceTicketPage.m */,
 			);
 			name = Models;
+			sourceTree = "<group>";
+		};
+		2FBAEE031992FBE8004DE362 /* gpluslogin */ = {
+			isa = PBXGroup;
+			children = (
+				2FBAEE1F1992FD79004DE362 /* GooglePlus.bundle */,
+				2FBAEE1B1992FD52004DE362 /* GoogleOpenSource.framework */,
+				2FBAEE1C1992FD52004DE362 /* GooglePlus.framework */,
+			);
+			name = gpluslogin;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -680,6 +751,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F3CFAC3197F71B4009428C9 /* bawarelogo.png in Resources */,
+				2FBAEE201992FD79004DE362 /* GooglePlus.bundle in Resources */,
 				2BDB2F1E19509B0B00AD8F67 /* LICENSE in Resources */,
 				2BDB2F2519509B3900AD8F67 /* tessdata in Resources */,
 				2B1D89441950B38200C5A5A3 /* starbucks_liso.jpg in Resources */,
@@ -852,7 +924,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/carolinamora/Documents/Programas/OpenCV,
 					"$(PROJECT_DIR)/mizuki",
 				);
 				INFOPLIST_FILE = mizuki/Info.plist;
@@ -862,7 +933,11 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/mizuki/tesseract-ios/tesseract-ios-lib/lib",
 				);
-				"OTHER_LDFLAGS[arch=*]" = "-lstdc++";
+				OTHER_LDFLAGS = "";
+				"OTHER_LDFLAGS[arch=*]" = (
+					"-lstdc++",
+					"-ObjC",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -878,7 +953,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/carolinamora/Documents/Programas/OpenCV,
 					"$(PROJECT_DIR)/mizuki",
 				);
 				INFOPLIST_FILE = mizuki/Info.plist;
@@ -888,7 +962,11 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/mizuki/tesseract-ios/tesseract-ios-lib/lib",
 				);
-				"OTHER_LDFLAGS[arch=*]" = "-lstdc++";
+				OTHER_LDFLAGS = "";
+				"OTHER_LDFLAGS[arch=*]" = (
+					"-lstdc++",
+					"-ObjC",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};

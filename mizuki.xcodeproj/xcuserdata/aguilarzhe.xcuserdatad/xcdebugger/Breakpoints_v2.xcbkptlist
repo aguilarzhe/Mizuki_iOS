@@ -11,11 +11,11 @@
             condition = "invoiceImage == nil"
             continueAfterRunningActions = "No"
             filePath = "mizuki/BWRInvoiceHistoryViewController.m"
-            timestampString = "427853076.224917"
+            timestampString = "429044275.864226"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "141"
-            endingLineNumber = "141">
+            startingLineNumber = "168"
+            endingLineNumber = "168">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Log">
@@ -152,6 +152,22 @@
             startingLineNumber = "335"
             endingLineNumber = "335"
             landmarkName = "-saveInfoRFC"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "mizuki/BWRInvoiceHistoryViewController.m"
+            timestampString = "429045951.025549"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "129"
+            endingLineNumber = "129"
+            landmarkName = "-imagePickerController:didFinishPickingMediaWithInfo:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
