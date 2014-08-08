@@ -82,7 +82,7 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
 {
     if([[segue identifier] isEqualToString:@"invoiceDataSegue"]){
         BWRInvoiceDataViewController *configurationInvoiceData = [segue destinationViewController];
-        [configurationInvoiceData initWithDefault:@"¡BIENVENIDO!"];
+        [configurationInvoiceData initWithDefault:@"bienvenido"];
     }
 }
 
