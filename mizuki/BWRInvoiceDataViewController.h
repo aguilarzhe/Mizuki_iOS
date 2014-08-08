@@ -28,7 +28,7 @@
 @property UILabel *lb_direccion;
 @property UIBarButtonItem *bt_listo;
 
-
+- (void)initWithFirstRFC:(NSString *)title;
 - (void)initWithDefault: (NSString *)title;
 - (void)initWithBWRRFCInfo:(BWRRFCInfo *)rfcInfo title:(NSString *)title;
 

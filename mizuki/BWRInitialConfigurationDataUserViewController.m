@@ -3,7 +3,7 @@
 //  mizuki
 //
 //  Created by Carolina Mora on 03/07/14.
-//  Copyright (c) 2014 Efrén Aguilar. All rights reserved.
+//  Copyright (c) 2014 Baware SA de CV. All rights reserved.
 //
 
 #import "BWRInitialConfigurationDataUserViewController.h"
@@ -11,27 +11,23 @@
 #import <GoogleOpenSource/GoogleOpenSource.h>
 #import <GooglePlus/GooglePlus.h>
 
-
+/** A viewcontroller that authenticate user in gplus. That can be with a gplus login button or by silent mode login (if user login once).
+ */
 @interface BWRInitialConfigurationDataUserViewController ()
+/** The signin object for authenticate user in google.
+ */
 @property GPPSignIn *signIn;
 @end
 
 @implementation BWRInitialConfigurationDataUserViewController
-
-@synthesize tf_correo;
-@synthesize tf_password;
-@synthesize tf_confpassword;
-@synthesize bt_siguiente;
 @synthesize signInButton;
 @synthesize signIn;
-
+// Google app id, is provided for Google and is necesary for request a GPlus login and user information.
 static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo1d5.apps.googleusercontent.com";
-
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     
     self.title = @"¡Bienvenido!";
     
@@ -43,6 +39,7 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
     signIn.scopes = @[ @"profile" ];
     signIn.delegate = self;
     [signIn trySilentAuthentication];
+    [self buildInterface];
 }
 
 - (void)didReceiveMemoryWarning
@@ -51,6 +48,12 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
 
 }
 
+
+/** Build interface for application login.
+ 
+ Create a gplus login button for obtain the user gmail address and show a application logo image.
+ 
+ */
 -(void)buildInterface{
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     UIImageView *logoImage = [[UIImageView alloc] init];
@@ -77,15 +80,25 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
 }
 
 #pragma mark - Navigation
-
+/** Catch the invocation segue event.
+ When a invoiceDataSegue is called, we init a BWRInvoiceDataViewController with initWithFirstRFC method.
+ */
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if([[segue identifier] isEqualToString:@"invoiceDataSegue"]){
         BWRInvoiceDataViewController *configurationInvoiceData = [segue destinationViewController];
-        [configurationInvoiceData initWithDefault:@"bienvenido"];
+        [configurationInvoiceData initWithFirstRFC:@"bienvenido"];
     }
 }
 
+
+/** Invoke user data capture view, for capture the RFC, names and address info of the user.
+ 
+ When is the first time access of the application and isn't configured a user email and user invoice data, a user data capture view is invoked for obtain the invoice data necesary for process the requests.
+ 
+ Also is saved the email of the user after of gplus login.
+ 
+ */
 - (void)invoiceDataViewController
 {
     NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
@@ -94,13 +107,22 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
     [self performSegueWithIdentifier:@"invoiceDataSegue" sender:self];
 }
 
+/** Invoke the user history invoice view.
+ 
+ Using a segue, invoke the invoice history view controller.
+ */
 - (void)invoiceHistoryViewController
 {
-    
     [self performSegueWithIdentifier:@"invoiceCompleteDataSegue" sender:self];
 }
 
 #pragma mark - GPPSignInDelegate
+/** Show the status of gplus login intent.
+ 
+ When user or a silent login try to authenticate, the response is received in this method. If error is diferent to nil, the error is showed in console.
+ 
+ If error is equal to nil, we refresh the interface.
+ */
 - (void)finishedWithAuth: (GTMOAuth2Authentication *)auth
                    error: (NSError *) error {
     NSLog(@"Received error %@ and auth object %@",error, auth);
@@ -111,6 +133,10 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
     }
 }
 
+#pragma mark - GPlus Login Auxiliars Messages
+/** Get the email address from the gplus account authenticated.
+ @return Email address of google account.
+ */
 -(NSString*)getEmailAddressFromGPPAccount{
     NSString *email;
     
@@ -119,6 +145,8 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
     return email;
 }
 
+/** If authentication is valid, we try to invoke the next view controller depending if is configurated the email address and the rfc info.
+ */
 -(void)refreshInterfaceBasedOnSignIn {
     if ([[GPPSignIn sharedInstance] authentication]) {
         NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
@@ -129,8 +157,6 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
             [self invoiceHistoryViewController];
         }
     }
-    [self buildInterface];
-    
 }
 
 

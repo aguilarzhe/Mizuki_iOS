@@ -219,10 +219,18 @@
     [self setTitle:@"Datos de facturación"];
 }
 
+
+
 #pragma mark - init
-- (void)initWithDefault: (NSString *)title
+
+-(void)initWithFirstRFC:(NSString *)title
 {
     firstRFC = YES;
+    [self initWithDefault:title];
+}
+
+- (void)initWithDefault: (NSString *)title
+{
     [self createInvoiceData];
     
     

@@ -10,11 +10,8 @@
 #import <GooglePlus/GooglePlus.h>
 
 @interface BWRInitialConfigurationDataUserViewController : UIViewController <GPPSignInDelegate>
-
-@property UITextField *tf_correo;
-@property UITextField *tf_password;
-@property UITextField *tf_confpassword;
-@property UIBarButtonItem *bt_siguiente;
+/** Google plus button for authentication.
+ */
 @property (retain, nonatomic) IBOutlet GPPSignInButton *signInButton;
 
 @end
