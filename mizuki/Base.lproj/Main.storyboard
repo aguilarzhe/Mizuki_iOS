@@ -137,10 +137,10 @@
             </objects>
             <point key="canvasLocation" x="1726" y="-361"/>
         </scene>
-        <!--Wev Invoice View Controller-->
+        <!--Web Invoice View Controller-->
         <scene sceneID="lrb-rr-Lpg">
             <objects>
-                <viewController id="SsD-YA-AO4" customClass="WevInvoiceViewController" sceneMemberID="viewController">
+                <viewController id="SsD-YA-AO4" customClass="WebInvoiceViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="erV-YE-Dxi"/>
                         <viewControllerLayoutGuide type="bottom" id="L5X-vz-oCt"/>

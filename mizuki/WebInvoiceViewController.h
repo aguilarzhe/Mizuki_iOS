@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WevInvoiceViewController : UIViewController <UIWebViewDelegate>
+@interface WebInvoiceViewController : UIViewController <UIWebViewDelegate, NSURLConnectionDataDelegate>
 
 @property NSMutableArray *invoicePagesArray;
 @property NSURL *companyURL;

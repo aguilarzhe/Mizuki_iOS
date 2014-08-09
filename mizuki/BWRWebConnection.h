@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Efrén Aguilar. All rights reserved.
 //
 
-@interface BWRWebConexion : NSObject
+@interface BWRWebConnection : NSObject
 
 + (NSMutableArray *) companyListWithSubstring: (NSString *)substring;
 

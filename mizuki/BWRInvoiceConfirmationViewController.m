@@ -9,11 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "AppDelegate.h"
 #import "BWRInvoiceConfirmationViewController.h"
-#import "WevInvoiceViewController.h"
+#import "WebInvoiceViewController.h"
 #import "BWRTicketViewElement.h"
 #import "BWRInvoiceTicketPage.h"
 #import "BWRRFCInfo.h"
-#import "BWRWebConexion.h"
+#import "BWRWebConnection.h"
 
 @interface BWRInvoiceConfirmationViewController ()
 @property NSString *tiendaURL;
@@ -374,7 +374,7 @@
     NSInteger ANCHO_LARGO = anchoPantalla-(2*PADING);
     
     //Obtener diccionario
-    NSDictionary *companyDataDictionary = [BWRWebConexion viewElementsWithCompany:identificador];
+    NSDictionary *companyDataDictionary = [BWRWebConnection viewElementsWithCompany:identificador];
     NSArray *rulesBlockArray = [companyDataDictionary valueForKey:@"rules_block"];
     _tiendaURL = [companyDataDictionary valueForKey:@"url"];
     
@@ -455,7 +455,7 @@
 
     if ([substring length]==3) {
         //Solicitar arreglo de strings
-        completeStringsArray = [BWRWebConexion companyListWithSubstring:substring];
+        completeStringsArray = [BWRWebConnection companyListWithSubstring:substring];
     
         if([completeStringsArray count]!=0){
             [completeTableView setFrame:CGRectMake(0, completeTableView.frame.origin.y, completeTableView.frame.size.width, 44*[completeStringsArray count])];
@@ -549,7 +549,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if([[segue identifier] isEqualToString:@"invoiceWebViewSegue"]){
-        WevInvoiceViewController *webViewInvoiceData = [segue destinationViewController];
+        WebInvoiceViewController *webViewInvoiceData = [segue destinationViewController];
         webViewInvoiceData.invoicePagesArray = _invoicePagesArray;
         webViewInvoiceData.companyURL = [NSURL URLWithString:_tiendaURL];
         webViewInvoiceData.actualPage = 0;

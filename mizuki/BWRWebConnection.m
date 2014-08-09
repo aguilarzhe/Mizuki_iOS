@@ -7,16 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BWRWebConexion.h"
+#import "BWRWebConnection.h"
 
 
-@interface BWRWebConexion ()
+@interface BWRWebConnection ()
 
 @end
 
 static NSData *dataCompany;
 
-@implementation BWRWebConexion
+@implementation BWRWebConnection
 
 + (NSMutableArray *) companyListWithSubstring: (NSString *)substring{
     
