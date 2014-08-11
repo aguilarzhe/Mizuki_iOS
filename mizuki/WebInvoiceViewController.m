@@ -39,7 +39,6 @@
     
     //load url into webview
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:companyURL];
-    //urlConnection = [NSURLConnection connectionWithRequest:urlRequest delegate:self];
     [invoiceWebView loadRequest:urlRequest];
     
     //invoiceWebView.suppressesIncrementalRendering = YES;
@@ -55,8 +54,8 @@
 #pragma mark - UIWebViewDelegate
 - (void) webViewDidFinishLoad:(UIWebView *)webView
 {
+    // TODO: Change performSelectorInBackground to dispatch_async and dispatch_queue_t
     [self performSelectorInBackground:@selector(executeJavaScriptFromWebPageDiv) withObject:nil];
-    //[self fillPagesAccordingToService];
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
@@ -97,17 +96,12 @@
         NSString *javascript = [self createJavaScriptStringWithRules:invoicePage.rules];
         [self performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:javascript waitUntilDone:YES];
         
-        
-        //NSLog(@"\n\n++++++++++LOADING: %hhd \n\n", invoiceWebView.loading);
-        
         if(![invoiceWebView.request.URL isEqual:companyURL]){
             //break;
         }
         
         [NSThread sleepForTimeInterval:3];
         actualPage++;
-        //[self viewDidLoad];
-        
     }
 }
 
