@@ -55,14 +55,14 @@
 #pragma mark - UIWebViewDelegate
 - (void) webViewDidFinishLoad:(UIWebView *)webView
 {
-    [self performSelectorInBackground:@selector(fillPagesAccordingToService) withObject:nil];
+    [self performSelectorInBackground:@selector(executeJavaScriptFromWebPageDiv) withObject:nil];
     //[self fillPagesAccordingToService];
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
  navigationType:(UIWebViewNavigationType)navigationType {
     
-    NSLog(@"\n\n**************REQUEST URL: %@   COMPANY URL: %@\n\n", request.URL, companyURL);
+    //NSLog(@"\n\n**************REQUEST URL: %@   COMPANY URL: %@\n\n", request.URL, companyURL);
     
     return TRUE;
 }
@@ -95,23 +95,32 @@
         BWRInvoiceTicketPage *invoicePage = [invoicePagesArray objectAtIndex:index];
         //BWRInvoiceTicketPage *invoicePage = [invoicePagesArray objectAtIndex:actualPage];
         NSString *javascript = [self createJavaScriptStringWithRules:invoicePage.rules];
+        [self performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:javascript waitUntilDone:YES];
         
-        if([invoiceWebView stringByEvaluatingJavaScriptFromString:javascript]){
-            NSLog(@"Java Script ejecutado");
-        }else{
-            NSLog(@"Java Script FALLO");
-        }
         
-        NSLog(@"\n\n++++++++++LOADING: %hhd \n\n", invoiceWebView.loading);
+        //NSLog(@"\n\n++++++++++LOADING: %hhd \n\n", invoiceWebView.loading);
         
         if(![invoiceWebView.request.URL isEqual:companyURL]){
             //break;
         }
         
-        [NSThread sleepForTimeInterval:15];
+        [NSThread sleepForTimeInterval:3];
         actualPage++;
         //[self viewDidLoad];
         
+    }
+}
+
+-(void)stringByEvaluatingJavaScriptFromString:(NSString *)javascript
+{
+    if([invoiceWebView stringByEvaluatingJavaScriptFromString:javascript]){
+        NSLog(@"Java Script ejecutado");
+    }else{
+        NSLog(@"Java Script FALLO");
+    }
+    
+    if(![invoiceWebView.request.URL isEqual:companyURL]){
+        //break;
     }
 }
 
