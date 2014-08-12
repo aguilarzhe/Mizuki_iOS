@@ -14,6 +14,7 @@
 @property NSManagedObjectContext *managedObjectContext;
 @property BOOL opcion;
 @property BWRRFCInfo *updateRFC;
+@property BOOL firstRFC;
 @end
 
 @implementation BWRInvoiceDataViewController
@@ -36,7 +37,7 @@
 @synthesize tf_cp;
 @synthesize lb_direccion;
 @synthesize bt_listo;
-
+@synthesize firstRFC;
 
 - (void)viewDidLoad
 {
@@ -47,15 +48,21 @@
     NSInteger ALTO = 31;
     NSInteger PADING = 20;
     NSInteger espaciado = 20;
-    NSInteger ANCHO_LARGO;
-    NSInteger ANCHO_CHICO;
+    NSInteger longWidth;
+    NSInteger shortWidth;
     
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        ANCHO_LARGO = 270;
-        ANCHO_CHICO = 120;
+        if (firstRFC) {
+            longWidth = (self.view.frame.size.width / 2) - (2 * PADING);
+            shortWidth = (longWidth / 2) - (PADING/2);
+        }else{
+            longWidth = 270;
+            shortWidth = 120;
+        }
+        
     }else{
-        ANCHO_LARGO = anchoPantalla-(2*PADING);
-        ANCHO_CHICO = (ANCHO_LARGO/2)-(PADING/2);
+        longWidth = anchoPantalla-(2*PADING);
+        shortWidth = (longWidth/2)-(PADING/2);
     }
     
     UIScrollView *scrollView=(UIScrollView *)self.view;
@@ -63,55 +70,53 @@
     scrollView=[[UIScrollView alloc] initWithFrame:fullScreenRect];
     scrollView.contentSize=CGSizeMake(320,740);
     
-    //RFC
-    tf_rfc.frame = CGRectMake(PADING, espaciado, ANCHO_LARGO, ALTO);
+    // Personal info
+    tf_rfc.frame = CGRectMake(PADING, espaciado, longWidth, ALTO);
     [scrollView addSubview:tf_rfc];
-    //Nombre
-    tf_nombre.frame = CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
+    tf_nombre.frame = CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
     [scrollView addSubview:tf_nombre];
-    //Apellido paterno
-    tf_apaterno.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
+    tf_apaterno.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
     [scrollView addSubview:tf_apaterno];
-    //Apellido materno
-    tf_amaterno.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
+    tf_amaterno.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
     [scrollView addSubview:tf_amaterno];
-    //Direccion
-    lb_direccion.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
+    
+    // If is firstRFC capture and the device is a iPad
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && firstRFC){
+        espaciado = -20;
+        PADING += longWidth + (PADING * 2);
+    }
+    
+    // Address user info
+    lb_direccion.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
     [scrollView addSubview:lb_direccion];
-    //Calle
-    tf_calle.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
+    tf_calle.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
     [scrollView addSubview:tf_calle];
     //Numero interior
-    tf_noint.frame =CGRectMake(PADING, espaciado+=40, ANCHO_CHICO, ALTO);
+    tf_noint.frame =CGRectMake(PADING, espaciado+=40, shortWidth, ALTO);
     [scrollView addSubview:tf_noint];
     //Numero exterior
-    tf_noext.frame =CGRectMake(PADING*2+ANCHO_CHICO, espaciado, ANCHO_CHICO, ALTO);
+    tf_noext.frame =CGRectMake(PADING*2+shortWidth, espaciado, shortWidth, ALTO);
     [scrollView addSubview:tf_noext];
-    //Colonia
-    tf_colonia.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
+    tf_colonia.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
     [scrollView addSubview:tf_colonia];
-    //Delegacion
-    tf_delegacion.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
+    tf_delegacion.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
     [scrollView addSubview:tf_delegacion];
-    //Estado
-    tf_estado.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
+    tf_estado.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
     [scrollView addSubview:tf_estado];
-    //Ciudad
-    tf_ciudad.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
+    tf_ciudad.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
     [scrollView addSubview:tf_ciudad];
-    //Localidad
-    tf_localidad.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
+    tf_localidad.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
     [scrollView addSubview:tf_localidad];
     //Codigo Postal
-    tf_cp.frame =CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
+    tf_cp.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
     [scrollView addSubview:tf_cp];
     
     
-    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && !firstRFC){
         UIButton *listoButton = [UIButton buttonWithType:UIButtonTypeSystem];
         [listoButton setTitle:@"Guardar" forState:UIControlStateNormal];
         [listoButton addTarget:self action:@selector(saveInfoRFC) forControlEvents:UIControlEventTouchUpInside];
-        listoButton.frame = CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO);
+        listoButton.frame = CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
         [scrollView addSubview:listoButton];
     }
     
@@ -129,7 +134,7 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+
 }
 
 #pragma mark - Inicialitation
@@ -214,9 +219,20 @@
     [self setTitle:@"Datos de facturación"];
 }
 
+
+
+#pragma mark - init
+
+-(void)initWithFirstRFC:(NSString *)title
+{
+    firstRFC = YES;
+    [self initWithDefault:title];
+}
+
 - (void)initWithDefault: (NSString *)title
 {
     [self createInvoiceData];
+    
     
     //Crear nuevo rfc en core data
     opcion = TRUE;
@@ -331,7 +347,7 @@
                 [userDefaults setValue:@"192.168.1.77" forKey:@"ipServidor"];
                 //***********************
             }
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && !firstRFC){
             [self dismissViewControllerAnimated:YES completion:nil];
         }else{
             [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];

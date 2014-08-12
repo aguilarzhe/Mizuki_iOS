@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import <GooglePlus/GooglePlus.h>
 
 @interface AppDelegate ()
             
@@ -61,6 +62,16 @@
         } 
     }
 }
+
+- (BOOL)application: (UIApplication *)application
+            openURL: (NSURL *)url
+  sourceApplication: (NSString *)sourceApplication
+         annotation: (id)annotation {
+    return [GPPURLHandler handleURL:url
+                  sourceApplication:sourceApplication
+                         annotation:annotation];
+}
+
 
 #pragma mark - Core Data stack
 
