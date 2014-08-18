@@ -146,9 +146,6 @@
     confInfoDictionary = [[NSDictionary alloc]initWithObjects:@[notificaciones, sonido, guardarFoto, conexion] forKeys:@[@"Notificaciones", @"Sonido", @"Guardar Fotos", @"Solo wifi"]];
 }
 
-#pragma mark - UITableViewDelegate
-
-
 #pragma mark - UITableViewDataSource
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

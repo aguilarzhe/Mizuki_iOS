@@ -50,6 +50,22 @@
     return self;
 }
 
+-(BWRTicketViewElement *)initTicketInfoWithElements: (NSString *)ticketField mask:(NSString *)ticketMask form:(NSString *)formField type:(NSString *)formFieldType value:(NSString *)fieldValue{
+    
+    self = [super init];
+    
+    campoTicket = ticketField;
+    campoRegex = @"";
+    mascaraTicket = ticketMask;
+    campoFormulario = formField;
+    tipoCampoFormulario = formFieldType;
+    //valueCampoTicket = [[NSArray alloc] initWithArray:[ticketElement valueForKey:@"value_campo_ticket"]];
+    dataSource = @"ticketInfo";
+    selectionValue = fieldValue;//[valueCampoTicket objectAtIndex:0];
+    
+    return self;
+}
+
 -(void)createViewWithRect: (CGFloat)x y:(CGFloat)y width:(CGFloat)width height:(CGFloat)height delegate:(UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate> *)viewDelegate{
     
     //Si es textbox

@@ -20,6 +20,7 @@
 @property UIView *viewTicketElement;
 
 -(BWRTicketViewElement *)initWithDictionary: (NSDictionary *) ticketElement;
+-(BWRTicketViewElement *)initTicketInfoWithElements: (NSString *)ticketField mask:(NSString *)ticketMask form:(NSString *)formField type:(NSString *)formFieldType value:(NSString *)fieldValue;
 -(void)createViewWithRect: (CGFloat)x y:(CGFloat)y width:(CGFloat)width height:(CGFloat)height delegate:(UIViewController *)viewDelegate;
 
 @end

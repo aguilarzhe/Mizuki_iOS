@@ -14,6 +14,7 @@
 #import "BWRInvoiceTicketPage.h"
 #import "BWRRFCInfo.h"
 #import "BWRWebConnection.h"
+#import "BWRCompleteInvoice.h"
 
 @interface BWRInvoiceConfirmationViewController ()
 @property NSString *tiendaURL;
@@ -553,6 +554,18 @@
         webViewInvoiceData.invoicePagesArray = _invoicePagesArray;
         webViewInvoiceData.companyURL = [NSURL URLWithString:_tiendaURL];
         webViewInvoiceData.actualPage = 0;
+        
+        NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+        NSString *rfc = [userDefaults valueForKey:@"rfc"];
+        NSMutableArray *viewsArray= [[NSMutableArray alloc] init];
+        for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
+            if ([viewElement.dataSource isEqualToString:@"ticket_info"]) {
+                [viewsArray addObject:viewElement];
+            }
+        }
+        NSLog (@"ARRAY %@", viewsArray);
+        
+        webViewInvoiceData.completeInvoice=[[BWRCompleteInvoice alloc] initWithData:viewsArray rfc:rfc ticketImage:invoiceImage stringOCR:invoiceLabel.text company:empresaTextField.text];
     }
 }
 

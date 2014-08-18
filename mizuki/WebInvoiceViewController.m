@@ -15,7 +15,6 @@
 @property UIWebView *invoiceWebView;
 @property NSURLResponse *theResponse;
 @property NSMutableData *dataRecive;
-@property NSURLConnection *urlConnection;
 
 @end
 
@@ -27,11 +26,17 @@
 @synthesize actualPage;
 @synthesize theResponse;
 @synthesize dataRecive;
-@synthesize urlConnection;
+@synthesize completeInvoice;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    if([completeInvoice addCompleteInvoiceWithStatus:@"Facturada"]){
+        NSLog(@"SE REALIZO EL ADD CORRECTAMENTE: %@", completeInvoice.idInvoice);
+    }else{
+        NSLog(@"ERROR EN EL ADD");
+    }
     
     invoiceWebView=[[UIWebView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,self.view.frame.size.height)];
     invoiceWebView.delegate = self;
@@ -40,8 +45,6 @@
     //load url into webview
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:companyURL];
     [invoiceWebView loadRequest:urlRequest];
-    
-    //invoiceWebView.suppressesIncrementalRendering = YES;
     
 }
 
@@ -66,20 +69,6 @@
     return TRUE;
 }
 
-/*#pragma mark - NSURLConnectionDataDelegate
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
-    theResponse = response;
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
-    [dataRecive appendData:data];
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection{
-    CGFloat percentage = (dataRecive.length*100)/theResponse.expectedContentLength;
-    NSLog(@"PORCENTAJE: %f", percentage);
-}*/
-
 #pragma mark - WebInvoiceViewConetroller Sources
 -(void) fillPagesAccordingToService {
     
@@ -103,6 +92,10 @@
         [NSThread sleepForTimeInterval:3];
         actualPage++;
     }
+    
+    
+    [self performSegueWithIdentifier:@"InvoiceCompleteSegue" sender:self];
+    
 }
 
 -(void)stringByEvaluatingJavaScriptFromString:(NSString *)javascript
