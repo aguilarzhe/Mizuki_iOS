@@ -129,6 +129,10 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
     if(error == nil){
         [self refreshInterfaceBasedOnSignIn];
     }else{
+        NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
+        if( error.code == -1009 && [userDefaults valueForKey:@"Correo"]  && [userDefaults valueForKey:@"rfc"]){
+            [self invoiceHistoryViewController];
+        }
         NSLog(@"%@", error);
     }
 }
