@@ -7,15 +7,20 @@
 //
 
 #import "BWREditInvoiceViewController.h"
+#import "AppDelegate.h"
+#import "BWRRFCInfo.h"
 #import "BWRTicketViewElement.h"
 
 @interface BWREditInvoiceViewController ()
 
 @property UITableView *rfcTableView;
-@property UITextField *companyTextField;
+@property UITextView *companyTextField;
 @property UIImageView *ticketImage;
 @property UITextView *ocrLabel;
 @property UIScrollView *ticketScrollView;
+@property UIActionSheet *rfcActionSheet;
+@property NSArray *fetchedResults;
+@property NSString *rfcSelected;
 
 @end
 
@@ -28,10 +33,24 @@
 @synthesize ticketImage;
 @synthesize ocrLabel;
 @synthesize ticketScrollView;
+@synthesize rfcActionSheet;
+@synthesize fetchedResults;
+@synthesize rfcSelected;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //Get rfc from data base
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext = appDelegate.managedObjectContext;
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"RFCInfo"];
+    NSSortDescriptor *ordenacionPorNombre = [[NSSortDescriptor alloc] initWithKey:@"rfc" ascending:YES];
+    fetchRequest.sortDescriptors = @[ordenacionPorNombre];
+    
+    NSError *fetchingError = nil;
+    fetchedResults = [managedObjectContext executeFetchRequest:fetchRequest error:&fetchingError];
     
     //Medidas
     NSInteger widthScreen = self.view.frame.size.width;
@@ -41,11 +60,18 @@
     NSInteger depth = 0;
     NSInteger width = widthScreen-(2*padding);
     
-    //Company TextField
-    companyTextField = [[UITextField alloc] initWithFrame:CGRectMake(padding, depth+=height+20, width, height)];
-    companyTextField.borderStyle = UITextBorderStyleRoundedRect;
-    companyTextField.text = completeInvoice.company;
-    companyTextField.delegate = self;
+    //RFC table
+    rfcTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, depth+=height+20, widthScreen, height) style:UITableViewStylePlain];
+    rfcTableView.scrollEnabled = NO;
+    rfcTableView.dataSource = self;
+    rfcTableView.delegate = self;
+    [self.view addSubview:rfcTableView];
+    
+    //Company TextView
+    companyTextField = [[UITextView alloc] initWithFrame:CGRectMake(padding, depth+=height+10, width, height+20)];
+    companyTextField.editable = NO;
+    companyTextField.text = [NSString stringWithFormat:@"Empresa: %@", completeInvoice.company];
+    companyTextField.scrollEnabled = NO;
     [self.view addSubview:companyTextField];
     
     //Image view
@@ -68,9 +94,9 @@
     [self inicializeViewTicketElementsArray];
     [self.view addSubview:ticketScrollView];
     
-    //Send Button
-    UIBarButtonItem *bt_send = [[UIBarButtonItem alloc] initWithTitle:@"Enviar" style:UIBarButtonItemStylePlain target:self action:@selector(updateInvoice)];
-    self.navigationItem.rightBarButtonItem = bt_send;
+    //Save Button
+    UIBarButtonItem *bt_save = [[UIBarButtonItem alloc] initWithTitle:@"Guardar" style:UIBarButtonItemStylePlain target:self action:@selector(updateInvoice)];
+    self.navigationItem.rightBarButtonItem = bt_save;
     
 }
 
@@ -89,7 +115,12 @@
         }
     }
     
-    [completeInvoice ADUCompleteInvoiceWithAction:2 status:@"Pendiente"];
+    if([completeInvoice.status isEqualToString:@"Error"]){
+        completeInvoice.status = @"Pendiente";
+    }
+    [completeInvoice updateCompleteInvoiceWithRFC:rfcSelected status:completeInvoice.status];
+    
+    [self performSegueWithIdentifier:@"returnToHistorySegue" sender:self];
     
 }
 
@@ -122,15 +153,55 @@
     return YES;
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+#pragma mark - UITableViewDataSource
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    NSInteger numberOfRows = 0;
+    
+    if(tableView == rfcTableView){
+        numberOfRows = 1;
+    }
+    
+    return numberOfRows;
 }
-*/
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell = nil;
+    
+    //RFC table
+    if(tableView == rfcTableView){
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"RFC"];
+        cell.textLabel.text = completeInvoice.rfc;
+        
+    }
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //RFC table
+    if(tableView == rfcTableView){
+        
+        rfcActionSheet = [[UIActionSheet alloc] initWithTitle:@"Seleccionar RFC" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+        
+        //Add rfc's like buttons
+        for (int index=0; index<[fetchedResults count]; index++) {
+            BWRRFCInfo *rfcInfo = [fetchedResults objectAtIndex:index];
+            [rfcActionSheet addButtonWithTitle:rfcInfo.rfc];
+        }
+        
+        [rfcActionSheet showInView:self.view];
+    }
+}
+
+#pragma mark - UIActionSheetDelegate
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(actionSheet == rfcActionSheet){
+        BWRRFCInfo *rfcInfo = [fetchedResults objectAtIndex:buttonIndex];
+        rfcSelected = rfcInfo.rfc;
+        [rfcTableView reloadData];
+    }
+}
 
 @end

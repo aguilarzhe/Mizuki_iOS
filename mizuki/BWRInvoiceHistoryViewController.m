@@ -19,12 +19,15 @@
 @property UIImage *invoiceImage;
 @property UIBarButtonItem *settingsButton;
 //Page 1
+@property UILabel *rightInvoiceLabel;
 @property UITableView *rightInvoiceTableView;
 @property NSMutableArray *rightInvoicesArray;
 //Page 2
+@property UILabel *pendingInvoiceLabel;
 @property UITableView *pendingInvoiceTableView;
 @property NSMutableArray *pendingInvoicesArray;
 //Page 3
+@property UILabel *errorInvoiceLabel;
 @property UITableView *errorInvoiceTableView;
 @property NSMutableArray *errorInvoicesArray;
 //Controls
@@ -44,6 +47,7 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 @synthesize rightInvoiceTableView, pendingInvoiceTableView, errorInvoiceTableView;
 @synthesize rightInvoicesArray, pendingInvoicesArray, errorInvoicesArray;
 @synthesize invoiceData, invoiceDataPageControl;
+@synthesize rightInvoiceLabel, pendingInvoiceLabel, errorInvoiceLabel;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -59,24 +63,34 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     NSInteger heightScreen = self.view.frame.size.height;
     
     //PAGE1 ------------------------------------------------------------------------------
-    //
+    //Right invoice label
+    rightInvoiceLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 30, widthScreen, 44)];
+    rightInvoiceLabel.text = @"Facturas hechas";
+    
     //Right invoices table
-    rightInvoiceTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, 20, widthScreen, heightScreen) style:UITableViewStylePlain];
+    rightInvoiceTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, 64, widthScreen, heightScreen) style:UITableViewStylePlain];
     rightInvoiceTableView.delegate = self;
     rightInvoiceTableView.dataSource = self;
     rightInvoiceTableView.scrollEnabled = YES;
-    [self.view addSubview:rightInvoiceTableView];
     
     //PAGE2 ------------------------------------------------------------------------------
+    //Pending invoice label
+    pendingInvoiceLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 30, widthScreen, 44)];
+    pendingInvoiceLabel.text = @"Facturas pendientes";
+    
     //Pending invoices table
-    pendingInvoiceTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, 20, widthScreen, heightScreen) style:UITableViewStylePlain];
+    pendingInvoiceTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, 64, widthScreen, heightScreen) style:UITableViewStylePlain];
     pendingInvoiceTableView.delegate = self;
     pendingInvoiceTableView.dataSource = self;
     pendingInvoiceTableView.scrollEnabled = YES;
     
     //PAGE3 ------------------------------------------------------------------------------
+    //Error invoice label
+    errorInvoiceLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 30, widthScreen, 44)];
+    errorInvoiceLabel.text = @"Facturas con errores";
+    
     //Error invoices table
-    errorInvoiceTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, 20, widthScreen, heightScreen) style:UITableViewStylePlain];
+    errorInvoiceTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, 64, widthScreen, heightScreen) style:UITableViewStylePlain];
     errorInvoiceTableView.delegate = self;
     errorInvoiceTableView.dataSource = self;
     errorInvoiceTableView.scrollEnabled = YES;
@@ -306,23 +320,32 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
         //Right invoices table
         if(tableView == rightInvoiceTableView){
             BWRCompleteInvoice *cInvoice = [rightInvoicesArray objectAtIndex:indexPath.row];
-            [cInvoice ADUCompleteInvoiceWithAction:1 status:@""];
-            [rightInvoicesArray removeObjectAtIndex:indexPath.row];
-            [rightInvoiceTableView reloadData];
+            if([cInvoice delateCompleteInvoice]){
+                [rightInvoicesArray removeObjectAtIndex:indexPath.row];
+                [rightInvoiceTableView reloadData];
+            }else{
+                NSLog(@"Error al eliminar");
+            }
         }
         //Pending invoices table
         else if(tableView == pendingInvoiceTableView){
             BWRCompleteInvoice *cInvoice = [pendingInvoicesArray objectAtIndex:indexPath.row];
-            [cInvoice ADUCompleteInvoiceWithAction:1 status:@""];
-            [pendingInvoicesArray removeObjectAtIndex:indexPath.row];
-            [pendingInvoiceTableView reloadData];
+            if([cInvoice delateCompleteInvoice]){
+                [pendingInvoicesArray removeObjectAtIndex:indexPath.row];
+                [pendingInvoiceTableView reloadData];
+            }else{
+                NSLog(@"Error al eliminar");
+            }
         }
         //Error invoices table
         else{
             BWRCompleteInvoice *cInvoice = [errorInvoicesArray objectAtIndex:indexPath.row];
-            [cInvoice ADUCompleteInvoiceWithAction:1 status:@""];
-            [errorInvoicesArray removeObjectAtIndex:indexPath.row];
-            [errorInvoiceTableView reloadData];
+            if([cInvoice delateCompleteInvoice]){
+                [errorInvoicesArray removeObjectAtIndex:indexPath.row];
+                [errorInvoiceTableView reloadData];
+            }else{
+                NSLog(@"Error al eliminar");
+            }
         }
         
     }
@@ -352,14 +375,17 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     
     switch (indexPath.row) {
         case 0:
+            [cell.contentView addSubview:rightInvoiceLabel];
             [cell.contentView addSubview:rightInvoiceTableView];
             break;
         
         case 1:
+            [cell.contentView addSubview:pendingInvoiceLabel];
             [cell.contentView addSubview:pendingInvoiceTableView];
             break;
             
         default:
+            [cell.contentView addSubview:errorInvoiceLabel];
             [cell.contentView addSubview:errorInvoiceTableView];
             break;
     }

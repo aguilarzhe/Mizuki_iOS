@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "BWRCompleteInvoice.h"
 
-@interface BWREditInvoiceViewController : UIViewController <UITextFieldDelegate>
+@interface BWREditInvoiceViewController : UIViewController <UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
 
 @property BWRCompleteInvoice *completeInvoice;
 @property NSInteger typeInvoice;

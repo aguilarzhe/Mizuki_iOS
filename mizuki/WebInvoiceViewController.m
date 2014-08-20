@@ -32,12 +32,6 @@
 {
     [super viewDidLoad];
     
-    if([completeInvoice addCompleteInvoiceWithStatus:@"Facturada"]){
-        NSLog(@"SE REALIZO EL ADD CORRECTAMENTE: %@", completeInvoice.idInvoice);
-    }else{
-        NSLog(@"ERROR EN EL ADD");
-    }
-    
     invoiceWebView=[[UIWebView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,self.view.frame.size.height)];
     invoiceWebView.delegate = self;
     [self.view addSubview:invoiceWebView];
@@ -64,8 +58,6 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
  navigationType:(UIWebViewNavigationType)navigationType {
     
-    //NSLog(@"\n\n**************REQUEST URL: %@   COMPANY URL: %@\n\n", request.URL, companyURL);
-    
     return TRUE;
 }
 
@@ -73,15 +65,12 @@
 -(void) fillPagesAccordingToService {
     
     [self performSelectorOnMainThread:@selector(executeJavaScriptFromWebPageDiv) withObject:nil waitUntilDone:YES];
-    //[self executeJavaScriptFromWebPageDiv];
 }
 
 - (void) executeJavaScriptFromWebPageDiv{
     
-    //for (BWRInvoiceTicketPage *invoicePage in invoicePagesArray){
     for (int index=actualPage; index<[invoicePagesArray count]; index++){
         BWRInvoiceTicketPage *invoicePage = [invoicePagesArray objectAtIndex:index];
-        //BWRInvoiceTicketPage *invoicePage = [invoicePagesArray objectAtIndex:actualPage];
         NSString *javascript = [self createJavaScriptStringWithRules:invoicePage.rules];
         [self performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:javascript waitUntilDone:YES];
         
@@ -93,6 +82,12 @@
         actualPage++;
     }
     
+    //Add invoice to data base
+    if([completeInvoice addCompleteInvoiceWithStatus:@"Facturada"]){
+        NSLog(@"SE REALIZO EL ADD CORRECTAMENTE: %@", completeInvoice.idInvoice);
+    }else{
+        NSLog(@"ERROR EN EL ADD");
+    }
     
     [self performSegueWithIdentifier:@"InvoiceCompleteSegue" sender:self];
     
@@ -106,9 +101,6 @@
         NSLog(@"Java Script FALLO");
     }
     
-    if(![invoiceWebView.request.URL isEqual:companyURL]){
-        //break;
-    }
 }
 
 - (NSString *) createJavaScriptStringWithRules: (NSArray *)invoicePageRules{
@@ -119,7 +111,6 @@
         if ([viewElement.tipoCampoFormulario isEqualToString:@"submit"]) {
             [javascript appendFormat:@"document.getElementById('%@').click();\n", viewElement.campoFormulario];
         }else{
-            //NSLog(@"Elemento %@ valor: %@", viewElement.campoTicket, viewElement.selectionValue);
             [javascript appendFormat:@"document.getElementById('%@').value = '%@';\n", viewElement.campoFormulario, viewElement.selectionValue];
         }
     }

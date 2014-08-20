@@ -19,7 +19,7 @@
 @property GPPSignIn *signIn;
 @end
 
-/*@implementation BWRInitialConfigurationDataUserViewController
+@implementation BWRInitialConfigurationDataUserViewController
 @synthesize signInButton;
 @synthesize signIn;
 // Google app id, is provided for Google and is necesary for request a GPlus login and user information.
@@ -54,7 +54,7 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
  Create a gplus login button for obtain the user gmail address and show a application logo image.
  
  */
-/*-(void)buildInterface{
+-(void)buildInterface{
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     UIImageView *logoImage = [[UIImageView alloc] init];
     NSInteger width;
@@ -83,7 +83,7 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
 /** Catch the invocation segue event.
  When a invoiceDataSegue is called, we init a BWRInvoiceDataViewController with initWithFirstRFC method.
  */
-/*- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if([[segue identifier] isEqualToString:@"invoiceDataSegue"]){
         BWRInvoiceDataViewController *configurationInvoiceData = [segue destinationViewController];
@@ -99,7 +99,7 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
  Also is saved the email of the user after of gplus login.
  
  */
-/*- (void)invoiceDataViewController
+- (void)invoiceDataViewController
 {
     NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
     [userDefaults setValue:[self getEmailAddressFromGPPAccount] forKey:@"Correo"];
@@ -111,7 +111,7 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
  
  Using a segue, invoke the invoice history view controller.
  */
-/*- (void)invoiceHistoryViewController
+- (void)invoiceHistoryViewController
 {
     [self performSegueWithIdentifier:@"invoiceCompleteDataSegue" sender:self];
 }
@@ -123,7 +123,7 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
  
  If error is equal to nil, we refresh the interface.
  */
-/*- (void)finishedWithAuth: (GTMOAuth2Authentication *)auth
+- (void)finishedWithAuth: (GTMOAuth2Authentication *)auth
                    error: (NSError *) error {
     NSLog(@"Received error %@ and auth object %@",error, auth);
     if(error == nil){
@@ -137,7 +137,7 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
 /** Get the email address from the gplus account authenticated.
  @return Email address of google account.
  */
-/*-(NSString*)getEmailAddressFromGPPAccount{
+-(NSString*)getEmailAddressFromGPPAccount{
     NSString *email;
     
     email = signIn.authentication.userEmail;
@@ -147,7 +147,7 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
 
 /** If authentication is valid, we try to invoke the next view controller depending if is configurated the email address and the rfc info.
  */
-/*-(void)refreshInterfaceBasedOnSignIn {
+-(void)refreshInterfaceBasedOnSignIn {
     if ([[GPPSignIn sharedInstance] authentication]) {
         NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
         
@@ -160,101 +160,7 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
 }
 
 
-@end*/
-
-@implementation BWRInitialConfigurationDataUserViewController
-
-@synthesize tf_correo;
-@synthesize tf_password;
-@synthesize tf_confpassword;
-@synthesize bt_siguiente;
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    self.title = @"¡BIENVENIDO!";
-    
-    //Medidas
-    NSInteger anchoPantalla = self.view.frame.size.width;
-    NSInteger ALTO = 31;
-    NSInteger PADING = 20;
-    NSInteger espaciado = 100;
-    NSInteger ANCHO_LARGO = anchoPantalla-(2*PADING);
-    
-    //Correo
-    tf_correo = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado, ANCHO_LARGO, ALTO)];
-    tf_correo.borderStyle = UITextBorderStyleRoundedRect;
-    tf_correo.font = [UIFont systemFontOfSize:17.0];
-    tf_correo.placeholder = @"Correo";
-    [self.view addSubview:tf_correo];
-    
-    //Contraseña
-    tf_password = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
-    tf_password.borderStyle = UITextBorderStyleRoundedRect;
-    tf_password.font = [UIFont systemFontOfSize:17.0];
-    tf_password.placeholder = @"Contraseña";
-    tf_password.secureTextEntry = YES;
-    [self.view addSubview:tf_password];
-    
-    //Comprobando si no es la primera vez de la aplicacion
-    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-    
-    if(!([userDefaults valueForKey:@"Correo"] && [userDefaults valueForKey:@"rfc"])){
-        bt_siguiente = [[UIBarButtonItem alloc] initWithTitle:@"Siguiente" style:UIBarButtonItemStylePlain target:self action:@selector(invoiceDataViewController)];
-        
-        //Confirmacion contraseña
-        tf_confpassword = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=40, ANCHO_LARGO, ALTO)];
-        tf_confpassword.borderStyle = UITextBorderStyleRoundedRect;
-        tf_confpassword.font = [UIFont systemFontOfSize:17.0];
-        tf_confpassword.placeholder = @"Confirmacion de contraseña";
-        tf_confpassword.secureTextEntry = YES;
-        [self.view addSubview:tf_confpassword];
-        
-    }else{
-        bt_siguiente = [[UIBarButtonItem alloc] initWithTitle:@"Login" style:UIBarButtonItemStylePlain target:self action:@selector(invoiceHistoryViewController)];
-    }
-    
-    //Boton siguiente
-    self.navigationItem.rightBarButtonItem = bt_siguiente;
-    
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - Navigation
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if([[segue identifier] isEqualToString:@"invoiceDataSegue"]){
-        BWRInvoiceDataViewController *configurationInvoiceData = [segue destinationViewController];
-        [configurationInvoiceData initWithDefault:@"¡BIENVENIDO!"];
-    }
-}
-
-- (void)invoiceDataViewController
-{
-    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-    [userDefaults setValue:tf_correo.text forKey:@"Correo"];
-    
-    [self performSegueWithIdentifier:@"invoiceDataSegue" sender:self];
-}
-
-- (void)invoiceHistoryViewController
-{
-    //Temporal
-    /*NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-     [userDefaults setValue:nil forKey:@"Correo"];
-     [userDefaults setValue:nil forKey:@"rfc"];*/
-    
-    [self performSegueWithIdentifier:@"invoiceCompleteDataSegue" sender:self];
-}
-
-
-
 @end
+
+
 

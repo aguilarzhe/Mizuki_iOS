@@ -28,7 +28,7 @@
 -(BWRCompleteInvoice *) initFromCoreDataWithInvoice:(BWRInvoice *) invoice;
 -(BOOL) addCompleteInvoiceWithStatus:(NSString *)status;
 -(BOOL) updateCompleteInvoiceWithRFC: (NSString *)rfc status:(NSString *)status;
--(BOOL) ADUCompleteInvoiceWithAction:(NSInteger)action status:(NSString *)state ;
+-(BOOL) delateCompleteInvoice;
 -(NSMutableArray *) getRulesViewElementsOfInvoice;
 
 

@@ -90,6 +90,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="returnToHistorySegue" id="q3W-YU-4gn"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y0j-XJ-nVU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -181,7 +184,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="q3W-YU-4gn"/>
         <segue reference="GoA-VB-Kl5"/>
-        <segue reference="eBy-Ij-oQw"/>
     </inferredMetricsTieBreakers>
 </document>

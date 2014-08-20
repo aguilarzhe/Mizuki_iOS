@@ -24,7 +24,8 @@ static NSData *dataCompany;
     NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
     //******************************
     
-    NSData *dataCompany = [self downloadDataOfURL:[NSString stringWithFormat:@"http://%@:3000/company?indicio=%@",[userDefaults valueForKey:@"ipServidor"],substring]];
+    //NSData *dataCompany = [self downloadDataOfURL:[NSString stringWithFormat:@"http://%@:3000/company?indicio=%@",[userDefaults valueForKey:@"ipServidor"],substring]];
+    NSData *dataCompany = [self downloadDataOfURL:[NSString stringWithFormat:@"http://bawaremobile.com/company?indicio=%@", substring]];
     if (dataCompany != nil)
     {
         NSMutableArray *companyList =[[NSMutableArray alloc] initWithArray:[NSJSONSerialization JSONObjectWithData:dataCompany options:0 error:NULL]];
@@ -39,7 +40,8 @@ static NSData *dataCompany;
     NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
     //******************************
     
-    NSData *dataCompany = [self downloadDataOfURL:[NSString stringWithFormat:@"http://%@:3000/company/%d",[userDefaults valueForKey:@"ipServidor"], idCompany]];
+    //NSData *dataCompany = [self downloadDataOfURL:[NSString stringWithFormat:@"http://%@:3000/company/%d",[userDefaults valueForKey:@"ipServidor"], idCompany]];
+    NSData *dataCompany = [self downloadDataOfURL:[NSString stringWithFormat:@"http://bawaremobile.com/company/%d", idCompany]];
     
     if (dataCompany != nil)
     {

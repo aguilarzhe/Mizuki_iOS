@@ -97,7 +97,7 @@
     addInvoice.company = company;
     NSData *imageData = [NSData dataWithData:UIImagePNGRepresentation(image)];
     addInvoice.image = imageData;
-    NSLog(@"Agregada Invoice: %@", addInvoice.idInvoice);
+    
     //Add Rules
     for(BWRTicketViewElement *rule in rulesViewElementsArray){
         BWRRule *addRule;
@@ -110,7 +110,6 @@
         addRule.formField = rule.campoFormulario;
         addRule.formFieldType = rule.tipoCampoFormulario;
         addRule.fieldValue = rule.selectionValue;
-        NSLog(@"Agregada Rule: %@", addRule.idInvoice_Invoice);
     }
     
     NSError *error = nil;
@@ -128,8 +127,21 @@
     status = state;
     date = [self stringDateFormatterFromDate:[NSDate date]];
     
-    //Update Invoice
+    //Get Invoice
     BWRInvoice *upInvoice;
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Invoice"];
+    NSPredicate *predicateID = [NSPredicate predicateWithFormat:@"idInvoice == %@",idInvoice];
+    [fetchRequest setPredicate:predicateID];
+    NSError *error;
+    NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    if(!error){
+        upInvoice = [fetchedObjects objectAtIndex:0];
+    }else{
+        return FALSE;
+    }
+
+    //Update Invoice
     upInvoice.status = state;
     upInvoice.date = [NSDate date];
     upInvoice.idInvoice = idInvoice;
@@ -139,9 +151,23 @@
     NSData *imageData = [NSData dataWithData:UIImagePNGRepresentation(image)];
     upInvoice.image = imageData;
     
+    //Get Rules
+    BWRRule *upRule;
+    NSInteger index = 0;
+    fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Rule"];
+    predicateID = [NSPredicate predicateWithFormat:@"idInvoice_Invoice == %@",idInvoice];
+    [fetchRequest setPredicate:predicateID];
+    fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    if(error){
+        return FALSE;
+    }
+    
     //Update Rules
     for(BWRTicketViewElement *rule in rulesViewElementsArray){
-        BWRRule *upRule;
+        upRule = [fetchedObjects objectAtIndex:index];
+        index++;
+        
         upRule.idRule = [NSString stringWithFormat:@"%@-%@", idInvoice, rule.campoTicket];
         upRule.idInvoice_Invoice=idInvoice;
         upRule.ticketField = rule.campoTicket;
@@ -151,7 +177,7 @@
         upRule.fieldValue = rule.selectionValue;
     }
     
-    NSError *error = nil;
+    error = nil;
     if([managedObjectContext save:&error]){
         return  TRUE;
     }
@@ -159,63 +185,46 @@
     return FALSE;
 }
 
--(BOOL) ADUCompleteInvoiceWithAction:(NSInteger)action status:(NSString *)state {
+-(BOOL) delateCompleteInvoice{
     
-    //Update object if action is update or add
-    if(action==0 || action==2){
-        status = state;
-        date = [self stringDateFormatterFromDate:[NSDate date]];;
+    //Get Invoice
+    BWRInvoice *dInvoice;
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Invoice"];
+    NSPredicate *predicateID = [NSPredicate predicateWithFormat:@"idInvoice == %@",idInvoice];
+    [fetchRequest setPredicate:predicateID];
+    NSError *error;
+    NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    if(!error){
+        dInvoice = [fetchedObjects objectAtIndex:0];
+    }else{
+        return FALSE;
     }
     
-    //INVOICE
-    BWRInvoice *Invoice;
-    //If action add
-    if(action==0){
-        Invoice = [NSEntityDescription insertNewObjectForEntityForName:@"Invoice" inManagedObjectContext:managedObjectContext];
-    }
-    //Asing data
-    Invoice.status = status;
-    Invoice.date = [NSDate date];
-    Invoice.idInvoice = idInvoice;
-    Invoice.rfc = rfc;
-    Invoice.resultOCR = resultOCR;
-    Invoice.company = company;
-    NSData *imageData = [NSData dataWithData:UIImagePNGRepresentation(image)];
-    Invoice.image = imageData;
-    //If action delete
-    if(action ==1){
-        [managedObjectContext deleteObject:Invoice];
+    //Delate Invoice
+    [managedObjectContext deleteObject:dInvoice];
+    
+    //Get Rules
+    fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Rule"];
+    predicateID = [NSPredicate predicateWithFormat:@"idInvoice_Invoice == %@",idInvoice];
+    [fetchRequest setPredicate:predicateID];
+    fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    if(error){
+        return FALSE;
     }
     
-    //RULES
-    for(BWRTicketViewElement *rule in rulesViewElementsArray){
-        BWRRule *Rule;
-        
-        //If action add
-        if(action==0){
-            Rule = [NSEntityDescription insertNewObjectForEntityForName:@"Rule" inManagedObjectContext:managedObjectContext];
-        }
-        //Asing data
-        Rule.idRule = [NSString stringWithFormat:@"%@-%@", idInvoice, rule.campoTicket];
-        Rule.idInvoice_Invoice=idInvoice;
-        Rule.ticketField = rule.campoTicket;
-        Rule.ticketMask = rule.mascaraTicket;
-        Rule.formField = rule.campoFormulario;
-        Rule.formFieldType = rule.tipoCampoFormulario;
-        Rule.fieldValue = rule.selectionValue;
-        //If action delete
-        if(action ==1){
-            [managedObjectContext deleteObject:Rule];
-        }
+    //Delete Rules
+    for(BWRRule *dRule in fetchedObjects){
+        [managedObjectContext deleteObject:dRule];
     }
     
-    NSError *error = nil;
+    error = nil;
     if([managedObjectContext save:&error]){
         return  TRUE;
     }
     
     return FALSE;
-    
 }
 
 -(NSMutableArray *) getRulesViewElementsOfInvoice{
@@ -235,6 +244,7 @@
         for(BWRRule *rule in fetchedObjects){
             BWRTicketViewElement *viewElement = [[BWRTicketViewElement alloc] initTicketInfoWithElements:rule.ticketField mask:rule.ticketMask form:rule.formField type:rule.formFieldType value:rule.fieldValue];
             [resultArray addObject:viewElement];
+            NSLog(@"\nRule: %@", rule.idRule);
         }
         
         return resultArray;
