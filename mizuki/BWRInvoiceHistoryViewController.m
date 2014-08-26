@@ -12,11 +12,12 @@
 #import "BWRMyAccountViewController.h"
 
 @interface BWRInvoiceHistoryViewController ()
-@property UIActionSheet *imageInvoiceActionSheet;
+@property (nonatomic, retain) UIActionSheet *imageInvoiceActionSheet;
 @property UIImage *invoiceImage;
 @property UITableView *invoiceTableView;
 @property NSMutableArray *invoices;
 @property UIBarButtonItem *settingsButton;
+@property UIImagePickerController *myImagePickerController;
 @end
 
 @implementation BWRInvoiceHistoryViewController
@@ -25,6 +26,7 @@
 @synthesize invoiceTableView;
 @synthesize invoices;
 @synthesize settingsButton;
+@synthesize myImagePickerController;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -83,23 +85,38 @@
 #pragma mark - Captura de imagen
 -(void)captureInvoiceFromCamera{
     if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
-        UIImagePickerController *myImagePickerController = [[UIImagePickerController alloc] init];
+        myImagePickerController = [[UIImagePickerController alloc] init];
         myImagePickerController.delegate = self;
         myImagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
         myImagePickerController.mediaTypes = @[(NSString *) kUTTypeImage];
         myImagePickerController.allowsEditing = NO;
-        [self presentViewController:myImagePickerController animated:YES completion:nil];
+        
+        if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+            [self dismissViewControllerAnimated:YES completion:^{
+                [self presentViewController:myImagePickerController animated:YES completion:nil];
+            }];
+        }else if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+            [self presentViewController:myImagePickerController animated:YES completion:nil];
+        }
+
     }
 }
 
 -(void)captureInvoiceFromPhotoLibrary{
     if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum]){
-        UIImagePickerController *myImagePickerController = [[UIImagePickerController alloc] init];
+        myImagePickerController = [[UIImagePickerController alloc] init];
         myImagePickerController.delegate = self;
         myImagePickerController.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
         myImagePickerController.mediaTypes = @[(NSString *)kUTTypeImage];
         myImagePickerController.allowsEditing = NO;
-        [self presentViewController:myImagePickerController animated:YES completion:nil];
+        
+        if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+            [self dismissViewControllerAnimated:YES completion:^{
+                [self presentViewController:myImagePickerController animated:YES completion:nil];
+            }];
+        }else if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+            [self presentViewController:myImagePickerController animated:YES completion:nil];
+        }
     }
 }
 
