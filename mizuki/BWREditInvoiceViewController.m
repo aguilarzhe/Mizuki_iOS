@@ -10,17 +10,21 @@
 #import "AppDelegate.h"
 #import "BWRRFCInfo.h"
 #import "BWRTicketViewElement.h"
+#import "BWRWebConnection.h"
+#import "BWRInvoiceTicketPage.h"
 
 @interface BWREditInvoiceViewController ()
 
 @property UITableView *rfcTableView;
-@property UITextView *companyTextField;
+@property UITextField *companyTextField;
 @property UIImageView *ticketImage;
-@property UITextView *ocrLabel;
 @property UIScrollView *ticketScrollView;
 @property UIActionSheet *rfcActionSheet;
 @property NSArray *fetchedResults;
 @property NSString *rfcSelected;
+//Send invoice
+@property NSURL *tiendaURL;
+@property NSMutableArray *invoicePagesArray;
 
 @end
 
@@ -31,7 +35,6 @@
 @synthesize rfcTableView;
 @synthesize companyTextField;
 @synthesize ticketImage;
-@synthesize ocrLabel;
 @synthesize ticketScrollView;
 @synthesize rfcActionSheet;
 @synthesize fetchedResults;
@@ -57,21 +60,30 @@
     NSInteger heightScreen = self.view.frame.size.height;
     NSInteger height = 44;
     NSInteger padding = 10;
-    NSInteger depth = 0;
+    NSInteger depth = 15;
     NSInteger width = widthScreen-(2*padding);
     
+    //TEMPORAL*************************************
+    UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [sendButton addTarget:self action:@selector(sendInvoice) forControlEvents:UIControlEventTouchDown];
+    [sendButton setTitle:@"Reenviar" forState:UIControlStateNormal];
+    sendButton.frame = CGRectMake(0, depth+=height+10, widthScreen, height);
+    [self.view addSubview:sendButton];
+    //*********************************************
+    
     //RFC table
-    rfcTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, depth+=height+20, widthScreen, height) style:UITableViewStylePlain];
+    rfcTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, depth+=height+10, widthScreen, height) style:UITableViewStylePlain];
     rfcTableView.scrollEnabled = NO;
     rfcTableView.dataSource = self;
     rfcTableView.delegate = self;
+    rfcSelected = completeInvoice.rfc;
     [self.view addSubview:rfcTableView];
     
     //Company TextView
-    companyTextField = [[UITextView alloc] initWithFrame:CGRectMake(padding, depth+=height+10, width, height+20)];
-    companyTextField.editable = NO;
+    companyTextField = [[UITextField alloc] initWithFrame:CGRectMake(padding, depth+=height+10, width, height)];
+    companyTextField.enabled = NO;
     companyTextField.text = [NSString stringWithFormat:@"Empresa: %@", completeInvoice.company];
-    companyTextField.scrollEnabled = NO;
+    //companyTextField.scrollEnabled = NO;
     [self.view addSubview:companyTextField];
     
     //Image view
@@ -80,13 +92,6 @@
     ticketImage.image = completeInvoice.image;
     [self.view addSubview:ticketImage];
     
-    //OCRLabel
-    ocrLabel = [[UITextView alloc] initWithFrame:CGRectMake(padding, depth+=100+10, width, 100)];
-    ocrLabel.editable = NO;
-    ocrLabel.scrollEnabled = YES;
-    ocrLabel.text = completeInvoice.resultOCR;
-    [self.view addSubview:ocrLabel];
-    
     //Scroll View
     ticketScrollView=[[UIScrollView alloc] initWithFrame:CGRectMake(0, depth+=100+10, widthScreen-10, heightScreen-100)];
     ticketScrollView.contentSize=CGSizeMake(widthScreen,heightScreen);
@@ -94,9 +99,14 @@
     [self inicializeViewTicketElementsArray];
     [self.view addSubview:ticketScrollView];
     
-    //Save Button
-    UIBarButtonItem *bt_save = [[UIBarButtonItem alloc] initWithTitle:@"Guardar" style:UIBarButtonItemStylePlain target:self action:@selector(updateInvoice)];
-    self.navigationItem.rightBarButtonItem = bt_save;
+    //If invoice is not right
+    if(![completeInvoice.status isEqualToString:@"Facturada"]){
+        //Save Button
+        UIBarButtonItem *bt_save = [[UIBarButtonItem alloc] initWithTitle:@"Guardar" style:UIBarButtonItemStylePlain target:self action:@selector(updateInvoice)];
+        self.navigationItem.rightBarButtonItem = bt_save;
+    }
+    
+    self.title = @"Editar Factura";
     
 }
 
@@ -136,9 +146,60 @@
     for(BWRTicketViewElement *viewElement in completeInvoice.rulesViewElementsArray){
         [viewElement createViewWithRect:padding y:depth width:width height:height/**[ticketViewElement.valueCampoTicket count]*/ delegate:self];
         ((UITextField *)viewElement.viewTicketElement).text = viewElement.selectionValue;
+        
+        //Disable editing if invoice is right
+        if([completeInvoice.status isEqualToString:@"Facturada"]){
+            ((UITextField *)viewElement.viewTicketElement).enabled = NO;
+        }
+        
         [ticketScrollView addSubview:viewElement.viewTicketElement];
         depth = depth + (height /** [ticketViewElement.valueCampoTicket count]*/) +10;
     }
+}
+
+-(void) sendInvoice {
+    
+    //Update invoice
+    [self updateInvoice];
+    
+    //Get Data company
+    NSArray *stringCompanyArray = [BWRWebConnection companyListWithSubstring:completeInvoice.company];
+    NSDictionary *companyDictionary = [stringCompanyArray objectAtIndex:0];
+    int idCompany = [[companyDictionary valueForKey:@"id"] integerValue];
+    
+    NSDictionary *companyDataDictionary = [BWRWebConnection viewElementsWithCompany:idCompany];
+    NSArray *rulesBlockArray = [companyDataDictionary valueForKey:@"rules_block"];
+    _tiendaURL = [companyDataDictionary valueForKey:@"url"];
+    
+    //Get data rfc
+    
+    
+    //Get pages and update elements
+    for(NSDictionary *pageDictionary in rulesBlockArray){
+        
+        BWRInvoiceTicketPage *invoicePage = [[BWRInvoiceTicketPage alloc] initWithData:[pageDictionary valueForKey:@"name"] pageNumber:[pageDictionary valueForKey:@"page_num"]];
+        NSArray *rulesArray = [pageDictionary valueForKey:@"rules"];
+        
+        //Recorrer rules
+        for(NSDictionary *ticketElement in rulesArray){
+            BWRTicketViewElement *ticketViewElement = [[BWRTicketViewElement alloc] initWithDictionary:ticketElement];
+            
+            //Dato de usuario
+            if([ticketViewElement.dataSource isEqualToString:@"user_info"]){
+                
+                
+            //Dato de ticket
+            }else if([ticketViewElement.dataSource isEqualToString:@"ticket_info"]){
+                
+            }
+            
+            [invoicePage.rules addObject:ticketViewElement];
+            
+        }
+        [_invoicePagesArray addObject:invoicePage];
+        
+    }
+    
 }
 
 #pragma mark - UITextFieldDelegate
@@ -170,7 +231,7 @@
     //RFC table
     if(tableView == rfcTableView){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"RFC"];
-        cell.textLabel.text = completeInvoice.rfc;
+        cell.textLabel.text = rfcSelected;
         
     }
     
@@ -184,10 +245,14 @@
         
         rfcActionSheet = [[UIActionSheet alloc] initWithTitle:@"Seleccionar RFC" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
         
-        //Add rfc's like buttons
-        for (int index=0; index<[fetchedResults count]; index++) {
-            BWRRFCInfo *rfcInfo = [fetchedResults objectAtIndex:index];
-            [rfcActionSheet addButtonWithTitle:rfcInfo.rfc];
+        //Add rfc's like buttons if invoice is not right
+        if(![completeInvoice.status isEqualToString:@"Facturada"]){
+            for (int index=0; index<[fetchedResults count]; index++) {
+                BWRRFCInfo *rfcInfo = [fetchedResults objectAtIndex:index];
+                [rfcActionSheet addButtonWithTitle:rfcInfo.rfc];
+            }
+        }else{
+            [rfcActionSheet addButtonWithTitle:completeInvoice.rfc];
         }
         
         [rfcActionSheet showInView:self.view];

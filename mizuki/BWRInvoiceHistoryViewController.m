@@ -18,21 +18,9 @@
 @property UIActionSheet *imageInvoiceActionSheet;
 @property UIImage *invoiceImage;
 @property UIBarButtonItem *settingsButton;
-//Page 1
-@property UILabel *rightInvoiceLabel;
-@property UITableView *rightInvoiceTableView;
-@property NSMutableArray *rightInvoicesArray;
-//Page 2
-@property UILabel *pendingInvoiceLabel;
-@property UITableView *pendingInvoiceTableView;
-@property NSMutableArray *pendingInvoicesArray;
-//Page 3
-@property UILabel *errorInvoiceLabel;
-@property UITableView *errorInvoiceTableView;
-@property NSMutableArray *errorInvoicesArray;
-//Controls
-@property UICollectionView *invoiceData;
-@property UIPageControl *invoiceDataPageControl;
+@property NSMutableArray *actualInvoicesArray;
+@property UITableView *invoiceTableView;
+@property UISegmentedControl *invoiceSegmentedControl;
 
 @end
 
@@ -44,80 +32,36 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 @synthesize imageInvoiceActionSheet;
 @synthesize invoiceImage;
 @synthesize settingsButton;
-@synthesize rightInvoiceTableView, pendingInvoiceTableView, errorInvoiceTableView;
-@synthesize rightInvoicesArray, pendingInvoicesArray, errorInvoicesArray;
-@synthesize invoiceData, invoiceDataPageControl;
-@synthesize rightInvoiceLabel, pendingInvoiceLabel, errorInvoiceLabel;
+@synthesize invoiceTableView;
+@synthesize actualInvoicesArray;
+@synthesize invoiceSegmentedControl;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     //Load invoices from core data
-    rightInvoicesArray = [[NSMutableArray alloc] init];
-    pendingInvoicesArray = [[NSMutableArray alloc] init];
-    errorInvoicesArray = [[NSMutableArray alloc] init];
-    [self loadInvoicesFromCoreData];
+    actualInvoicesArray = [[NSMutableArray alloc] init];
+    [self loadInvoicesFromCoreData: @"Todas"];
     
     //Measures
     NSInteger widthScreen = self.view.frame.size.width;
     NSInteger heightScreen = self.view.frame.size.height;
     
-    //PAGE1 ------------------------------------------------------------------------------
-    //Right invoice label
-    rightInvoiceLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 30, widthScreen, 44)];
-    rightInvoiceLabel.text = @"Facturas hechas";
+    //Invoice Table View
+    invoiceTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, 55, widthScreen, heightScreen) style:UITableViewStylePlain];
+    invoiceTableView.delegate = self;
+    invoiceTableView.dataSource = self;
+    invoiceTableView.scrollEnabled = YES;
+    invoiceTableView.hidden = NO;
+    [self.view addSubview:invoiceTableView];
     
-    //Right invoices table
-    rightInvoiceTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, 64, widthScreen, heightScreen) style:UITableViewStylePlain];
-    rightInvoiceTableView.delegate = self;
-    rightInvoiceTableView.dataSource = self;
-    rightInvoiceTableView.scrollEnabled = YES;
-    
-    //PAGE2 ------------------------------------------------------------------------------
-    //Pending invoice label
-    pendingInvoiceLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 30, widthScreen, 44)];
-    pendingInvoiceLabel.text = @"Facturas pendientes";
-    
-    //Pending invoices table
-    pendingInvoiceTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, 64, widthScreen, heightScreen) style:UITableViewStylePlain];
-    pendingInvoiceTableView.delegate = self;
-    pendingInvoiceTableView.dataSource = self;
-    pendingInvoiceTableView.scrollEnabled = YES;
-    
-    //PAGE3 ------------------------------------------------------------------------------
-    //Error invoice label
-    errorInvoiceLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 30, widthScreen, 44)];
-    errorInvoiceLabel.text = @"Facturas con errores";
-    
-    //Error invoices table
-    errorInvoiceTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, 64, widthScreen, heightScreen) style:UITableViewStylePlain];
-    errorInvoiceTableView.delegate = self;
-    errorInvoiceTableView.dataSource = self;
-    errorInvoiceTableView.scrollEnabled = YES;
-    
-    //CONTROL ------------------------------------------------------------------------------
-    UICollectionViewFlowLayout *invoiceDataLayout = [[UICollectionViewFlowLayout alloc] init];
-    invoiceDataLayout.minimumLineSpacing = 0.0;
-    invoiceDataLayout.itemSize = CGSizeMake(widthScreen-10, heightScreen-100);
-    invoiceDataLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    
-    invoiceData= [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, widthScreen, heightScreen-60) collectionViewLayout:invoiceDataLayout];
-    invoiceData.dataSource = self;
-    invoiceData.delegate = self;
-    invoiceData.backgroundColor = [UIColor whiteColor];
-    invoiceData.pagingEnabled = YES;
-    invoiceData.showsHorizontalScrollIndicator = NO;
-    [invoiceData registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"invoiceCell"];
-    [self.view addSubview:invoiceData];
-    
-    invoiceDataPageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, heightScreen-70, widthScreen, 20)];
-    invoiceDataPageControl.backgroundColor = [UIColor whiteColor];
-    invoiceDataPageControl.userInteractionEnabled = NO;
-    invoiceDataPageControl.currentPageIndicatorTintColor = [UIColor redColor];
-    invoiceDataPageControl.numberOfPages = 3;
-    invoiceDataPageControl.pageIndicatorTintColor = [UIColor colorWithWhite:0.92 alpha:1.0];
-    [self.view addSubview:invoiceDataPageControl];
-    
+    //Segmented control
+    invoiceSegmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Todas", @"Listas", @"Pendientes", @"Error", nil]];
+    invoiceSegmentedControl.frame = CGRectMake(10, 70, widthScreen-20, 30);
+    invoiceSegmentedControl.selectedSegmentIndex = 0;
+    invoiceSegmentedControl.tintColor = [UIColor blueColor];
+    [invoiceSegmentedControl addTarget:self action:@selector(valueChanged:) forControlEvents: UIControlEventValueChanged];
+    [self.view addSubview:invoiceSegmentedControl];
 
     //Navegation buttons
     UIBarButtonItem *imageInvoiceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showImageInvoceActionSheet:)];
@@ -164,7 +108,7 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     }
 }
 
-- (void) loadInvoicesFromCoreData {
+- (void) loadInvoicesFromCoreData: (NSString *)invoiceType{
     
     //Get invoices from data base
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
@@ -177,24 +121,54 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     NSError *error;
     NSArray *invoicesResult = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
     
+    [actualInvoicesArray removeAllObjects];
     if(!error){
         NSLog(@"Recuperación satisfactoria. %d", [invoicesResult count]);
         
         for(BWRInvoice *invoice in invoicesResult){
             BWRCompleteInvoice *completeInvoice = [[BWRCompleteInvoice alloc] initFromCoreDataWithInvoice:invoice];
-            
-            if([completeInvoice.status isEqualToString:@"Facturada"]){
-                [rightInvoicesArray addObject:completeInvoice];
-            }else if([completeInvoice.status isEqualToString:@"Pendiente"]){
-                [pendingInvoicesArray addObject:completeInvoice];
-            }else{
-                [errorInvoicesArray addObject:completeInvoice];
+            if([invoiceType isEqualToString:completeInvoice.status]){
+                [actualInvoicesArray addObject:completeInvoice];
+            }else if([invoiceType isEqualToString:@"Todas"]){
+                [actualInvoicesArray addObject:completeInvoice];
             }
         }
         
     } else {
         NSLog(@"Error al recuperar.");
     }
+}
+
+-(void) sendAllPendingInvoices { //Do in background
+    
+    //Recorrer pending invoices
+    
+        //Get id company
+    
+        //Get rules of company
+    
+        //Get url
+    
+        //Recorrer rules to actualizar ticket elements
+    
+        //Eliminar factura
+    
+        //Facturar
+}
+
+#pragma mark - Segmented control sources
+- (void)valueChanged:(UISegmentedControl *)segment {
+    
+    if(segment.selectedSegmentIndex == 0) {
+        [self loadInvoicesFromCoreData:@"Todas"];
+    }else if(segment.selectedSegmentIndex == 1){
+        [self loadInvoicesFromCoreData:@"Facturada"];
+    }else if(segment.selectedSegmentIndex == 2){
+        [self loadInvoicesFromCoreData:@"Pendiente"];
+    }else if(segment.selectedSegmentIndex==3){
+        [self loadInvoicesFromCoreData:@"Error"];
+    }
+    [invoiceTableView reloadData];
 }
 
 #pragma mark - Captura de imagen
@@ -252,12 +226,8 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     NSInteger numberOfRows = 0;
     
-    if(tableView == rightInvoiceTableView){
-        numberOfRows = [rightInvoicesArray count];
-    }else if(tableView == pendingInvoiceTableView){
-        numberOfRows = [pendingInvoicesArray count];
-    }else{
-        numberOfRows = [errorInvoicesArray count];
+    if(tableView == invoiceTableView){
+        numberOfRows = [actualInvoicesArray count];
     }
     
     return numberOfRows;
@@ -266,25 +236,10 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = nil;
     
-    //Right invoices table
-    if(tableView == rightInvoiceTableView){
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"RightInvoiceCell"];
+    if(tableView == invoiceTableView){
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"InvoiceCell"];
         
-        BWRCompleteInvoice *completeInvoice = [rightInvoicesArray objectAtIndex:indexPath.row];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@\t%@", completeInvoice.company, completeInvoice.date];
-    }
-    //Pending invoices table
-    else if(tableView == pendingInvoiceTableView){
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"PendingInvoiceCell"];
-        
-        BWRCompleteInvoice *completeInvoice = [pendingInvoicesArray objectAtIndex:indexPath.row];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@\t%@", completeInvoice.company, completeInvoice.date];
-    }
-    //Error invoices table
-    else{
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ErrorInvoiceCell"];
-        
-        BWRCompleteInvoice *completeInvoice = [errorInvoicesArray objectAtIndex:indexPath.row];
+        BWRCompleteInvoice *completeInvoice = [actualInvoicesArray objectAtIndex:indexPath.row];
         cell.textLabel.text = [NSString stringWithFormat:@"%@\t%@", completeInvoice.company, completeInvoice.date];
     }
     
@@ -293,20 +248,8 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 
-    //Right invoices table
-    if(tableView == rightInvoiceTableView){
-        typeActualInvoice = 0;
-        actualInvoice = [rightInvoicesArray objectAtIndex:indexPath.row];
-    }
-    //Pending invoices table
-    else if(tableView == pendingInvoiceTableView){
-        typeActualInvoice = 2;
-        actualInvoice = [pendingInvoicesArray objectAtIndex:indexPath.row];
-    }
-    //Error invoices table
-    else{
-        typeActualInvoice = 2;
-        actualInvoice = [errorInvoicesArray objectAtIndex:indexPath.row];
+    if(tableView == invoiceTableView){
+        actualInvoice = [actualInvoicesArray objectAtIndex:indexPath.row];
     }
     
     [self performSegueWithIdentifier:@"EditInvoiceSegue" sender:self];
@@ -317,33 +260,11 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
-        //Right invoices table
-        if(tableView == rightInvoiceTableView){
-            BWRCompleteInvoice *cInvoice = [rightInvoicesArray objectAtIndex:indexPath.row];
-            if([cInvoice delateCompleteInvoice]){
-                [rightInvoicesArray removeObjectAtIndex:indexPath.row];
-                [rightInvoiceTableView reloadData];
-            }else{
-                NSLog(@"Error al eliminar");
-            }
-        }
-        //Pending invoices table
-        else if(tableView == pendingInvoiceTableView){
-            BWRCompleteInvoice *cInvoice = [pendingInvoicesArray objectAtIndex:indexPath.row];
-            if([cInvoice delateCompleteInvoice]){
-                [pendingInvoicesArray removeObjectAtIndex:indexPath.row];
-                [pendingInvoiceTableView reloadData];
-            }else{
-                NSLog(@"Error al eliminar");
-            }
-        }
-        //Error invoices table
-        else{
-            BWRCompleteInvoice *cInvoice = [errorInvoicesArray objectAtIndex:indexPath.row];
-            if([cInvoice delateCompleteInvoice]){
-                [errorInvoicesArray removeObjectAtIndex:indexPath.row];
-                [errorInvoiceTableView reloadData];
-            }else{
+        if(tableView == invoiceTableView){
+            BWRCompleteInvoice *cInvoice = [actualInvoicesArray objectAtIndex:indexPath.row];
+            [actualInvoicesArray removeObject:cInvoice];
+            [invoiceTableView reloadData];
+            if(![cInvoice delateCompleteInvoice]){
                 NSLog(@"Error al eliminar");
             }
         }
@@ -359,38 +280,6 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
     [super setEditing:editing animated:animated];
-}
-
-#pragma mark - Collection view data source
--(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    return 3;
-}
-
-
--(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    UICollectionViewCell *cell = nil;
-    
-    cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"invoiceCell" forIndexPath:indexPath];
-    
-    switch (indexPath.row) {
-        case 0:
-            [cell.contentView addSubview:rightInvoiceLabel];
-            [cell.contentView addSubview:rightInvoiceTableView];
-            break;
-        
-        case 1:
-            [cell.contentView addSubview:pendingInvoiceLabel];
-            [cell.contentView addSubview:pendingInvoiceTableView];
-            break;
-            
-        default:
-            [cell.contentView addSubview:errorInvoiceLabel];
-            [cell.contentView addSubview:errorInvoiceTableView];
-            break;
-    }
-    
-    return cell;
 }
 
 #pragma mark - Navegation

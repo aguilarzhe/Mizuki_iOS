@@ -15,6 +15,7 @@
 @property UIWebView *invoiceWebView;
 @property NSURLResponse *theResponse;
 @property NSMutableData *dataRecive;
+@property NSError *loadError;
 
 @end
 
@@ -27,11 +28,20 @@
 @synthesize theResponse;
 @synthesize dataRecive;
 @synthesize completeInvoice;
+@synthesize loadError;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    //Add invoice to data base
+    if([completeInvoice addCompleteInvoiceWithStatus:@"Pendiente"]){
+        NSLog(@"SE REALIZO EL ADD CORRECTAMENTE: %@", completeInvoice.idInvoice);
+    }else{
+        NSLog(@"ERROR EN EL ADD");
+    }
+    
+    //Webview
     invoiceWebView=[[UIWebView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,self.view.frame.size.height)];
     invoiceWebView.delegate = self;
     [self.view addSubview:invoiceWebView];
@@ -61,6 +71,10 @@
     return TRUE;
 }
 
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
+    loadError = error;
+}
+
 #pragma mark - WebInvoiceViewConetroller Sources
 -(void) fillPagesAccordingToService {
     
@@ -74,20 +88,16 @@
         NSString *javascript = [self createJavaScriptStringWithRules:invoicePage.rules];
         [self performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:javascript waitUntilDone:YES];
         
-        if(![invoiceWebView.request.URL isEqual:companyURL]){
-            //break;
-        }
-        
         [NSThread sleepForTimeInterval:3];
         actualPage++;
     }
     
-    //Add invoice to data base
-    if([completeInvoice addCompleteInvoiceWithStatus:@"Facturada"]){
-        NSLog(@"SE REALIZO EL ADD CORRECTAMENTE: %@", completeInvoice.idInvoice);
-    }else{
-        NSLog(@"ERROR EN EL ADD");
+    //Update invoice with new status
+    NSString *status = @"Facturada";
+    if(loadError){
+        status = @"Error";
     }
+    [completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:status];
     
     [self performSegueWithIdentifier:@"InvoiceCompleteSegue" sender:self];
     
