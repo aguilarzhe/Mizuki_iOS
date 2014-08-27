@@ -16,9 +16,8 @@
 
 @implementation BWRTicketViewElement
 
-@synthesize campoFormulario, campoTicket, mascaraTicket, tipoCampoFormulario, dataSource, campoRegex;
-@synthesize valueCampoTicket;
-@synthesize selectionValue;
+@synthesize formField, formFieldType, ticketField, ticketMask, ticketSearchRegex, selectionValue, dataSource;
+@synthesize ticketFieldValue;
 @synthesize viewTicketElement;
 
 -(BWRTicketViewElement *)initWithDictionary: (NSDictionary *) ticketElement{
@@ -27,25 +26,41 @@
     
     //Si es textbox
     if(![[ticketElement valueForKey:@"form_field_type"] isEqualToString:@"submit"]){
-        campoTicket = [ticketElement valueForKey:@"ticket_field"];
-        campoRegex = [ticketElement valueForKey:@"ticket_search_regex"];
-        mascaraTicket = [ticketElement valueForKey:@"ticket_mask"];
-        campoFormulario = [ticketElement valueForKey:@"form_field"];
-        tipoCampoFormulario = [ticketElement valueForKey:@"form_field_type"];
+        ticketField = [ticketElement valueForKey:@"ticket_field"];
+        ticketSearchRegex = [ticketElement valueForKey:@"ticket_search_regex"];
+        ticketMask = [ticketElement valueForKey:@"ticket_mask"];
+        formField = [ticketElement valueForKey:@"form_field"];
+        formFieldType = [ticketElement valueForKey:@"form_field_type"];
         //valueCampoTicket = [[NSArray alloc] initWithArray:[ticketElement valueForKey:@"value_campo_ticket"]];
         dataSource = [ticketElement valueForKey:@"data_source"];
-        selectionValue = campoTicket;//[valueCampoTicket objectAtIndex:0];
+        selectionValue = ticketField;//[valueCampoTicket objectAtIndex:0];
     
     //Si es boton
     }else{
-        campoTicket = @"Enviar";
-        mascaraTicket = @"Ninguno";
-        campoFormulario = [ticketElement valueForKey:@"form_field"];
-        tipoCampoFormulario = [ticketElement valueForKey:@"form_field_type"];
+        ticketField = @"Enviar";
+        ticketMask = @"Ninguno";
+        formField = [ticketElement valueForKey:@"form_field"];
+        formFieldType = [ticketElement valueForKey:@"form_field_type"];
         //valueCampoTicket = [[NSArray alloc] initWithArray:[ticketElement valueForKey:@"value_campo_ticket"]];
         dataSource = @"Ninguno";
-        selectionValue = campoTicket;//[valueCampoTicket objectAtIndex:0];
+        selectionValue = ticketField;//[valueCampoTicket objectAtIndex:0];
     }
+    
+    return self;
+}
+
+-(BWRTicketViewElement *)initTicketInfoWithElements: (NSString *)field mask:(NSString *)mask form:(NSString *)form type:(NSString *)type value:(NSString *)value{
+    
+    self = [super init];
+    
+    ticketField = field;
+    ticketSearchRegex = @"";
+    ticketMask = mask;
+    formField = form;
+    formFieldType = type;
+    //valueCampoTicket = [[NSArray alloc] initWithArray:[ticketElement valueForKey:@"value_campo_ticket"]];
+    dataSource = @"ticketInfo";
+    selectionValue = value;//[valueCampoTicket objectAtIndex:0];
     
     return self;
 }
@@ -53,7 +68,7 @@
 -(void)createViewWithRect: (CGFloat)x y:(CGFloat)y width:(CGFloat)width height:(CGFloat)height delegate:(UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate> *)viewDelegate{
     
     //Si es textbox
-    if ([tipoCampoFormulario isEqualToString:@"textbox"]) {
+    if ([formFieldType isEqualToString:@"textbox"]) {
         UITextField *campoTextField = [[UITextField alloc] initWithFrame:CGRectMake(x, y, width, height)];
         campoTextField.placeholder = selectionValue;
         campoTextField.borderStyle = UITextBorderStyleRoundedRect;
@@ -62,7 +77,7 @@
     }
     
     //Si es combobox
-    else if ([tipoCampoFormulario isEqualToString:@"combobox"]){
+    else if ([formFieldType isEqualToString:@"combobox"]){
         UITableView *campoTableView = [[UITableView alloc] initWithFrame:CGRectMake(x, y, width, height) style:UITableViewStylePlain];
         campoTableView.scrollEnabled = YES;
         campoTableView.delegate = viewDelegate;
@@ -76,6 +91,38 @@
         [button setTitle:@"Enviar" forState:UIControlStateNormal];
         button.frame = CGRectMake(x, y, width, height);
         viewTicketElement = button;
+    }
+}
+
+-(void)findTicketFieldInOCR: (NSString *)resultOCR{
+    
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:ticketSearchRegex options:NSRegularExpressionCaseInsensitive error:&error];
+    NSTextCheckingResult *match = [regex firstMatchInString:resultOCR options:0
+                                                      range:NSMakeRange(0, [resultOCR length])];
+    
+    if (match) {
+        ((UITextField *)viewTicketElement).text = [resultOCR substringWithRange:match.range];
+    }else{
+        ((UITextField *)viewTicketElement).text = [NSString stringWithFormat:@"%@ no reconocido",selectionValue];
+    }
+    
+}
+
+-(BOOL)validateFieldValueWithTicketMask{
+    
+    NSError *error = NULL;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:ticketMask options:NSRegularExpressionCaseInsensitive error:&error];
+    NSTextCheckingResult *match = [regex firstMatchInString:((UITextField *)viewTicketElement).text  options:0 range:NSMakeRange(0, [((UITextField *)viewTicketElement).text length])];
+    
+    if (match){
+        ((UITextField *)viewTicketElement).text = [((UITextField *)viewTicketElement).text substringWithRange:match.range];
+        return TRUE;
+    }else{
+        NSLog(@"Error en el campo: %@", ticketField);//[viewElement.valueCampoTicket objectAtIndex:0]);
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Datos no válidos" message:[NSString stringWithFormat:@"Error en el campo: %@", ticketField] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alertView show];
+        return FALSE;
     }
 }
 

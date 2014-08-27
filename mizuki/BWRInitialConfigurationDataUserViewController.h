@@ -14,6 +14,11 @@
  */
 @property (retain, nonatomic) IBOutlet GPPSignInButton *signInButton;
 
+@property UITextField *tf_correo;
+@property UITextField *tf_password;
+@property UITextField *tf_confpassword;
+@property UIBarButtonItem *bt_siguiente;
+
 @end
 
 @class GPPSignInButton;

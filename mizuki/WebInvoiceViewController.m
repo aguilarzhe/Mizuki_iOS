@@ -15,7 +15,7 @@
 @property UIWebView *invoiceWebView;
 @property NSURLResponse *theResponse;
 @property NSMutableData *dataRecive;
-@property NSURLConnection *urlConnection;
+@property NSError *loadError;
 
 @end
 
@@ -27,12 +27,14 @@
 @synthesize actualPage;
 @synthesize theResponse;
 @synthesize dataRecive;
-@synthesize urlConnection;
+@synthesize completeInvoice;
+@synthesize loadError;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    //Webview
     invoiceWebView=[[UIWebView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,self.view.frame.size.height)];
     invoiceWebView.delegate = self;
     [self.view addSubview:invoiceWebView];
@@ -40,8 +42,6 @@
     //load url into webview
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:companyURL];
     [invoiceWebView loadRequest:urlRequest];
-    
-    //invoiceWebView.suppressesIncrementalRendering = YES;
     
 }
 
@@ -61,48 +61,39 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
  navigationType:(UIWebViewNavigationType)navigationType {
     
-    //NSLog(@"\n\n**************REQUEST URL: %@   COMPANY URL: %@\n\n", request.URL, companyURL);
-    
     return TRUE;
 }
 
-/*#pragma mark - NSURLConnectionDataDelegate
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
-    theResponse = response;
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
+    loadError = error;
 }
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
-    [dataRecive appendData:data];
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection{
-    CGFloat percentage = (dataRecive.length*100)/theResponse.expectedContentLength;
-    NSLog(@"PORCENTAJE: %f", percentage);
-}*/
 
 #pragma mark - WebInvoiceViewConetroller Sources
 -(void) fillPagesAccordingToService {
     
     [self performSelectorOnMainThread:@selector(executeJavaScriptFromWebPageDiv) withObject:nil waitUntilDone:YES];
-    //[self executeJavaScriptFromWebPageDiv];
 }
 
 - (void) executeJavaScriptFromWebPageDiv{
     
-    //for (BWRInvoiceTicketPage *invoicePage in invoicePagesArray){
     for (int index=actualPage; index<[invoicePagesArray count]; index++){
         BWRInvoiceTicketPage *invoicePage = [invoicePagesArray objectAtIndex:index];
-        //BWRInvoiceTicketPage *invoicePage = [invoicePagesArray objectAtIndex:actualPage];
         NSString *javascript = [self createJavaScriptStringWithRules:invoicePage.rules];
         [self performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:javascript waitUntilDone:YES];
-        
-        if(![invoiceWebView.request.URL isEqual:companyURL]){
-            //break;
-        }
         
         [NSThread sleepForTimeInterval:3];
         actualPage++;
     }
+    
+    //Update invoice with new status
+    NSString *status = @"Facturada";
+    if(loadError){
+        status = @"Error";
+    }
+    [completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:status];
+    
+    [self performSegueWithIdentifier:@"InvoiceCompleteSegue" sender:self];
+    
 }
 
 -(void)stringByEvaluatingJavaScriptFromString:(NSString *)javascript
@@ -113,9 +104,6 @@
         NSLog(@"Java Script FALLO");
     }
     
-    if(![invoiceWebView.request.URL isEqual:companyURL]){
-        //break;
-    }
 }
 
 - (NSString *) createJavaScriptStringWithRules: (NSArray *)invoicePageRules{
@@ -123,11 +111,10 @@
     NSMutableString *javascript = [[NSMutableString alloc] initWithString:@"javascript:(function() {\n"];
     
     for(BWRTicketViewElement *viewElement in invoicePageRules){
-        if ([viewElement.tipoCampoFormulario isEqualToString:@"submit"]) {
-            [javascript appendFormat:@"document.getElementById('%@').click();\n", viewElement.campoFormulario];
+        if ([viewElement.formFieldType isEqualToString:@"submit"]) {
+            [javascript appendFormat:@"document.getElementById('%@').click();\n", viewElement.formField];
         }else{
-            //NSLog(@"Elemento %@ valor: %@", viewElement.campoTicket, viewElement.selectionValue);
-            [javascript appendFormat:@"document.getElementById('%@').value = '%@';\n", viewElement.campoFormulario, viewElement.selectionValue];
+            [javascript appendFormat:@"document.getElementById('%@').value = '%@';\n", viewElement.formField, viewElement.selectionValue];
         }
     }
     

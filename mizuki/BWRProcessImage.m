@@ -30,6 +30,7 @@
 {
     Tesseract* tesseract = [[Tesseract alloc] initWithDataPath:@"tessdata" language:@"spa"];
     OpenCV *opencv = [[OpenCV alloc] init];
+    //UIImage *image_result = [UIImage imageNamed:@"starbucks_con_dobles.jpg"];
     
     if(!processImage){
         return @"Error";

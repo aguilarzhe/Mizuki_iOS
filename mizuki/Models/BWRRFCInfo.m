@@ -39,6 +39,7 @@
         value = [NSString stringWithFormat:@"%@ %@ %@", self.nombre, self.apellidoPaterno, self.apellidoMaterno];
     }
     else if ([property isEqualToString:@"homoclave"]){
+        value = [NSString stringWithFormat:@"%c%c%c", [self.rfc characterAtIndex:self.rfc.length-2], [self.rfc characterAtIndex:self.rfc.length-1], [self.rfc characterAtIndex:self.rfc.length]];
         
     }else if ([property isEqualToString:@"email"]){
         NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];

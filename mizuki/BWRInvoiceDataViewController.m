@@ -342,10 +342,6 @@
                 [userDefaults setBool:TRUE forKey:@"Sonido"];
                 [userDefaults setBool:TRUE forKey:@"Guardar Fotos"];
                 [userDefaults setBool:TRUE forKey:@"Solo wifi"];
-                
-                /************ TEMPORAL*/
-                [userDefaults setValue:@"192.168.1.77" forKey:@"ipServidor"];
-                //***********************
             }
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && !firstRFC){
             [self dismissViewControllerAnimated:YES completion:nil];

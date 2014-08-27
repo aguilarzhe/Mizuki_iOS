@@ -8,29 +8,56 @@
 
 #import "BWRInvoiceHistoryViewController.h"
 #import "BWRInvoiceConfirmationViewController.h"
-#import "BWRProcessImage.h"
+#import "BWREditInvoiceViewController.h"
 #import "BWRMyAccountViewController.h"
+#import "BWRCompleteInvoice.h"
+#import "AppDelegate.h"
 
 @interface BWRInvoiceHistoryViewController ()
 @property (nonatomic, retain) UIActionSheet *imageInvoiceActionSheet;
 @property UIImage *invoiceImage;
-@property UITableView *invoiceTableView;
-@property NSMutableArray *invoices;
 @property UIBarButtonItem *settingsButton;
 @property UIImagePickerController *myImagePickerController;
 @end
 
+static BWRCompleteInvoice *actualInvoice;
+static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
+
 @implementation BWRInvoiceHistoryViewController
+
 @synthesize imageInvoiceActionSheet;
 @synthesize invoiceImage;
-@synthesize invoiceTableView;
-@synthesize invoices;
 @synthesize settingsButton;
 @synthesize myImagePickerController;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    //Load invoices from core data
+    actualInvoicesArray = [[NSMutableArray alloc] init];
+    [self loadInvoicesFromCoreData: @"Todas"];
+    
+    //Measures
+    NSInteger widthScreen = self.view.frame.size.width;
+    NSInteger heightScreen = self.view.frame.size.height;
+    
+    //Invoice Table View
+    invoiceTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, 55, widthScreen, heightScreen) style:UITableViewStylePlain];
+    invoiceTableView.delegate = self;
+    invoiceTableView.dataSource = self;
+    invoiceTableView.scrollEnabled = YES;
+    invoiceTableView.hidden = NO;
+    [self.view addSubview:invoiceTableView];
+    
+    //Segmented control
+    invoiceSegmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Todas", @"Listas", @"Pendientes", @"Error", nil]];
+    invoiceSegmentedControl.frame = CGRectMake(10, 70, widthScreen-20, 30);
+    invoiceSegmentedControl.selectedSegmentIndex = 0;
+    invoiceSegmentedControl.tintColor = [UIColor blueColor];
+    [invoiceSegmentedControl addTarget:self action:@selector(valueChanged:) forControlEvents: UIControlEventValueChanged];
+    [self.view addSubview:invoiceSegmentedControl];
 
+    //Navegation buttons
     UIBarButtonItem *imageInvoiceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showImageInvoceActionSheet:)];
     
     self.navigationItem.rightBarButtonItem = imageInvoiceButton;
@@ -50,6 +77,7 @@
 
 }
 
+#pragma mark - BWRInvoiceHistorySources
 -(void)showImageInvoceActionSheet:(id)sender{
     imageInvoiceActionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Agregar factura", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Cancelar", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Cámara", nil), NSLocalizedString(@"Galeria", nil), NSLocalizedString(@"Capturar datos", nil), nil];
 
@@ -74,12 +102,68 @@
     }
 }
 
-
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    if([[segue identifier] isEqualToString:@"invoiceConfirmationSegue"]){
-        BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [segue destinationViewController];
-        confirmInvoiceViewController.invoiceImage = invoiceImage;
+- (void) loadInvoicesFromCoreData: (NSString *)invoiceType{
+    
+    //Get invoices from data base
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *managedObjectContext = appDelegate.managedObjectContext;
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Invoice"];
+    NSSortDescriptor *ordenacionPorFecha = [[NSSortDescriptor alloc] initWithKey:@"date" ascending:YES];
+    fetchRequest.sortDescriptors = @[ordenacionPorFecha];
+    
+    NSError *error;
+    NSArray *invoicesResult = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    [actualInvoicesArray removeAllObjects];
+    if(!error){
+        NSLog(@"Recuperación satisfactoria. %d", [invoicesResult count]);
+        
+        for(BWRInvoice *invoice in invoicesResult){
+            BWRCompleteInvoice *completeInvoice = [[BWRCompleteInvoice alloc] initFromCoreDataWithInvoice:invoice];
+            if([invoiceType isEqualToString:completeInvoice.status]){
+                [actualInvoicesArray addObject:completeInvoice];
+            }else if([invoiceType isEqualToString:@"Todas"]){
+                [actualInvoicesArray addObject:completeInvoice];
+            }
+        }
+        
+    } else {
+        NSLog(@"Error al recuperar.");
     }
+}
+
+-(void) sendAllPendingInvoices { //Do in background
+    
+    //Recorrer pending invoices
+    
+        //Get id company
+    
+        //Get rules of company
+    
+        //Get url
+    
+        //Recorrer rules to actualizar ticket elements
+    
+        //Eliminar factura
+    
+        //Facturar
+}
+
+
+#pragma mark - Segmented control sources
+- (void)valueChanged:(UISegmentedControl *)segment {
+    
+    if(segment.selectedSegmentIndex == 0) {
+        [self loadInvoicesFromCoreData:@"Todas"];
+    }else if(segment.selectedSegmentIndex == 1){
+        [self loadInvoicesFromCoreData:@"Facturada"];
+    }else if(segment.selectedSegmentIndex == 2){
+        [self loadInvoicesFromCoreData:@"Pendiente"];
+    }else if(segment.selectedSegmentIndex==3){
+        [self loadInvoicesFromCoreData:@"Error"];
+    }
+    [invoiceTableView reloadData];
 }
 
 #pragma mark - Captura de imagen
@@ -147,5 +231,85 @@
         [self confirmInvoice];
     }
 }
+
+#pragma mark - UITableViewDataSource
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    NSInteger numberOfRows = 0;
+    
+    if(tableView == invoiceTableView){
+        numberOfRows = [actualInvoicesArray count];
+    }
+    
+    return numberOfRows;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell = nil;
+    
+    if(tableView == invoiceTableView){
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"InvoiceCell"];
+        
+        BWRCompleteInvoice *completeInvoice = [actualInvoicesArray objectAtIndex:indexPath.row];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@\t%@", completeInvoice.company, completeInvoice.date];
+    }
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+
+    if(tableView == invoiceTableView){
+        actualInvoice = [actualInvoicesArray objectAtIndex:indexPath.row];
+    }
+    
+    [self performSegueWithIdentifier:@"EditInvoiceSegue" sender:self];
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        if(tableView == invoiceTableView){
+            BWRCompleteInvoice *cInvoice = [actualInvoicesArray objectAtIndex:indexPath.row];
+            [actualInvoicesArray removeObject:cInvoice];
+            [invoiceTableView reloadData];
+            if(![cInvoice delateCompleteInvoice]){
+                NSLog(@"Error al eliminar");
+            }
+        }
+        
+    }
+    
+}
+
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+    
+    if (editing){
+        [invoiceTableView setEditing:YES animated:YES];
+        UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(Done)];
+        self.navigationItem.leftBarButtonItem = doneButtonItem;
+    }
+}
+
+-(void)Done{
+    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    [invoiceTableView setEditing:NO animated:NO];
+}
+
+#pragma mark - Navegation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if([[segue identifier] isEqualToString:@"invoiceConfirmationSegue"]){
+        BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [segue destinationViewController];
+        confirmInvoiceViewController.invoiceResending = NO;
+        confirmInvoiceViewController.invoiceImage = invoiceImage;
+    }else if([[segue identifier] isEqualToString:@"EditInvoiceSegue"]){
+        BWREditInvoiceViewController *editIvoiceViewController = [segue destinationViewController];
+        editIvoiceViewController.completeInvoice = actualInvoice;
+        editIvoiceViewController.typeInvoice = typeActualInvoice;
+    }
+}
+
 
 @end

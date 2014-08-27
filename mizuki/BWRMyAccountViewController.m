@@ -23,8 +23,6 @@
 @property NSFetchedResultsController *fetchedResultsController;
 @property NSUInteger numRowsRFC;
 @property BWRRFCInfo *rfcActual;
-/***********TEMPORAL*/
-@property UITextField *textField;
 
 @end
 
@@ -85,38 +83,12 @@
     [scrollView addSubview:confInfoLabel];
     [scrollView addSubview:confInfoTableView];
     
-    /********************* TEMPORAL*/
-    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-    
-    _textField = [[UITextField alloc] initWithFrame:CGRectMake(0.0f, 220.0f+(44 * ([confInfoDictionary count]+numRowsRFC + 1)), width, 44 )];
-    _textField.borderStyle = UITextBorderStyleRoundedRect;
-    _textField.delegate = self;
-    _textField.text = [userDefaults valueForKey:@"ipServidor"];
-    [scrollView addSubview:_textField];
-    /********************/
-    
     // Configuración de vista
     self.view=scrollView;
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cerrar sesión" style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
     self.title = NSLocalizedString(@"Mi cuenta", nil);
 }
-
-/************************* TEMPORAL********/
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
-{
-    return YES;
-}
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-    [userDefaults setValue:textField.text forKey:@"ipServidor"];
-    NSLog(@"IP SERVIDOR: %@", textField.text);
-    [textField resignFirstResponder];
-    return YES;
-}
-/***********************/
 
 -(void)initializeDummyDataSources{
     NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
@@ -145,9 +117,6 @@
     
     confInfoDictionary = [[NSDictionary alloc]initWithObjects:@[notificaciones, sonido, guardarFoto, conexion] forKeys:@[@"Notificaciones", @"Sonido", @"Guardar Fotos", @"Solo wifi"]];
 }
-
-#pragma mark - UITableViewDelegate
-
 
 #pragma mark - UITableViewDataSource
 
