@@ -275,15 +275,11 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
-    //[super setEditing:editing animated:animated];
     
     if (editing){
         [invoiceTableView setEditing:YES animated:YES];
         UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(Done)];
         self.navigationItem.leftBarButtonItem = doneButtonItem;
-    }
-    else{
-        
     }
 }
 
