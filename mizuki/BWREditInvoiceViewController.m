@@ -12,6 +12,7 @@
 #import "BWRTicketViewElement.h"
 #import "BWRWebConnection.h"
 #import "BWRInvoiceTicketPage.h"
+#import "BWRInvoiceConfirmationViewController.h"
 
 @interface BWREditInvoiceViewController ()
 
@@ -162,44 +163,8 @@
     //Update invoice
     [self updateInvoice];
     
-    //Get Data company
-    NSArray *stringCompanyArray = [BWRWebConnection companyListWithSubstring:completeInvoice.company];
-    NSDictionary *companyDictionary = [stringCompanyArray objectAtIndex:0];
-    int idCompany = [[companyDictionary valueForKey:@"id"] integerValue];
-    
-    NSDictionary *companyDataDictionary = [BWRWebConnection viewElementsWithCompany:idCompany];
-    NSArray *rulesBlockArray = [companyDataDictionary valueForKey:@"rules_block"];
-    _tiendaURL = [companyDataDictionary valueForKey:@"url"];
-    
-    //Get data rfc
-    
-    
-    //Get pages and update elements
-    for(NSDictionary *pageDictionary in rulesBlockArray){
-        
-        BWRInvoiceTicketPage *invoicePage = [[BWRInvoiceTicketPage alloc] initWithData:[pageDictionary valueForKey:@"name"] pageNumber:[pageDictionary valueForKey:@"page_num"]];
-        NSArray *rulesArray = [pageDictionary valueForKey:@"rules"];
-        
-        //Recorrer rules
-        for(NSDictionary *ticketElement in rulesArray){
-            BWRTicketViewElement *ticketViewElement = [[BWRTicketViewElement alloc] initWithDictionary:ticketElement];
-            
-            //Dato de usuario
-            if([ticketViewElement.dataSource isEqualToString:@"user_info"]){
-                
-                
-            //Dato de ticket
-            }else if([ticketViewElement.dataSource isEqualToString:@"ticket_info"]){
-                
-            }
-            
-            [invoicePage.rules addObject:ticketViewElement];
-            
-        }
-        [_invoicePagesArray addObject:invoicePage];
-        
-    }
-    
+    //Go to BWRInvoiceConfirmation
+    [self performSegueWithIdentifier:@"ResendingInvoiceSegue" sender:self];
 }
 
 #pragma mark - UITextFieldDelegate
@@ -266,6 +231,16 @@
         BWRRFCInfo *rfcInfo = [fetchedResults objectAtIndex:buttonIndex];
         rfcSelected = rfcInfo.rfc;
         [rfcTableView reloadData];
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if([[segue identifier] isEqualToString:@"ResendingInvoiceSegue"]){
+        BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [segue destinationViewController];
+        confirmInvoiceViewController.invoiceResending = YES;
+        confirmInvoiceViewController.invoiceImage = completeInvoice.image;
+        confirmInvoiceViewController.completeInvoice = completeInvoice;
     }
 }
 

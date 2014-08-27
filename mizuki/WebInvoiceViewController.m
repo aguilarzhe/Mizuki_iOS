@@ -118,10 +118,10 @@
     NSMutableString *javascript = [[NSMutableString alloc] initWithString:@"javascript:(function() {\n"];
     
     for(BWRTicketViewElement *viewElement in invoicePageRules){
-        if ([viewElement.tipoCampoFormulario isEqualToString:@"submit"]) {
-            [javascript appendFormat:@"document.getElementById('%@').click();\n", viewElement.campoFormulario];
+        if ([viewElement.formFieldType isEqualToString:@"submit"]) {
+            [javascript appendFormat:@"document.getElementById('%@').click();\n", viewElement.formField];
         }else{
-            [javascript appendFormat:@"document.getElementById('%@').value = '%@';\n", viewElement.campoFormulario, viewElement.selectionValue];
+            [javascript appendFormat:@"document.getElementById('%@').value = '%@';\n", viewElement.formField, viewElement.selectionValue];
         }
     }
     

@@ -92,11 +92,12 @@
                     </view>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="returnToHistorySegue" id="q3W-YU-4gn"/>
+                        <segue destination="rL8-FQ-150" kind="show" identifier="ResendingInvoiceSegue" id="car-cz-uCl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y0j-XJ-nVU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1106" y="813"/>
+            <point key="canvasLocation" x="1024" y="787"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="OXi-Gn-ci7">
@@ -185,6 +186,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="q3W-YU-4gn"/>
+        <segue reference="car-cz-uCl"/>
         <segue reference="GoA-VB-Kl5"/>
     </inferredMetricsTieBreakers>
 </document>

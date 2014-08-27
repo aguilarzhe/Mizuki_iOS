@@ -103,12 +103,12 @@
         BWRRule *addRule;
         addRule = [NSEntityDescription insertNewObjectForEntityForName:@"Rule" inManagedObjectContext:managedObjectContext];
         
-        addRule.idRule = [NSString stringWithFormat:@"%@-%@", idInvoice, rule.campoTicket];
+        addRule.idRule = [NSString stringWithFormat:@"%@-%@", idInvoice, rule.ticketField];
         addRule.idInvoice_Invoice=idInvoice;
-        addRule.ticketField = rule.campoTicket;
-        addRule.ticketMask = rule.mascaraTicket;
-        addRule.formField = rule.campoFormulario;
-        addRule.formFieldType = rule.tipoCampoFormulario;
+        addRule.ticketField = rule.ticketField;
+        addRule.ticketMask = rule.ticketMask;
+        addRule.formField = rule.formField;
+        addRule.formFieldType = rule.formFieldType;
         addRule.fieldValue = rule.selectionValue;
     }
     
@@ -168,12 +168,12 @@
         upRule = [fetchedObjects objectAtIndex:index];
         index++;
         
-        upRule.idRule = [NSString stringWithFormat:@"%@-%@", idInvoice, rule.campoTicket];
+        upRule.idRule = [NSString stringWithFormat:@"%@-%@", idInvoice, rule.ticketField];
         upRule.idInvoice_Invoice=idInvoice;
-        upRule.ticketField = rule.campoTicket;
-        upRule.ticketMask = rule.mascaraTicket;
-        upRule.formField = rule.campoFormulario;
-        upRule.formFieldType = rule.tipoCampoFormulario;
+        upRule.ticketField = rule.ticketField;
+        upRule.ticketMask = rule.ticketMask;
+        upRule.formField = rule.formField;
+        upRule.formFieldType = rule.formFieldType;
         upRule.fieldValue = rule.selectionValue;
     }
     
@@ -244,6 +244,7 @@
         for(BWRRule *rule in fetchedObjects){
             BWRTicketViewElement *viewElement = [[BWRTicketViewElement alloc] initTicketInfoWithElements:rule.ticketField mask:rule.ticketMask form:rule.formField type:rule.formFieldType value:rule.fieldValue];
             [resultArray addObject:viewElement];
+            NSLog(@"ViewElement: %@", viewElement.ticketField);
         }
         
         return resultArray;

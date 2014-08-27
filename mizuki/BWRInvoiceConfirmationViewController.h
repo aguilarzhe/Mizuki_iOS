@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "BWRProcessImage.h"
+#import "BWRCompleteInvoice.h"
 
 @interface BWRInvoiceConfirmationViewController : UIViewController <UIActionSheetDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate>
 @property NSString *invoiceText;
@@ -15,5 +16,8 @@
 
 //Temporal
 @property UITextView *invoiceLabel;
+
+@property BWRCompleteInvoice *completeInvoice;
+@property BOOL invoiceResending;
 
 @end

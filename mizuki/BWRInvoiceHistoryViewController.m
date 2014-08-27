@@ -287,6 +287,7 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 {
     if([[segue identifier] isEqualToString:@"invoiceConfirmationSegue"]){
         BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [segue destinationViewController];
+        confirmInvoiceViewController.invoiceResending = NO;
         confirmInvoiceViewController.invoiceImage = invoiceImage;
     }else if([[segue identifier] isEqualToString:@"EditInvoiceSegue"]){
         BWREditInvoiceViewController *editIvoiceViewController = [segue destinationViewController];
