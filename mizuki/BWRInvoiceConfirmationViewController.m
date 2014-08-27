@@ -588,8 +588,10 @@
         webViewInvoiceData.companyURL = [NSURL URLWithString:_tiendaURL];
         webViewInvoiceData.actualPage = 0;
         
+        //If resend invoice
         if(invoiceResending){
             webViewInvoiceData.completeInvoice=completeInvoice;
+            
         }else{
             NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
             NSString *rfc = [userDefaults valueForKey:@"rfc"];
@@ -602,6 +604,13 @@
             NSLog (@"ARRAY %@", viewsArray);
             
             webViewInvoiceData.completeInvoice=[[BWRCompleteInvoice alloc] initWithData:viewsArray rfc:rfc ticketImage:invoiceImage stringOCR:invoiceLabel.text company:empresaTextField.text];
+            
+            //Add invoice to data base
+            if([completeInvoice addCompleteInvoiceWithStatus:@"Pendiente"]){
+                NSLog(@"SE REALIZO EL ADD CORRECTAMENTE: %@", completeInvoice.idInvoice);
+            }else{
+                NSLog(@"ERROR EN EL ADD");
+            }
         }
         
     }

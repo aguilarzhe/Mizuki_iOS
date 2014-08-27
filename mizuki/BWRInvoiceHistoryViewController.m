@@ -156,6 +156,7 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
         //Facturar
 }
 
+
 #pragma mark - Segmented control sources
 - (void)valueChanged:(UISegmentedControl *)segment {
     
@@ -273,13 +274,22 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return YES;
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+    //[super setEditing:editing animated:animated];
+    
+    if (editing){
+        [invoiceTableView setEditing:YES animated:YES];
+        UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(Done)];
+        self.navigationItem.leftBarButtonItem = doneButtonItem;
+    }
+    else{
+        
+    }
 }
 
-- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
-    [super setEditing:editing animated:animated];
+-(void)Done{
+    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    [invoiceTableView setEditing:NO animated:NO];
 }
 
 #pragma mark - Navegation

@@ -34,13 +34,6 @@
 {
     [super viewDidLoad];
     
-    //Add invoice to data base
-    if([completeInvoice addCompleteInvoiceWithStatus:@"Pendiente"]){
-        NSLog(@"SE REALIZO EL ADD CORRECTAMENTE: %@", completeInvoice.idInvoice);
-    }else{
-        NSLog(@"ERROR EN EL ADD");
-    }
-    
     //Webview
     invoiceWebView=[[UIWebView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,self.view.frame.size.height)];
     invoiceWebView.delegate = self;
