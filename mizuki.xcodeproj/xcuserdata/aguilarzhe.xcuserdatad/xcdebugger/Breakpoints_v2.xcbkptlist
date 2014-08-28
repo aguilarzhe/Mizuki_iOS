@@ -11,11 +11,13 @@
             condition = "invoiceImage == nil"
             continueAfterRunningActions = "No"
             filePath = "mizuki/BWRInvoiceHistoryViewController.m"
-            timestampString = "430766258.783463"
+            timestampString = "430876630.859171"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186">
+            startingLineNumber = "184"
+            endingLineNumber = "184"
+            landmarkName = "-captureInvoiceFromCamera"
+            landmarkType = "5">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Log">
@@ -98,12 +100,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "mizuki/BWRInvoiceHistoryViewController.m"
-            timestampString = "430766258.783463"
+            timestampString = "430876630.859171"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "147"
-            endingLineNumber = "147"
-            landmarkName = "-imagePickerController:didFinishPickingMediaWithInfo:"
+            startingLineNumber = "145"
+            endingLineNumber = "145"
+            landmarkName = "-sendAllPendingInvoices"
             landmarkType = "5">
             <Actions>
                <BreakpointActionProxy

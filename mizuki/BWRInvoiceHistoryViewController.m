@@ -17,7 +17,12 @@
 @property (nonatomic, retain) UIActionSheet *imageInvoiceActionSheet;
 @property UIImage *invoiceImage;
 @property UIBarButtonItem *settingsButton;
+@property NSMutableArray *actualInvoicesArray;
+@property UITableView *invoiceTableView;
+@property NSMutableArray *invoices;
 @property UIImagePickerController *myImagePickerController;
+@property UISegmentedControl *invoiceSegmentedControl;
+
 @end
 
 static BWRCompleteInvoice *actualInvoice;
@@ -28,7 +33,11 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 @synthesize imageInvoiceActionSheet;
 @synthesize invoiceImage;
 @synthesize settingsButton;
+@synthesize invoiceTableView;
+@synthesize invoices;
 @synthesize myImagePickerController;
+@synthesize actualInvoicesArray;
+@synthesize invoiceSegmentedControl;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
