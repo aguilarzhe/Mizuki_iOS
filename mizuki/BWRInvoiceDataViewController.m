@@ -8,6 +8,7 @@
 
 #import "BWRInvoiceDataViewController.h"
 #import "BWRInvoiceHistoryViewController.h"
+#import "BWRUserPreferences.h"
 #import "AppDelegate.h"
 
 @interface BWRInvoiceDataViewController () <NSFetchedResultsControllerDelegate, UITextFieldDelegate>
@@ -43,26 +44,26 @@
 {
     [super viewDidLoad];
     
-    //Medidas
-    NSInteger anchoPantalla = self.view.frame.size.width;
-    NSInteger ALTO = 31;
-    NSInteger PADING = 20;
-    NSInteger espaciado = 20;
+    //Measures
+    NSInteger screenWidth = self.view.frame.size.width;
+    NSInteger height = 31;
+    NSInteger padding = 20;
+    NSInteger depth = 20;
     NSInteger longWidth;
     NSInteger shortWidth;
     
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
         if (firstRFC) {
-            longWidth = (self.view.frame.size.width / 2) - (2 * PADING);
-            shortWidth = (longWidth / 2) - (PADING/2);
+            longWidth = (self.view.frame.size.width / 2) - (2 * padding);
+            shortWidth = (longWidth / 2) - (padding/2);
         }else{
             longWidth = 270;
             shortWidth = 120;
         }
         
     }else{
-        longWidth = anchoPantalla-(2*PADING);
-        shortWidth = (longWidth/2)-(PADING/2);
+        longWidth = screenWidth-(2*padding);
+        shortWidth = (longWidth/2)-(padding/2);
     }
     
     UIScrollView *scrollView=(UIScrollView *)self.view;
@@ -71,44 +72,44 @@
     scrollView.contentSize=CGSizeMake(320,740);
     
     // Personal info
-    tf_rfc.frame = CGRectMake(PADING, espaciado, longWidth, ALTO);
+    tf_rfc.frame = CGRectMake(padding, depth, longWidth, height);
     [scrollView addSubview:tf_rfc];
-    tf_nombre.frame = CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
+    tf_nombre.frame = CGRectMake(padding, depth+=40, longWidth, height);
     [scrollView addSubview:tf_nombre];
-    tf_apaterno.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
+    tf_apaterno.frame =CGRectMake(padding, depth+=40, longWidth, height);
     [scrollView addSubview:tf_apaterno];
-    tf_amaterno.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
+    tf_amaterno.frame =CGRectMake(padding, depth+=40, longWidth, height);
     [scrollView addSubview:tf_amaterno];
     
     // If is firstRFC capture and the device is a iPad
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && firstRFC){
-        espaciado = -20;
-        PADING += longWidth + (PADING * 2);
+        depth = -20;
+        padding += longWidth + (padding * 2);
     }
     
     // Address user info
-    lb_direccion.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
+    lb_direccion.frame =CGRectMake(padding, depth+=40, longWidth, height);
     [scrollView addSubview:lb_direccion];
-    tf_calle.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
+    tf_calle.frame =CGRectMake(padding, depth+=40, longWidth, height);
     [scrollView addSubview:tf_calle];
     //Numero interior
-    tf_noint.frame =CGRectMake(PADING, espaciado+=40, shortWidth, ALTO);
+    tf_noint.frame =CGRectMake(padding, depth+=40, shortWidth, height);
     [scrollView addSubview:tf_noint];
     //Numero exterior
-    tf_noext.frame =CGRectMake(PADING*2+shortWidth, espaciado, shortWidth, ALTO);
+    tf_noext.frame =CGRectMake(padding*2+shortWidth, depth, shortWidth, height);
     [scrollView addSubview:tf_noext];
-    tf_colonia.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
+    tf_colonia.frame =CGRectMake(padding, depth+=40, longWidth, height);
     [scrollView addSubview:tf_colonia];
-    tf_delegacion.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
+    tf_delegacion.frame =CGRectMake(padding, depth+=40, longWidth, height);
     [scrollView addSubview:tf_delegacion];
-    tf_estado.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
+    tf_estado.frame =CGRectMake(padding, depth+=40, longWidth, height);
     [scrollView addSubview:tf_estado];
-    tf_ciudad.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
+    tf_ciudad.frame =CGRectMake(padding, depth+=40, longWidth, height);
     [scrollView addSubview:tf_ciudad];
-    tf_localidad.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
+    tf_localidad.frame =CGRectMake(padding, depth+=40, longWidth, height);
     [scrollView addSubview:tf_localidad];
     //Codigo Postal
-    tf_cp.frame =CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
+    tf_cp.frame =CGRectMake(padding, depth+=40, longWidth, height);
     [scrollView addSubview:tf_cp];
     
     
@@ -116,7 +117,7 @@
         UIButton *listoButton = [UIButton buttonWithType:UIButtonTypeSystem];
         [listoButton setTitle:@"Guardar" forState:UIControlStateNormal];
         [listoButton addTarget:self action:@selector(saveInfoRFC) forControlEvents:UIControlEventTouchUpInside];
-        listoButton.frame = CGRectMake(PADING, espaciado+=40, longWidth, ALTO);
+        listoButton.frame = CGRectMake(padding, depth+=40, longWidth, height);
         [scrollView addSubview:listoButton];
     }
     
@@ -124,7 +125,7 @@
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     managedObjectContext = appDelegate.managedObjectContext;
     
-    //Boton Listo
+    //Ready button
     self.navigationItem.rightBarButtonItem = bt_listo;
     
     //SCROLL VIEW
@@ -138,6 +139,10 @@
 }
 
 #pragma mark - Inicialitation
+/** Alloc and init each view element.
+ 
+ Adding the method asings delegate and border style (TextField)
+ */
 - (void)createInvoiceData
 {
     //RFC
@@ -186,7 +191,6 @@
     tf_delegacion.borderStyle = UITextBorderStyleRoundedRect;
     tf_delegacion.delegate = self;
     
-
     //Estado
     tf_estado = [[UITextField alloc] init];
     tf_estado.borderStyle = UITextBorderStyleRoundedRect;
@@ -207,14 +211,11 @@
     tf_cp.borderStyle = UITextBorderStyleRoundedRect;
     tf_cp.delegate = self;
     
-    //Boton Listo
+    //Ready button
     bt_listo = [[UIBarButtonItem alloc] initWithTitle:@"Listo" style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
     
     self.view.backgroundColor = [UIColor whiteColor];
     tf_cp.delegate = self;
-    
-    //Boton Listo
-    bt_listo = [[UIBarButtonItem alloc] initWithTitle:@"Listo" style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
     
     [self setTitle:@"Datos de facturación"];
 }
@@ -222,22 +223,33 @@
 
 
 #pragma mark - init
-
+/** Init the viewController with default values and firstRFC in YES.
+ 
+ The firstRFC indicates that the rfc will be seved like default selected rfc in user preferens.
+ 
+ @param title NSString with the view title.
+ */
 -(void)initWithFirstRFC:(NSString *)title
 {
     firstRFC = YES;
     [self initWithDefault:title];
 }
 
+/** Init the viewController with default values.
+ 
+ Put in each textField in placeholder feature the element name.
+ 
+ @param title NSString with the view title.
+ */
 - (void)initWithDefault: (NSString *)title
 {
     [self createInvoiceData];
     
     
-    //Crear nuevo rfc en core data
+    //Create new rfc in core data
     opcion = TRUE;
     
-    //Titulo
+    //Title
     self.title = title;
     
     //RFC
@@ -269,11 +281,18 @@
     
 }
 
+/** Init the viewController with rfcInfo values.
+ 
+ Put in each textField in placeholder feature the rfcInfo value.
+ 
+ @param rfcInfo BWRFCInfo to edit.
+ @param title NSString with the view title.
+ */
 - (void)initWithBWRRFCInfo:(BWRRFCInfo *)rfcInfo title:(NSString *)title
 {
     [self initWithDefault:title];
     
-    //No crear nuevo objeto en core data
+    //Don't create new object in core data
     opcion = FALSE;
     updateRFC = rfcInfo;
     
@@ -307,6 +326,13 @@
 }
 
 #pragma mark - Navigation
+/** Save the rfcInfo in core data.
+ 
+ According to the option it inserts or updates the rfcInfo in core data and validate the action executed.
+ 
+ @param rfcInfo BWRFCInfo to edit.
+ @param title NSString with the view title.
+ */
 - (void)saveInfoRFC
 {
     BWRRFCInfo *rfcInfo;
@@ -318,6 +344,8 @@
     }
     
     if (rfcInfo) {
+        
+        //update rfc info
         rfcInfo.rfc = tf_rfc.text;
         rfcInfo.nombre = tf_nombre.text;
         rfcInfo.apellidoPaterno = tf_apaterno.text;
@@ -334,15 +362,12 @@
         rfcInfo.localidad = tf_localidad.text;
         
         NSError *error = nil;
+        //Save changes in data base
         /*if (*/[managedObjectContext save:&error];//) {
-            NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-            if (![userDefaults valueForKey:@"rfc"]) {
-                [userDefaults setValue:rfcInfo.rfc forKey:@"rfc"];
-                [userDefaults setBool:TRUE forKey:@"Notificaciones"];
-                [userDefaults setBool:TRUE forKey:@"Sonido"];
-                [userDefaults setBool:TRUE forKey:@"Guardar Fotos"];
-                [userDefaults setBool:TRUE forKey:@"Solo wifi"];
+            if (![BWRUserPreferences getStringValueForKey:@"rfc"]) {
+                [BWRUserPreferences setStringValue:rfcInfo.rfc forKey:@"rfc"];
             }
+        
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && !firstRFC){
             [self dismissViewControllerAnimated:YES completion:nil];
         }else{

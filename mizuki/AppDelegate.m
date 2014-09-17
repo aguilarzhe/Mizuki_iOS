@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import <GooglePlus/GooglePlus.h>
+#import "BWRGoCamaraViewController.h"
 
 @interface AppDelegate ()
             
@@ -67,6 +68,13 @@
             openURL: (NSURL *)url
   sourceApplication: (NSString *)sourceApplication
          annotation: (id)annotation {
+    
+    if([[NSString stringWithFormat:@"%@",url] isEqualToString:@"com.baware.mizuki://"]){
+        BWRGoCamaraViewController *goCamara = [[BWRGoCamaraViewController alloc]init];
+        [[[[UIApplication sharedApplication] delegate] window] setRootViewController:goCamara];
+        //[goCamara viewDidAppear:true];
+    }
+    
     return [GPPURLHandler handleURL:url
                   sourceApplication:sourceApplication
                          annotation:annotation];

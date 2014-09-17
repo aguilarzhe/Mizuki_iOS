@@ -9,7 +9,8 @@
 @interface BWRWebConnection : NSObject
 
 + (NSMutableArray *) companyListWithSubstring: (NSString *)substring;
-
 + (NSDictionary *) viewElementsWithCompany: (NSInteger)idCompany;
+
++(BOOL)getConnection;
 
 @end

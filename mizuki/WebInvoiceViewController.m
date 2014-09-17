@@ -9,13 +9,14 @@
 #import "WebInvoiceViewController.h"
 #import "BWRTicketViewElement.h"
 #import "BWRInvoiceTicketPage.h"
+#import "BWRWebConnection.h"
 
 @interface WebInvoiceViewController ()
 
 @property UIWebView *invoiceWebView;
 @property NSURLResponse *theResponse;
 @property NSMutableData *dataRecive;
-@property NSError *loadError;
+@property BOOL loadError;
 
 @end
 
@@ -39,10 +40,13 @@
     invoiceWebView.delegate = self;
     [self.view addSubview:invoiceWebView];
     
-    //load url into webview
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:companyURL];
-    [invoiceWebView loadRequest:urlRequest];
-    
+    //Validate internet connection
+    if ([BWRWebConnection getConnection]) {
+        
+        //load url into webview
+        NSURLRequest *urlRequest = [NSURLRequest requestWithURL:companyURL];
+        [invoiceWebView loadRequest:urlRequest];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -61,11 +65,16 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
  navigationType:(UIWebViewNavigationType)navigationType {
     
+    if(actualPage==[invoicePagesArray count]-1){
+        loadError = TRUE;
+        return FALSE;
+    }
     return TRUE;
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
-    loadError = error;
+    NSLog(@"ERROR: %@", error);
+    loadError = TRUE;
 }
 
 #pragma mark - WebInvoiceViewConetroller Sources
@@ -76,6 +85,7 @@
 
 - (void) executeJavaScriptFromWebPageDiv{
     
+    //Fill and send all forms
     for (int index=actualPage; index<[invoicePagesArray count]; index++){
         BWRInvoiceTicketPage *invoicePage = [invoicePagesArray objectAtIndex:index];
         NSString *javascript = [self createJavaScriptStringWithRules:invoicePage.rules];
@@ -85,14 +95,8 @@
         actualPage++;
     }
     
-    //Update invoice with new status
-    NSString *status = @"Facturada";
-    if(loadError){
-        status = @"Error";
-    }
-    [completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:status];
-    
-    [self performSegueWithIdentifier:@"InvoiceCompleteSegue" sender:self];
+    //Finish invoicing
+    [self goToInvoiceHistory];
     
 }
 
@@ -123,7 +127,19 @@
     return javascript;
 }
 
-
+-(void)goToInvoiceHistory{
+    
+    //Update invoice with new status
+    NSString *status = @"Facturada";
+    if(loadError){
+        status = @"Error";
+    }
+    [completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:status];
+    
+    //Go to history
+    [self performSegueWithIdentifier:@"InvoiceCompleteSegue" sender:self];
+    
+}
 
 
 

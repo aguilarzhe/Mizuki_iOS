@@ -15,6 +15,7 @@
 #import "BWRRFCInfo.h"
 #import "BWRWebConnection.h"
 #import "BWRCompleteInvoice.h"
+#import "BWRUserPreferences.h"
 
 @interface BWRInvoiceConfirmationViewController ()
 @property NSString *tiendaURL;
@@ -81,53 +82,52 @@
     }
     
     //User Defaults
-    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-    actualRFC = [userDefaults valueForKey:@"rfc"];
+    actualRFC = [BWRUserPreferences getStringValueForKey:@"rfc"];
     
-    //Medidas
-    NSInteger anchoPantalla = self.view.frame.size.width;
-    NSInteger largoPantalla = self.view.frame.size.height;
-    NSInteger ALTO = 44;
-    NSInteger PADING = 10;
-    NSInteger espaciado = 0;
-    NSInteger ANCHO_LARGO = anchoPantalla-(2*PADING);
+    //Measures
+    NSInteger screenWidth = self.view.frame.size.width;
+    NSInteger screenHeight = self.view.frame.size.height;
+    NSInteger height = 44;
+    NSInteger padding = 10;
+    NSInteger depth = 0;
+    NSInteger width = screenWidth-(2*padding);
     
     //PAGE 1 --------------------------------------------------------------------------------
-    //Tabla RFC
-    rfcLabel = [[UILabel alloc] initWithFrame:CGRectMake(PADING, espaciado, ANCHO_LARGO, ALTO)];
+    //RFC table
+    rfcLabel = [[UILabel alloc] initWithFrame:CGRectMake(padding, depth, width, height)];
     rfcLabel.text = @"RFC";
     
-    rfcTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, espaciado+=ALTO, anchoPantalla, ALTO) style:UITableViewStylePlain];
+    rfcTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, depth+=height, screenWidth, height) style:UITableViewStylePlain];
     rfcTableView.scrollEnabled = NO;
     rfcTableView.dataSource = self;
     rfcTableView.delegate = self;
     
-    //TextField de la empresa
-    empresaTextField = [[UITextField alloc] initWithFrame:CGRectMake(PADING, espaciado+=ALTO+10, ANCHO_LARGO, ALTO)];
+    //Company TextField
+    empresaTextField = [[UITextField alloc] initWithFrame:CGRectMake(padding, depth+=height+10, width, height)];
     empresaTextField.borderStyle = UITextBorderStyleRoundedRect;
     empresaTextField.placeholder = @"Empresa";
     empresaTextField.delegate = self;
    
-    //Tabla para autocomplete
-    completeTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, espaciado+=ALTO, anchoPantalla, ALTO) style:UITableViewStylePlain];
+    //Autocomplete table
+    completeTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, depth+=height, screenWidth, height) style:UITableViewStylePlain];
     completeTableView.delegate = self;
     completeTableView.dataSource = self;
     completeTableView.scrollEnabled = YES;
     completeTableView.hidden = YES;
     
-    //Array
+    //Arrays
     completeStringsArray = [[NSMutableArray alloc] init];
     ticketViewElementsArray = [[NSMutableArray alloc] init];
     
     //Scroll View
-    ticketScrollView=[[UIScrollView alloc] initWithFrame:CGRectMake(0, 160, anchoPantalla-10, largoPantalla-100)];
-    ticketScrollView.contentSize=CGSizeMake(anchoPantalla,largoPantalla);
+    ticketScrollView=[[UIScrollView alloc] initWithFrame:CGRectMake(0, 160, screenWidth-10, screenHeight-100)];
+    ticketScrollView.contentSize=CGSizeMake(screenWidth,screenHeight);
     ticketScrollView.hidden = NO;
     
     
     
     //PAGE 2 --------------------------------------------------------------------------------
-    //Imagen del ticket
+    //Ticket image
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         invoiceImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 50.0f, self.view.frame.size.width, 200.0f)];
@@ -147,7 +147,7 @@
     }
     invoiceImageView.image = invoiceImage;
     
-    //Resultado tesseract
+    //Tesseract result
     invoiceLabel.editable = NO;
     invoiceLabel.scrollEnabled = YES;
     invoiceLabel.text = @"Procesando";
@@ -155,10 +155,10 @@
     //CONTROL ------------------------------------------------------------------------------
     UICollectionViewFlowLayout *ticketDataLayout = [[UICollectionViewFlowLayout alloc] init];
     ticketDataLayout.minimumLineSpacing = 0.0;
-    ticketDataLayout.itemSize = CGSizeMake(anchoPantalla-10, largoPantalla-100);
+    ticketDataLayout.itemSize = CGSizeMake(screenWidth-10, screenHeight-100);
     ticketDataLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     
-    ticketData = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, anchoPantalla, largoPantalla-60) collectionViewLayout:ticketDataLayout];
+    ticketData = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight-60) collectionViewLayout:ticketDataLayout];
     ticketData.dataSource = self;
     ticketData.delegate = self;
     ticketData.backgroundColor = [UIColor whiteColor];
@@ -168,7 +168,7 @@
     [self.view addSubview:ticketData];
 
     
-    ticketDataPageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, largoPantalla-70, anchoPantalla, 20)];
+    ticketDataPageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, screenHeight-70, screenWidth, 20)];
     ticketDataPageControl.backgroundColor = [UIColor whiteColor];
     ticketDataPageControl.userInteractionEnabled = NO;
     ticketDataPageControl.currentPageIndicatorTintColor = [UIColor redColor];
@@ -176,7 +176,7 @@
     ticketDataPageControl.pageIndicatorTintColor = [UIColor colorWithWhite:0.92 alpha:1.0];
     [self.view addSubview:ticketDataPageControl];
     
-    //Boton enviar
+    //Send Button
     UIBarButtonItem *bt_enviar = [[UIBarButtonItem alloc] initWithTitle:@"Enviar" style:UIBarButtonItemStylePlain target:self action:@selector(goToWebview)];
     self.navigationItem.rightBarButtonItem = bt_enviar;
     
@@ -253,7 +253,7 @@
 }
 
 - (void) updateViewsWhitSelectedRFC {
-    //Obtener elemento rfc del arreglo
+    //Get rfc element from arreglo
     BWRRFCInfo *rfcActual;
     for (BWRRFCInfo *rfcInfo in fetchedResults){
         if ([actualRFC isEqualToString:rfcInfo.rfc]) {
@@ -262,7 +262,7 @@
         }
     }
    
-    //Colocar campo en elemento visual
+    //Put field in visual element
     for (BWRTicketViewElement *viewElement in ticketViewElementsArray){
         if([viewElement.dataSource isEqualToString:@"user_info"]){
             viewElement.selectionValue = [rfcActual getFormValueWhitProperty:viewElement.ticketField];
@@ -271,7 +271,6 @@
     }
 }
 
-//Reenviar factura
 -(void)sendInvoiceDirectly{
     
     //Get id company
@@ -316,7 +315,7 @@
     }else if(tableView == completeTableView){
         numberOfRows = [completeStringsArray count];
     }else{
-        //Buscando tableView
+        //find tableView
         BWRTicketViewElement *ticketElement = [ticketViewElementsArray objectAtIndex:[self findTableViewTicket:tableView]];
         numberOfRows = [ticketElement.ticketFieldValue count];
     }
@@ -395,14 +394,13 @@
 
 -(void)createTicketViewElemetsWithId: (NSInteger)identificador {
     
-    //Medidas
-    NSInteger anchoPantalla = self.view.frame.size.width;
-    NSInteger ALTO = 44;
-    NSInteger PADING = 10;
-    NSInteger espaciado = 0;
-    NSInteger ANCHO_LARGO = anchoPantalla-(2*PADING);
+    //Measures
+    NSInteger heigth = 44;
+    NSInteger padding = 10;
+    NSInteger depth = 0;
+    NSInteger width = self.view.frame.size.width-(2*padding);
     
-    //Obtener diccionario
+    //Get company dictionary
     NSDictionary *companyDataDictionary = [BWRWebConnection viewElementsWithCompany:identificador];
     NSArray *rulesBlockArray = [companyDataDictionary valueForKey:@"rules_block"];
     _tiendaURL = [companyDataDictionary valueForKey:@"url"];
@@ -420,16 +418,16 @@
         for(NSDictionary *ticketElement in rulesArray){
             BWRTicketViewElement *ticketViewElement = [[BWRTicketViewElement alloc] initWithDictionary:ticketElement];
             
-            //Dato de usuario
+            //User data
             if([ticketViewElement.dataSource isEqualToString:@"user_info"]){
                 [ticketViewElementsArray addObject:ticketViewElement];
                 
-            //Dato de ticket
+            //Ticket data
             }else if([ticketViewElement.dataSource isEqualToString:@"ticket_info"]){
-                [ticketViewElement createViewWithRect:PADING y:espaciado width:ANCHO_LARGO height:ALTO/**[ticketViewElement.valueCampoTicket count]*/ delegate:self];
+                [ticketViewElement createViewWithRect:padding y:depth width:width height:heigth/**[ticketViewElement.valueCampoTicket count]*/ delegate:self];
                 [ticketViewElementsArray addObject:ticketViewElement];
                 [ticketScrollView addSubview:ticketViewElement.viewTicketElement];
-                espaciado = espaciado + (ALTO /** [ticketViewElement.valueCampoTicket count]*/) +10;
+                depth = depth + (heigth /** [ticketViewElement.valueCampoTicket count]*/) +10;
             }
             
             [invoicePage.rules addObject:ticketViewElement];
@@ -445,6 +443,7 @@
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if(actionSheet == rfcActionSheet){
+        //show all rfc's
         BWRRFCInfo *rfcInfo = [fetchedResults objectAtIndex:buttonIndex];
         actualRFC = rfcInfo.rfc;
         [rfcTableView reloadData];
@@ -467,12 +466,12 @@
 - (void)searchAutocompleteEntriesWithSubstring:(NSString *)substring {
 
     NSMutableArray *temporalArray = [[NSMutableArray alloc] initWithArray:completeStringsArray];
+    //If there are elements in array
     if([completeStringsArray count]!=0) {
-        NSLog(@"JUSTO ANTES DEL ERROR elementos: %d arreglo: %@", [completeStringsArray count], completeStringsArray);
         [completeStringsArray removeAllObjects];
     }
     
-    //Eliminar elementos del scrollview
+    //Delate elements from scrollview
     NSArray *subviews = [ticketScrollView subviews];
     if(subviews!=nil){
         for (UIView *view in subviews)
@@ -481,16 +480,18 @@
     }
     ticketScrollView.hidden = YES;
 
+    //If substring length is equals to 3
     if ([substring length]==3) {
-        //Solicitar arreglo de strings
+        //Get strings array to complete
         completeStringsArray = [BWRWebConnection companyListWithSubstring:substring];
-    
+        //Resize array
         if([completeStringsArray count]!=0){
             [completeTableView setFrame:CGRectMake(0, completeTableView.frame.origin.y, completeTableView.frame.size.width, 44*[completeStringsArray count])];
             [completeTableView setContentSize:CGSizeMake(self.view.frame.size.width, (44 * [completeStringsArray count]))];
         }
     }
     
+    //If substring length is higher than 3
     else if ([substring length]>3){
         for(NSDictionary *curDictionary in temporalArray) {
             NSString *curString = [curDictionary valueForKey:@"name"];
@@ -499,20 +500,22 @@
                 [completeStringsArray addObject:curDictionary];
             }
         }
-        
+        //Resize array
         if([completeStringsArray count]!=0){
             [completeTableView setFrame:CGRectMake(0, completeTableView.frame.origin.y, completeTableView.frame.size.width, 44*[completeStringsArray count])];
             [completeTableView setContentSize:CGSizeMake(self.view.frame.size.width, (44 * [completeStringsArray count]))];
+        //Save previous strings
         }else{
             completeStringsArray = temporalArray;
             //completeTableView.hidden =YES;
         }
     }
     
+    //If substring length is less than 3
     else{
         completeTableView.hidden = YES;
     }
-    
+    //Reload table data
     [completeTableView reloadData];
     
 }
@@ -541,12 +544,14 @@
     
     cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ticketCell" forIndexPath:indexPath];
     
+    //Page 1
     if(indexPath.row==0){
         [cell.contentView addSubview:rfcLabel];
         [cell.contentView addSubview:rfcTableView];
         [cell.contentView addSubview:empresaTextField];
         [cell.contentView addSubview:completeTableView];
         [cell.contentView addSubview:ticketScrollView];
+    //Page 2
     }else{
         [cell.contentView addSubview:invoiceImageView];
         [cell.contentView addSubview:invoiceLabel];
@@ -560,10 +565,10 @@
     
     if([self validationInvoiceData] && !([invoiceLabel.text isEqualToString:@"Procesando"])){
         
-        //If no resending invoice
+        //If don't resend invoice
         if(!invoiceResending){
             
-            //Colocar el texto del text field en el campo selectionValue
+            //Put TextField text in selectionValue
             for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
                 if ([viewElement.viewTicketElement isKindOfClass:[UITextField class]] && [viewElement.dataSource isEqualToString:@"ticket_info"]) {
                     
@@ -571,9 +576,15 @@
                     
                 }
             }
+            
+            //update completeInvoice with new invoice
+            completeInvoice = [self getNewCompleteInvoice];
+            if(completeInvoice==nil){
+                return;
+            }
         }
         
-        //Colocar los campos del rfc user_info
+        //Put rfc user_info fields
         [self updateViewsWhitSelectedRFC];
         
         [self performSegueWithIdentifier:@"invoiceWebViewSegue" sender:self];
@@ -587,35 +598,31 @@
         webViewInvoiceData.invoicePagesArray = _invoicePagesArray;
         webViewInvoiceData.companyURL = [NSURL URLWithString:_tiendaURL];
         webViewInvoiceData.actualPage = 0;
-        
-        //If resend invoice
-        if(invoiceResending){
-            webViewInvoiceData.completeInvoice=completeInvoice;
-            
-        }else{
-            NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-            NSString *rfc = [userDefaults valueForKey:@"rfc"];
-            NSMutableArray *viewsArray= [[NSMutableArray alloc] init];
-            for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
-                if ([viewElement.dataSource isEqualToString:@"ticket_info"]) {
-                    [viewsArray addObject:viewElement];
-                }
-            }
-            NSLog (@"ARRAY %@", viewsArray);
-            
-            webViewInvoiceData.completeInvoice=[[BWRCompleteInvoice alloc] initWithData:viewsArray rfc:rfc ticketImage:invoiceImage stringOCR:invoiceLabel.text company:empresaTextField.text];
-            
-            //Add invoice to data base
-            if([completeInvoice addCompleteInvoiceWithStatus:@"Pendiente"]){
-                NSLog(@"SE REALIZO EL ADD CORRECTAMENTE: %@", completeInvoice.idInvoice);
-            }else{
-                NSLog(@"ERROR EN EL ADD");
-            }
-        }
-        
+        webViewInvoiceData.completeInvoice=completeInvoice;
     }
 }
 
-
+-(BWRCompleteInvoice *) getNewCompleteInvoice{
+    
+    //Get view elements array
+    NSMutableArray *viewsArray= [[NSMutableArray alloc] init];
+    for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
+        if ([viewElement.dataSource isEqualToString:@"ticket_info"]) {
+            [viewsArray addObject:viewElement];
+        }
+    }
+    
+    //Create new invoice
+    BWRCompleteInvoice *newCompleteInvoice=[[BWRCompleteInvoice alloc] initWithData:viewsArray rfc:actualRFC ticketImage:invoiceImage stringOCR:invoiceLabel.text company:empresaTextField.text];
+    
+    //Add invoice to data base
+    if([newCompleteInvoice addCompleteInvoiceWithStatus:@"Pendiente"]){
+        NSLog(@"SE REALIZO EL ADD CORRECTAMENTE: %@", completeInvoice.idInvoice);
+        return newCompleteInvoice;
+    }else{
+        NSLog(@"ERROR EN EL ADD");
+        return nil;
+    }
+}
 
 @end

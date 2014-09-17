@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "BWRMyAccountViewController.h"
 #import "BWRInvoiceDataViewController.h"
+#import "BWRUserPreferences.h"
+#import "BWRMessagesToUser.h"
 #import "AppDelegate.h"
 #import "Models/BWRRFCInfo.h"
 
@@ -43,7 +45,7 @@
     // Core Data
     [self loadCoreData];
     int width = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)?self.view.frame.size.width : 320.0f;
-    // Tabla de información de usuario
+    // User information table
     UILabel *userInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 0.0f, width, 44.0f)];
     userInfoLabel.text = NSLocalizedString(@"Datos de usuario", nil);
     
@@ -52,7 +54,7 @@
     userInfoTableView.dataSource = self;
     userInfoTableView.delegate = self;
     
-    // Tabla de RFC
+    // RFC table
     UILabel *rfcLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 135.0f, width, 44.0f)];
     rfcLabel.text = @"RFC";
     
@@ -61,7 +63,7 @@
     rfcTableView.dataSource = self;
     rfcTableView.delegate = self;
     
-    //Tabla de Configuraciones
+    //Configurations table
     UILabel *confInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 180.0f+(44 * (numRowsRFC + 1)), width, 44.0f)];
     confInfoLabel.text = NSLocalizedString(@"Configuración", nil);
     
@@ -83,7 +85,7 @@
     [scrollView addSubview:confInfoLabel];
     [scrollView addSubview:confInfoTableView];
     
-    // Configuración de vista
+    //Configuring view
     self.view=scrollView;
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cerrar sesión" style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
@@ -91,31 +93,24 @@
 }
 
 -(void)initializeDummyDataSources{
-    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
     NSString *email, *levelAccount;
-    if(!(email = [userDefaults valueForKey:@"Correo"])){
-        NSLog(@"Setting email");
-        [userDefaults setValue:@"aguilarzhe@gmail.com" forKey:@"Correo"];
-        email = [userDefaults valueForKey:@"Correo"];
-    }
-    if(!(levelAccount = [userDefaults valueForKey:@"Tipo cuenta"])){
-        [userDefaults setValue:@"Premium" forKey:@"Tipo cuenta"];
-        levelAccount = [userDefaults valueForKey:@"Tipo cuenta"];
-    }
     
+    //Get email an account lavel
+    if(!(email = [BWRUserPreferences getStringValueForKey:@"Correo"])){
+        NSLog(@"Setting email");
+        [BWRUserPreferences setStringValue:@"aguilarzhe@gmail.com" forKey:@"Correo"];
+        email = @"aguilarzhe@gmail.com";
+    }
+    if(!(levelAccount = [BWRUserPreferences getStringValueForKey:@"Tipo cuenta"])){
+        [BWRUserPreferences setStringValue:@"Premium" forKey:@"Tipo cuenta"];
+        levelAccount = @"Premium";
+    }
     
     dummyUserInfoDictionary = [[NSDictionary alloc]initWithObjects:@[email, levelAccount] forKeys:@[@"Correo", @"Tipo cuenta"]];
 }
 
 -(void)initializeConfDataSources{
-    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-    
-    NSNumber *notificaciones = [[NSNumber alloc] initWithBool:[userDefaults boolForKey:@"Notificaciones"]];
-    NSNumber *sonido = [[NSNumber alloc] initWithBool:[userDefaults boolForKey:@"Sonido"]];
-    NSNumber *guardarFoto = [[NSNumber alloc] initWithBool:[userDefaults boolForKey:@"Guardar Fotos"]];
-    NSNumber *conexion = [[NSNumber alloc] initWithBool:[userDefaults boolForKey:@"Solo wifi"]];
-    
-    confInfoDictionary = [[NSDictionary alloc]initWithObjects:@[notificaciones, sonido, guardarFoto, conexion] forKeys:@[@"Notificaciones", @"Sonido", @"Guardar Fotos", @"Solo wifi"]];
+    confInfoDictionary = [[NSDictionary alloc]initWithObjects:[BWRUserPreferences getConfPreferencesArray] forKeys:@[@"Notificaciones", @"Sonido", @"Guardar Fotos", @"Solo wifi"]];
 }
 
 #pragma mark - UITableViewDataSource
@@ -138,23 +133,27 @@
     UITableViewCell *cell = nil;
     NSString *key;
     
+    //RFC table
     if(tableView == rfcTableView){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"RFC"];
         if (indexPath.row < numRowsRFC) {
             BWRRFCInfo *rfcInfo = [fetchedResultsController objectAtIndexPath:indexPath];
             cell.textLabel.text = rfcInfo.rfc;
-            NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-            if ([[userDefaults valueForKey:@"rfc"] isEqualToString:rfcInfo.rfc]) {
+            if ([[BWRUserPreferences getStringValueForKey:@"rfc"] isEqualToString:rfcInfo.rfc]) {
                 cell.textLabel.textColor = [UIColor blueColor];
             }
         }else{
             cell.textLabel.text = NSLocalizedString(@"Agregar RFC", nil);
         }
+    
+    //User information table
     }else if(tableView == userInfoTableView){
         key = [dummyUserInfoDictionary allKeys][indexPath.row];
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"USERINFO"];
         cell.textLabel.text = NSLocalizedString(key, nil);
         cell.detailTextLabel.text = dummyUserInfoDictionary[key];
+        
+    //Configurations table
     }else if(tableView == confInfoTableView){
         key = [confInfoDictionary allKeys][indexPath.row];
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"CONFIG"];
@@ -183,17 +182,29 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    //RFC table
     if(tableView == rfcTableView){
-        //Mostrar opciones para RFC
+        //Show RFC options
         if (indexPath.row < numRowsRFC) {
             rfcActual = [fetchedResultsController objectAtIndexPath:indexPath];
             
             rfcActionSheet = [[UIActionSheet alloc] initWithTitle:@"Opciones RFC" delegate:self cancelButtonTitle:@"Cancelar" destructiveButtonTitle:@"Eliminar" otherButtonTitles:@"Seleccionar",@"Editar", nil];
             
             [rfcActionSheet showInView:self.view];
-            //Agregar un nuevo rfc
+        
+        //Add new rfc
         }else{
-            if(numRowsRFC<5){
+            
+            //Get maximus number of rfc's acording to acount type
+            NSInteger maxNumRFC = 0;
+            if([[BWRUserPreferences getStringValueForKey:@"Tipo cuenta"] isEqualToString:@"Premium"]){
+                maxNumRFC = 5;
+            }else{
+                maxNumRFC = 2;
+            }
+            
+            //Evaluate maxismus number of rfc's
+            if(numRowsRFC<maxNumRFC){
                 if (self.modalPresentationStyle == UIModalPresentationPopover){
                     BWRInvoiceDataViewController *createInvoiceData = [[BWRInvoiceDataViewController alloc] init];
                     [createInvoiceData initWithDefault:@"Datos de Facturación"];
@@ -208,14 +219,15 @@
             }
         }
     }
+    
+    //Configurations table
     else if(tableView == confInfoTableView){
         [confInfoTableView deselectRowAtIndexPath:indexPath animated:NO];
         UITableViewCell* cell = [confInfoTableView cellForRowAtIndexPath:indexPath];
         UISwitch* switcher = (UISwitch*)cell.accessoryView;
         [switcher setOn:!switcher.on animated:YES];
         
-        NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-        [userDefaults setBool:switcher.on forKey:[confInfoDictionary allKeys][indexPath.row]];
+        [BWRUserPreferences setBoolValue:switcher.on forKey:[confInfoDictionary allKeys][indexPath.row]];
         NSLog(@"La configuración %@ ahora tiene el valor %hhd", [confInfoDictionary allKeys][indexPath.row], switcher.on);
     }
 }
@@ -223,18 +235,18 @@
 #pragma mark - UIActionSheetDelegate
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-    
     switch (buttonIndex) {
-        case 0://Eliminar un RFC
+        case 0://Delate a RFC
             [self delateRFC];
             break;
-        case 1://Establecer un RFC para facturación
-            [userDefaults setValue:rfcActual.rfc forKey:@"rfc"];
-            NSLog(@"RFC Seleccionado para facturación: %@", [userDefaults valueForKey:@"rfc"]);
+            
+        case 1://Select a RFC to invoicing
+            [BWRUserPreferences setStringValue:rfcActual.rfc forKey:@"rfc"];
+            //NSLog(@"RFC Seleccionado para facturación: %@", [userDefaults valueForKey:@"rfc"]);
             [rfcTableView reloadData];
             break;
-        case 2://Editar un RFC
+            
+        case 2://Edit a RFC
             [self performSegueWithIdentifier:@"editInvoiceDataSegue" sender:self];
             break;
         default:
@@ -259,19 +271,19 @@
 
 - (void)delateRFC
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error RFC" message:@"Verifique los datos." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    
+    //Validate that there is at least one RFC
     if(numRowsRFC>1){
         
-        NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-        if (![[userDefaults valueForKey:@"rfc"] isEqualToString:rfcActual.rfc]) {
+        //Validate selected RFC
+        if (![[BWRUserPreferences getStringValueForKey:@"rfc"] isEqualToString:rfcActual.rfc]) {
             
             [managedObjectContext deleteObject:rfcActual];
             NSError *error = nil;
+            
+            //Save changes in data base
             if (![managedObjectContext save:&error]) {
-                NSLog(@"Can't Delete! %@ %@", error, [error localizedDescription]);
-                [alertView setMessage:[NSString stringWithFormat:@"Can't Delete! %@ %@", error, [error localizedDescription]]];
-                [alertView show];
+                [BWRMessagesToUser Error:error code:0 message:@"Can't Delate!"];
+                
                 return;
             }
         
@@ -281,14 +293,13 @@
             [rfcTableView reloadData];
             
         }else{
-            [alertView setMessage:@"El rfc a eliminar es el seleccionado para facturar. Seleccione otro para poder eliminarlo"];
-            [alertView show];
+            [BWRMessagesToUser Alert:@"Error RFC" message:@"El rfc a eliminar es el seleccionado para facturar. Seleccione otro para poder eliminarlo"];
             return;
         }
+    
     }else{
+        [BWRMessagesToUser Alert:@"Error RFC" message:@"Can't Delete. Debe de haber al menos un RFC"];
         NSLog(@"Can't Delete. Debe de haber al menos un RFC");
-        [alertView setMessage:@"Can't Delete. Debe de haber al menos un RFC"];
-        [alertView show];
     }
     
 }
@@ -299,22 +310,19 @@
     managedObjectContext = appDelegate.managedObjectContext;
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"RFCInfo"];
-    
     NSSortDescriptor *ordenacionPorNombre = [[NSSortDescriptor alloc] initWithKey:@"rfc" ascending:YES];
-    
     fetchRequest.sortDescriptors = @[ordenacionPorNombre];
     
     fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:managedObjectContext sectionNameKeyPath:nil cacheName:nil];
     fetchedResultsController.delegate = self;
     
     NSError *fetchingError = nil;
-    
     if ([fetchedResultsController performFetch:&fetchingError]) {
         NSLog(@"Recuperación satisfactoria.");
         id <NSFetchedResultsSectionInfo> sectionInfo = fetchedResultsController.sections[0];
         numRowsRFC = [sectionInfo numberOfObjects];
     } else {
-        NSLog(@"Error al recuperar.");
+        [BWRMessagesToUser Error:fetchingError code:1 message:@"No se pudieron obtener rfc's de la base"];
     }
     
 }

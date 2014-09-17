@@ -36,7 +36,7 @@
         return @"Error";
     }
     
-    //Mejorar la imagen
+    //Improve image
     processImage = [opencv improveImageFromUIImage:processImage];
     //processImage = [opencv improveImageFromUIImage:image_result];
 
@@ -45,13 +45,13 @@
         return @"Imagen demasiado obscura o demasiado clara";
     }
     
-    //Reconocer texto
+    //Recognize text
     [tesseract setImage: processImage];
     [tesseract recognize];
     NSString *result = [tesseract recognizedText];
     NSLog(@"%@", result);
     
-    //Liberar memoria
+    //Free memory
     tesseract = nil; //deallocate and free all memory
     
     return result;

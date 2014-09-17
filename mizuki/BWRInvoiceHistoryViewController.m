@@ -75,8 +75,9 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     self.toolbarItems = @[flexibleItem, settingsButton];
     
     self.title = NSLocalizedString(@"Mis facturas", nil);
+    
+    
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -84,6 +85,8 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 }
 
 #pragma mark - BWRInvoiceHistorySources
+/** Show the options to invoice the ticket.
+ */
 -(void)showImageInvoceActionSheet:(id)sender{
     imageInvoiceActionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Agregar factura", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Cancelar", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Cámara", nil), NSLocalizedString(@"Galeria", nil), NSLocalizedString(@"Capturar datos", nil), nil];
 
@@ -94,6 +97,10 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     }
 }
 
+/** Go to BWRInvoiceConfirmationViewController.
+
+ Use segue to continue the ticket invoice in other view.
+ */
 -(void)confirmInvoice{
     [self performSegueWithIdentifier:@"invoiceConfirmationSegue" sender:self];
 }
@@ -108,6 +115,12 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     }
 }
 
+/** Get the invoices in array according to type.
+ 
+ Put all invoices that match with the type (rigth, pending or error) in array actualInvoicesArray.
+ 
+ @param invoiceType String invoice type ("Todas", "Facturada", "Pendiente", "Error").
+ */
 - (void) loadInvoicesFromCoreData: (NSString *)invoiceType{
     
     //Get invoices from data base
@@ -156,8 +169,11 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
         //Facturar
 }
 
-
 #pragma mark - Segmented control sources
+/** Get the actual invoices according to type selected in UISegmentedControl.
+ 
+ According to type selected, load actualInvoicesArray data to reload invoiceTableView data.
+ */
 - (void)valueChanged:(UISegmentedControl *)segment {
     
     if(segment.selectedSegmentIndex == 0) {
@@ -173,6 +189,10 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 }
 
 #pragma mark - Captura de imagen
+/** Method to capture ticket from camara.
+ 
+ Prepare the camara to take the ticket photo
+ */
 -(void)captureInvoiceFromCamera{
     if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
         UIImagePickerController *myImagePickerController = [[UIImagePickerController alloc] init];
@@ -180,10 +200,16 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
         myImagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
         myImagePickerController.mediaTypes = @[(NSString *) kUTTypeImage];
         myImagePickerController.allowsEditing = NO;
+        AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        NSLog(@"URL camara: %@", [appDelegate applicationDocumentsDirectory]);
         [self presentViewController:myImagePickerController animated:YES completion:nil];
     }
 }
 
+/** Get the ticket from galery.
+ 
+ Prapare the photo library to select the ticket photo
+ */
 -(void)captureInvoiceFromPhotoLibrary{
     if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum]){
         UIImagePickerController *myImagePickerController = [[UIImagePickerController alloc] init];
@@ -191,11 +217,18 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
         myImagePickerController.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
         myImagePickerController.mediaTypes = @[(NSString *)kUTTypeImage];
         myImagePickerController.allowsEditing = NO;
+        AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        NSLog(@"URL galery: %@", [appDelegate applicationDocumentsDirectory]);
         [self presentViewController:myImagePickerController animated:YES completion:nil];
     }
 }
 
 #pragma mark - UIActionSheetDelegate
+/** Invoke the method according to the selected option in action sheet.
+ 
+ @param actionSheet UIActionSheet that show invoice options.
+ @param buttonIndex NSInteger that indicate the selected option.
+ */
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     switch (buttonIndex) {
@@ -212,6 +245,10 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 
 
 #pragma mark - UIImagePickerControllerDelegate
+/** Get the image that was selected or taken.
+ 
+ Actualize the image invoiceImage with the photo
+ */
 -(void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     NSString *mediaType = info [UIImagePickerControllerMediaType];
@@ -224,6 +261,12 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 }
 
 #pragma mark - UITableViewDataSource
+/** Get table view number of rows.
+ 
+ If the tableView is invoiceTableView return the number of items in array actualInvoiceArray.
+ 
+ @return numberOfRows NSInteger with the tableview number of rows.
+ */
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     NSInteger numberOfRows = 0;
     
@@ -234,6 +277,10 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     return numberOfRows;
 }
 
+/** Get the cell content of the tableview.
+ 
+ If the tableView is invoiceTableView, the cell will content company and date invoice at index in array actualInvoicesArray.
+ */
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = nil;
     
@@ -247,6 +294,10 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     return cell;
 }
 
+/** Action if a tableview row was clicked.
+ 
+ If tableView is invoiceTableView actualize BWRCompleteInvoice actualInvoice with the invoice selected and go to BWREditInvoiceViewController view to show or chage data invoice.
+ */
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 
     if(tableView == invoiceTableView){
@@ -256,6 +307,10 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     [self performSegueWithIdentifier:@"EditInvoiceSegue" sender:self];
 }
 
+/** Select the tableview row to edit.
+ 
+ If editingStyle is delete and the tableview is invoiceTableView, it will delete invoice from core data and array actualInvoicesArray, and reload invoiceTableView data.
+ */
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -274,6 +329,8 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     
 }
 
+/** Allow the edit options for tableview rows
+ */
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
     
     if (editing){
@@ -289,6 +346,11 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 }
 
 #pragma mark - Navegation
+/** Prepare the reciver class before the segue.
+ 
+ If the segue identifier is invoiceConfirmationSegue, send invoiceImage and indication of don't resend invoice.
+ If the segue identifier is EditInvoiceSegue, send actualInvoice and the type inovice.
+ */
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if([[segue identifier] isEqualToString:@"invoiceConfirmationSegue"]){

@@ -8,6 +8,7 @@
 
 #import "BWRInitialConfigurationDataUserViewController.h"
 #import "BWRInvoiceDataViewController.h"
+#import "BWRUserPreferences.h"
 #import <GoogleOpenSource/GoogleOpenSource.h>
 #import <GooglePlus/GooglePlus.h>
 
@@ -101,9 +102,7 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
  */
 - (void)invoiceDataViewController
 {
-    NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
-    [userDefaults setValue:[self getEmailAddressFromGPPAccount] forKey:@"Correo"];
-    
+    [BWRUserPreferences setDefaultsWithEmail:[self getEmailAddressFromGPPAccount]];
     [self performSegueWithIdentifier:@"invoiceDataSegue" sender:self];
 }
 
@@ -149,9 +148,8 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
  */
 -(void)refreshInterfaceBasedOnSignIn {
     if ([[GPPSignIn sharedInstance] authentication]) {
-        NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
         
-        if(!([userDefaults valueForKey:@"Correo"] && [userDefaults valueForKey:@"rfc"])){
+        if(!([BWRUserPreferences applicationConfigured])){
             [self invoiceDataViewController];
         }else{
             [self invoiceHistoryViewController];

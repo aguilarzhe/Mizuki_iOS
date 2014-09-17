@@ -103,7 +103,7 @@
     //If invoice is not right
     if(![completeInvoice.status isEqualToString:@"Facturada"]){
         //Save Button
-        UIBarButtonItem *bt_save = [[UIBarButtonItem alloc] initWithTitle:@"Guardar" style:UIBarButtonItemStylePlain target:self action:@selector(updateInvoice)];
+        UIBarButtonItem *bt_save = [[UIBarButtonItem alloc] initWithTitle:@"Guardar" style:UIBarButtonItemStylePlain target:self action:@selector(saveInvoiceChanges)];
         self.navigationItem.rightBarButtonItem = bt_save;
     }
     
@@ -129,20 +129,18 @@
     if([completeInvoice.status isEqualToString:@"Error"]){
         completeInvoice.status = @"Pendiente";
     }
+    
     [completeInvoice updateCompleteInvoiceWithRFC:rfcSelected status:completeInvoice.status];
-    
-    [self performSegueWithIdentifier:@"returnToHistorySegue" sender:self];
-    
 }
 
 -(void)inicializeViewTicketElementsArray{
     
     //Medidas
-    NSInteger widthScreen = self.view.frame.size.width;
+    NSInteger screenWidth = self.view.frame.size.width;
     NSInteger height = 44;
     NSInteger padding = 10;
     NSInteger depth = 0;
-    NSInteger width = widthScreen-(2*padding);
+    NSInteger width = screenWidth-(2*padding);
     
     for(BWRTicketViewElement *viewElement in completeInvoice.rulesViewElementsArray){
         [viewElement createViewWithRect:padding y:depth width:width height:height/**[ticketViewElement.valueCampoTicket count]*/ delegate:self];
@@ -165,6 +163,15 @@
     
     //Go to BWRInvoiceConfirmation
     [self performSegueWithIdentifier:@"ResendingInvoiceSegue" sender:self];
+}
+
+-(void) saveInvoiceChanges {
+    
+    //Update invoice
+    [self updateInvoice];
+    
+    //Go to History
+    [self performSegueWithIdentifier:@"returnToHistorySegue" sender:self];
 }
 
 #pragma mark - UITextFieldDelegate
