@@ -134,7 +134,7 @@ static BWRCompleteInvoice *actualInvoice;
     
     [actualInvoicesArray removeAllObjects];
     if(!error){
-        NSLog(@"Recuperación satisfactoria. %d", [invoicesResult count]);
+        NSLog(@"Recuperación satisfactoria. %lu", (unsigned long)[invoicesResult count]);
         
         for(BWRInvoice *invoice in invoicesResult){
             BWRCompleteInvoice *completeInvoice = [[BWRCompleteInvoice alloc] initFromCoreDataWithInvoice:invoice];

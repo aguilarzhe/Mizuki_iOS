@@ -35,7 +35,7 @@ static NSData *dataCompany;
 + (NSDictionary *) viewElementsWithCompany: (NSInteger)idCompany{
     //Validate Connection
     if([self getConnection]){
-        NSData *dataCompany = [self downloadDataOfURL:[NSString stringWithFormat:@"http://bawaremobile.com/company/%d", idCompany]];
+        NSData *dataCompany = [self downloadDataOfURL:[NSString stringWithFormat:@"http://bawaremobile.com/company/%ld", (long) (long)idCompany]];
         
         if (dataCompany != nil)
         {
