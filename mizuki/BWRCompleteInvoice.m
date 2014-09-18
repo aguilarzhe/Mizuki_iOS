@@ -10,6 +10,7 @@
 #import "BWRCompleteInvoice.h"
 #import "BWRRule.h"
 #import "BWRTicketViewElement.h"
+#import "BWRMessagesToUser.h"
 
 @interface BWRCompleteInvoice ()
 
@@ -117,6 +118,8 @@
         return  TRUE;
     }
     
+    //If error to save
+    [BWRMessagesToUser Error:error code:0 message:@"Error al agregar factura"];
     return FALSE;
     
 }
@@ -182,6 +185,8 @@
         return  TRUE;
     }
     
+    //If error to save
+    [BWRMessagesToUser Error:error code:0 message:@"Error al actualizar factura"];
     return FALSE;
 }
 
@@ -224,6 +229,8 @@
         return  TRUE;
     }
     
+    //If error to save
+    [BWRMessagesToUser Error:error code:0 message:@"Error al eliminar factura"];
     return FALSE;
 }
 

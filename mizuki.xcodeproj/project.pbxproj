@@ -7,8 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B1327E719BE5BA700D36AC0 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1327E619BE5BA700D36AC0 /* NotificationCenter.framework */; };
+		2B1327ED19BE5BA700D36AC0 /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B1327EC19BE5BA700D36AC0 /* TodayViewController.m */; };
+		2B1327EF19BE5BA700D36AC0 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B1327EE19BE5BA700D36AC0 /* MainInterface.storyboard */; };
+		2B1327F219BE5BA700D36AC0 /* com.baware.mizuki.Mizuki-widget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2B1327E419BE5BA700D36AC0 /* com.baware.mizuki.Mizuki-widget.appex */; };
+		2B182FB519B9537D00743BD7 /* BWRMessagesToUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B182FB419B9537D00743BD7 /* BWRMessagesToUser.m */; };
+		2B1BEDC219C9416B005E00EC /* BWRGoCamaraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B1BEDC119C9416B005E00EC /* BWRGoCamaraViewController.m */; };
 		2B1D89441950B38200C5A5A3 /* starbucks_liso.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2B1D89431950B38200C5A5A3 /* starbucks_liso.jpg */; };
 		2B1D89461950B3C300C5A5A3 /* starbucks_con_dobles.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2B1D89451950B3C300C5A5A3 /* starbucks_con_dobles.jpg */; };
+		2B21A4CF19B63F810070A433 /* BWRUserPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B21A4CE19B63F800070A433 /* BWRUserPreferences.m */; };
 		2B23A60319589FED0054FB8A /* OpenCV.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B23A60219589FED0054FB8A /* OpenCV.mm */; };
 		2B2628AF1994442C00E5564B /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B2628AE1994442C00E5564B /* WebKit.framework */; };
 		2B351E6C1991CD84000D8611 /* BWRWebConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B351E6B1991CD84000D8611 /* BWRWebConnection.m */; };
@@ -62,6 +69,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2B1327F019BE5BA700D36AC0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2F397D5F1948BD6E004CC963 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2B1327E319BE5BA700D36AC0;
+			remoteInfo = "Mizuki-widget";
+		};
+		2B1327F319BE5BA700D36AC0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2F397D5F1948BD6E004CC963 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2B1327E319BE5BA700D36AC0;
+			remoteInfo = "Mizuki-widget";
+		};
 		2F397D811948BD6F004CC963 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2F397D5F1948BD6E004CC963 /* Project object */;
@@ -71,9 +92,35 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		2B1327F819BE5BA700D36AC0 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				2B1327F219BE5BA700D36AC0 /* com.baware.mizuki.Mizuki-widget.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		2B1327E419BE5BA700D36AC0 /* com.baware.mizuki.Mizuki-widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "com.baware.mizuki.Mizuki-widget.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B1327E619BE5BA700D36AC0 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		2B1327EA19BE5BA700D36AC0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2B1327EB19BE5BA700D36AC0 /* TodayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayViewController.h; sourceTree = "<group>"; };
+		2B1327EC19BE5BA700D36AC0 /* TodayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayViewController.m; sourceTree = "<group>"; };
+		2B1327EE19BE5BA700D36AC0 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
+		2B182FB319B9536800743BD7 /* BWRMessagesToUser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BWRMessagesToUser.h; sourceTree = "<group>"; };
+		2B182FB419B9537D00743BD7 /* BWRMessagesToUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRMessagesToUser.m; sourceTree = "<group>"; };
+		2B1BEDC019C94150005E00EC /* BWRGoCamaraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWRGoCamaraViewController.h; sourceTree = "<group>"; };
+		2B1BEDC119C9416B005E00EC /* BWRGoCamaraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRGoCamaraViewController.m; sourceTree = "<group>"; };
 		2B1D89431950B38200C5A5A3 /* starbucks_liso.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = starbucks_liso.jpg; sourceTree = "<group>"; };
 		2B1D89451950B3C300C5A5A3 /* starbucks_con_dobles.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = starbucks_con_dobles.jpg; sourceTree = "<group>"; };
+		2B21A4CE19B63F800070A433 /* BWRUserPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRUserPreferences.m; sourceTree = "<group>"; };
+		2B21A4D019B63FB50070A433 /* BWRUserPreferences.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BWRUserPreferences.h; sourceTree = "<group>"; };
 		2B23A60119589FD10054FB8A /* OpenCV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenCV.h; sourceTree = "<group>"; };
 		2B23A60219589FED0054FB8A /* OpenCV.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenCV.mm; sourceTree = "<group>"; };
 		2B23A6041958A0170054FB8A /* mizuki-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mizuki-Prefix.pch"; sourceTree = "<group>"; };
@@ -294,6 +341,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2B1327E119BE5BA700D36AC0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B1327E719BE5BA700D36AC0 /* NotificationCenter.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2F397D641948BD6F004CC963 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -333,6 +388,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2B1327E519BE5BA700D36AC0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2B1327E619BE5BA700D36AC0 /* NotificationCenter.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2B1327E819BE5BA700D36AC0 /* Mizuki-widget */ = {
+			isa = PBXGroup;
+			children = (
+				2B1327EB19BE5BA700D36AC0 /* TodayViewController.h */,
+				2B1327EC19BE5BA700D36AC0 /* TodayViewController.m */,
+				2B1327EE19BE5BA700D36AC0 /* MainInterface.storyboard */,
+				2B1327E919BE5BA700D36AC0 /* Supporting Files */,
+			);
+			path = "Mizuki-widget";
+			sourceTree = "<group>";
+		};
+		2B1327E919BE5BA700D36AC0 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2B1327EA19BE5BA700D36AC0 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		2B23A60019589FA70054FB8A /* opencv-ios */ = {
 			isa = PBXGroup;
 			children = (
@@ -585,6 +667,8 @@
 				2F397D691948BD6F004CC963 /* mizuki */,
 				2F397D6A1948BD6F004CC963 /* Supporting Files */,
 				2F397D831948BD6F004CC963 /* mizukiTests */,
+				2B1327E819BE5BA700D36AC0 /* Mizuki-widget */,
+				2B1327E519BE5BA700D36AC0 /* Frameworks */,
 				2F397D681948BD6F004CC963 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -594,6 +678,7 @@
 			children = (
 				2F397D671948BD6F004CC963 /* mizuki.app */,
 				2F397D801948BD6F004CC963 /* mizukiTests.xctest */,
+				2B1327E419BE5BA700D36AC0 /* com.baware.mizuki.Mizuki-widget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -601,6 +686,8 @@
 		2F397D691948BD6F004CC963 /* mizuki */ = {
 			isa = PBXGroup;
 			children = (
+				2B1BEDC119C9416B005E00EC /* BWRGoCamaraViewController.m */,
+				2B1BEDC019C94150005E00EC /* BWRGoCamaraViewController.h */,
 				2FBAEE031992FBE8004DE362 /* gpluslogin */,
 				2F3CFAC4197F71F1009428C9 /* images */,
 				2BCEE57A197DC24900E00667 /* WebInvoiceViewController.m */,
@@ -633,6 +720,10 @@
 				2F5E380E19804BBE00189A8F /* Localizable.strings */,
 				2BBBE1B8199FDE0400B94C1C /* BWREditInvoiceViewController.h */,
 				2BBBE1B9199FDE0400B94C1C /* BWREditInvoiceViewController.m */,
+				2B21A4CE19B63F800070A433 /* BWRUserPreferences.m */,
+				2B21A4D019B63FB50070A433 /* BWRUserPreferences.h */,
+				2B182FB319B9536800743BD7 /* BWRMessagesToUser.h */,
+				2B182FB419B9537D00743BD7 /* BWRMessagesToUser.m */,
 			);
 			path = mizuki;
 			sourceTree = "<group>";
@@ -705,6 +796,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2B1327E319BE5BA700D36AC0 /* Mizuki-widget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2B1327F719BE5BA700D36AC0 /* Build configuration list for PBXNativeTarget "Mizuki-widget" */;
+			buildPhases = (
+				2B1327E019BE5BA700D36AC0 /* Sources */,
+				2B1327E119BE5BA700D36AC0 /* Frameworks */,
+				2B1327E219BE5BA700D36AC0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Mizuki-widget";
+			productName = "Mizuki-widget";
+			productReference = 2B1327E419BE5BA700D36AC0 /* com.baware.mizuki.Mizuki-widget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		2F397D661948BD6F004CC963 /* mizuki */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2F397D8A1948BD6F004CC963 /* Build configuration list for PBXNativeTarget "mizuki" */;
@@ -712,10 +820,13 @@
 				2F397D631948BD6F004CC963 /* Sources */,
 				2F397D641948BD6F004CC963 /* Frameworks */,
 				2F397D651948BD6F004CC963 /* Resources */,
+				2B1327F819BE5BA700D36AC0 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				2B1327F119BE5BA700D36AC0 /* PBXTargetDependency */,
+				2B1327F419BE5BA700D36AC0 /* PBXTargetDependency */,
 			);
 			name = mizuki;
 			productName = mizuki;
@@ -749,6 +860,15 @@
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Efrén Aguilar";
 				TargetAttributes = {
+					2B1327E319BE5BA700D36AC0 = {
+						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = PQL8DY4A57;
+						SystemCapabilities = {
+							com.apple.iOS = {
+								enabled = 0;
+							};
+						};
+					};
 					2F397D661948BD6F004CC963 = {
 						CreatedOnToolsVersion = 6.0;
 						DevelopmentTeam = 699336Z43R;
@@ -779,11 +899,20 @@
 			targets = (
 				2F397D661948BD6F004CC963 /* mizuki */,
 				2F397D7F1948BD6F004CC963 /* mizukiTests */,
+				2B1327E319BE5BA700D36AC0 /* Mizuki-widget */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2B1327E219BE5BA700D36AC0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B1327EF19BE5BA700D36AC0 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2F397D651948BD6F004CC963 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -810,6 +939,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2B1327E019BE5BA700D36AC0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B1327ED19BE5BA700D36AC0 /* TodayViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2F397D631948BD6F004CC963 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -823,9 +960,12 @@
 				2B380A0B1965E93500A7FDFE /* BWRInvoiceDataViewController.m in Sources */,
 				2F397D911948BF31004CC963 /* BWRInvoiceConfirmationViewController.m in Sources */,
 				2B3BEA88199BD806007466E2 /* BWRRule.m in Sources */,
+				2B1BEDC219C9416B005E00EC /* BWRGoCamaraViewController.m in Sources */,
 				2BDB2F2819509B7E00AD8F67 /* BWRProcessImage.m in Sources */,
+				2B21A4CF19B63F810070A433 /* BWRUserPreferences.m in Sources */,
 				2BBBE1BA199FDE0400B94C1C /* BWREditInvoiceViewController.m in Sources */,
 				2B351E6C1991CD84000D8611 /* BWRWebConnection.m in Sources */,
+				2B182FB519B9537D00743BD7 /* BWRMessagesToUser.m in Sources */,
 				2BDB2F1D19509B0B00AD8F67 /* Tesseract.mm in Sources */,
 				2B23A60319589FED0054FB8A /* OpenCV.mm in Sources */,
 				2F7D5CB51964E0EE003BBAB6 /* BWRMyAccountViewController.m in Sources */,
@@ -848,6 +988,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		2B1327F119BE5BA700D36AC0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2B1327E319BE5BA700D36AC0 /* Mizuki-widget */;
+			targetProxy = 2B1327F019BE5BA700D36AC0 /* PBXContainerItemProxy */;
+		};
+		2B1327F419BE5BA700D36AC0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2B1327E319BE5BA700D36AC0 /* Mizuki-widget */;
+			targetProxy = 2B1327F319BE5BA700D36AC0 /* PBXContainerItemProxy */;
+		};
 		2F397D821948BD6F004CC963 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2F397D661948BD6F004CC963 /* mizuki */;
@@ -876,6 +1026,49 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		2B1327F519BE5BA700D36AC0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/mizuki",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Mizuki-widget/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				METAL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "com.baware.mizuki.$(TARGET_NAME:rfc1034identifier)";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		2B1327F619BE5BA700D36AC0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/mizuki",
+				);
+				INFOPLIST_FILE = "Mizuki-widget/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				METAL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "com.baware.mizuki.$(TARGET_NAME:rfc1034identifier)";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		2F397D881948BD6F004CC963 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1054,6 +1247,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2B1327F719BE5BA700D36AC0 /* Build configuration list for PBXNativeTarget "Mizuki-widget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B1327F519BE5BA700D36AC0 /* Debug */,
+				2B1327F619BE5BA700D36AC0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		2F397D621948BD6E004CC963 /* Build configuration list for PBXProject "mizuki" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

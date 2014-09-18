@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "BWRTicketViewElement.h"
+#import "BWRMessagesToUser.h"
 
 @interface BWRTicketViewElement()
 
@@ -119,9 +120,7 @@
         ((UITextField *)viewTicketElement).text = [((UITextField *)viewTicketElement).text substringWithRange:match.range];
         return TRUE;
     }else{
-        NSLog(@"Error en el campo: %@", ticketField);//[viewElement.valueCampoTicket objectAtIndex:0]);
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Datos no válidos" message:[NSString stringWithFormat:@"Error en el campo: %@", ticketField] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alertView show];
+        [BWRMessagesToUser Alert:@"Datos no válidos" message:[NSString stringWithFormat:@"Error en el campo: %@", ticketField]];
         return FALSE;
     }
 }

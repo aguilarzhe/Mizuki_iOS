@@ -11,5 +11,7 @@
 
 @interface BWRInvoiceHistoryViewController : UIViewController <UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource>
 
+-(void)captureInvoiceFromCamera;
+
 @end
 

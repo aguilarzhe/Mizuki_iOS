@@ -18,6 +18,6 @@
 @property UITextView *invoiceLabel;
 
 @property BWRCompleteInvoice *completeInvoice;
-@property BOOL invoiceResending;
+@property NSInteger invoiceAction;
 
 @end

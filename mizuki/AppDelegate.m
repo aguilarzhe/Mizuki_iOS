@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import <GooglePlus/GooglePlus.h>
+#import "BWRGoCamaraViewController.h"
 
 @interface AppDelegate ()
             
@@ -67,6 +68,15 @@
             openURL: (NSURL *)url
   sourceApplication: (NSString *)sourceApplication
          annotation: (id)annotation {
+    
+    //Go to camara
+    NSDictionary *queryDict = [self parseQueryToDictionary:[url query]];
+    if([[queryDict valueForKey:@"token"] isEqualToString:@"9204265553"]){
+        BWRGoCamaraViewController *goCamara = [[BWRGoCamaraViewController alloc]init];
+        //[[[[UIApplication sharedApplication] delegate] window] setRootViewController:goCamara];
+        [goCamara viewDidAppear:true];
+    }
+    
     return [GPPURLHandler handleURL:url
                   sourceApplication:sourceApplication
                          annotation:annotation];
@@ -148,6 +158,20 @@
 // Returns the URL to the application's Documents directory.
 - (NSURL *)applicationDocumentsDirectory {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
+- (NSDictionary *)parseQueryToDictionary:(NSString *)query {
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:6];
+    NSArray *pairs = [query componentsSeparatedByString:@"&"];
+    
+    for (NSString *pair in pairs) {
+        NSArray *elements = [pair componentsSeparatedByString:@"="];
+        NSString *key = [[elements objectAtIndex:0] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *val = [[elements objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        
+        [dict setObject:val forKey:key];
+    }
+    return dict;
 }
 
 @end
