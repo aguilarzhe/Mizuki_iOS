@@ -56,6 +56,7 @@
 		2FBAEE1D1992FD52004DE362 /* GoogleOpenSource.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBAEE1B1992FD52004DE362 /* GoogleOpenSource.framework */; };
 		2FBAEE1E1992FD52004DE362 /* GooglePlus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBAEE1C1992FD52004DE362 /* GooglePlus.framework */; };
 		2FBAEE201992FD79004DE362 /* GooglePlus.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2FBAEE1F1992FD79004DE362 /* GooglePlus.bundle */; };
+		2FBECFF119CA97BB00ED4A84 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FBECFF019CA97BB00ED4A84 /* StoreKit.framework */; };
 		2FCA2C881993E7E200C008DE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FCA2C871993E7E200C008DE /* AVFoundation.framework */; };
 		2FCA2C8A1993E83D00C008DE /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FCA2C891993E83D00C008DE /* CoreMedia.framework */; };
 /* End PBXBuildFile section */
@@ -287,6 +288,7 @@
 		2FBAEE1B1992FD52004DE362 /* GoogleOpenSource.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleOpenSource.framework; sourceTree = "<group>"; };
 		2FBAEE1C1992FD52004DE362 /* GooglePlus.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GooglePlus.framework; sourceTree = "<group>"; };
 		2FBAEE1F1992FD79004DE362 /* GooglePlus.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GooglePlus.bundle; sourceTree = "<group>"; };
+		2FBECFF019CA97BB00ED4A84 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		2FCA2C871993E7E200C008DE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		2FCA2C891993E83D00C008DE /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -317,6 +319,7 @@
 				2BDB2F2219509B0B00AD8F67 /* libtesseract_all.a in Frameworks */,
 				2B73652D1975DE6900726BCC /* opencv2.framework in Frameworks */,
 				2BDB2F2119509B0B00AD8F67 /* liblept.a in Frameworks */,
+				2FBECFF119CA97BB00ED4A84 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -562,6 +565,7 @@
 		2F397D5E1948BD6E004CC963 = {
 			isa = PBXGroup;
 			children = (
+				2FBECFF019CA97BB00ED4A84 /* StoreKit.framework */,
 				2B2628AE1994442C00E5564B /* WebKit.framework */,
 				2FCA2C891993E83D00C008DE /* CoreMedia.framework */,
 				2FCA2C871993E7E200C008DE /* AVFoundation.framework */,
@@ -747,7 +751,12 @@
 				TargetAttributes = {
 					2F397D661948BD6F004CC963 = {
 						CreatedOnToolsVersion = 6.0;
-						DevelopmentTeam = PQL8DY4A57;
+						DevelopmentTeam = 699336Z43R;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
 					};
 					2F397D7F1948BD6F004CC963 = {
 						CreatedOnToolsVersion = 6.0;
