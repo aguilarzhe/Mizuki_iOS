@@ -70,6 +70,7 @@
                         <segue destination="rL8-FQ-150" kind="show" identifier="invoiceConfirmationSegue" id="mRf-qK-f6T"/>
                         <segue destination="Yjm-3e-ggX" kind="show" identifier="showMyAccountSegue" id="uGC-hk-rhI"/>
                         <segue destination="Uql-IM-50r" kind="show" identifier="EditInvoiceSegue" id="dGJ-RN-p3U"/>
+                        <segue destination="rL8-FQ-150" kind="show" identifier="InvoiceConfirmationDataSegue" id="EEB-jF-FMT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -98,6 +99,28 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y0j-XJ-nVU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1024" y="787"/>
+        </scene>
+        <!--Go Camara View Controller-->
+        <scene sceneID="6vj-To-rA5">
+            <objects>
+                <viewController id="kV1-wc-t4b" customClass="BWRGoCamaraViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="vFe-HX-QFO"/>
+                        <viewControllerLayoutGuide type="bottom" id="Qyx-k8-2ag"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Vu5-C0-Lkh">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <connections>
+                        <segue destination="rL8-FQ-150" kind="show" identifier="invoiceCamaraConfirmationSegue" id="v4g-2V-dkS"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wFc-Cd-AjP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1024" y="1349"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="OXi-Gn-ci7">
@@ -185,8 +208,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="EEB-jF-FMT"/>
         <segue reference="q3W-YU-4gn"/>
-        <segue reference="car-cz-uCl"/>
         <segue reference="GoA-VB-Kl5"/>
     </inferredMetricsTieBreakers>
 </document>
