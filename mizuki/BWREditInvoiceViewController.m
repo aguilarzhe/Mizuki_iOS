@@ -32,7 +32,6 @@
 @implementation BWREditInvoiceViewController
 
 @synthesize completeInvoice;
-@synthesize typeInvoice;
 @synthesize rfcTableView;
 @synthesize companyTextField;
 @synthesize ticketImage;
@@ -245,7 +244,7 @@
 {
     if([[segue identifier] isEqualToString:@"ResendingInvoiceSegue"]){
         BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [segue destinationViewController];
-        confirmInvoiceViewController.invoiceResending = YES;
+        confirmInvoiceViewController.invoiceAction = 1;
         confirmInvoiceViewController.invoiceImage = completeInvoice.image;
         confirmInvoiceViewController.completeInvoice = completeInvoice;
     }

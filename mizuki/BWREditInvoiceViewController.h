@@ -12,6 +12,5 @@
 @interface BWREditInvoiceViewController : UIViewController <UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
 
 @property BWRCompleteInvoice *completeInvoice;
-@property NSInteger typeInvoice;
 
 @end

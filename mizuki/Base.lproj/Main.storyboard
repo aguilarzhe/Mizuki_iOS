@@ -70,6 +70,7 @@
                         <segue destination="rL8-FQ-150" kind="show" identifier="invoiceConfirmationSegue" id="mRf-qK-f6T"/>
                         <segue destination="Yjm-3e-ggX" kind="show" identifier="showMyAccountSegue" id="uGC-hk-rhI"/>
                         <segue destination="Uql-IM-50r" kind="show" identifier="EditInvoiceSegue" id="dGJ-RN-p3U"/>
+                        <segue destination="rL8-FQ-150" kind="show" identifier="InvoiceConfirmationDataSegue" id="EEB-jF-FMT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -207,8 +208,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="GoA-VB-Kl5"/>
-        <segue reference="v4g-2V-dkS"/>
+        <segue reference="EEB-jF-FMT"/>
         <segue reference="q3W-YU-4gn"/>
+        <segue reference="GoA-VB-Kl5"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -37,6 +37,13 @@
     [self captureInvoiceFromCamera];
 }
 
+-(void)viewDidAppear:(BOOL)animated {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(captureInvoiceFromCamera)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -76,7 +83,7 @@
 {
     if([[segue identifier] isEqualToString:@"invoiceCamaraConfirmationSegue"]){
         BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [segue destinationViewController];
-        confirmInvoiceViewController.invoiceResending = NO;
+        confirmInvoiceViewController.invoiceAction = 0;
         confirmInvoiceViewController.invoiceImage = invoiceImage;
     }
 }

@@ -38,11 +38,11 @@
     //Button intem - invoices
     UIBarButtonItem *invoicesButton = [[UIBarButtonItem alloc] initWithTitle:@"Mis facturas" style:UIBarButtonItemStylePlain target:self action:@selector(invoiceWithHistory)];
     //Button item - galery
-    UIBarButtonItem *galeryButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(invoiceWithGalery)];
+    UIBarButtonItem *camaraButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(invoiceWithCamara)];
     //Button item - data
     UIBarButtonItem *dataButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(invoiceWithData)];
     //Button item - camara
-    UIBarButtonItem *camaraButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(invoiceWithCamara)];
+    UIBarButtonItem *galeryButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(invoiceWithGalery)];
     UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
     //add button items
@@ -68,7 +68,7 @@
 }
 
 - (void)invoiceWithCamara {
-    NSURL *url = [NSURL URLWithString:@"com.baware.mizuki://"];
+    NSURL *url = [NSURL URLWithString:@"com.baware.mizuki://?token=9204265553"];
     [self.extensionContext openURL:url completionHandler:nil];
 }
 

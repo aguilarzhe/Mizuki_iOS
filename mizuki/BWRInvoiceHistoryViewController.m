@@ -18,6 +18,8 @@
 @property UIActionSheet *imageInvoiceActionSheet;
 @property UIImage *invoiceImage;
 @property UIBarButtonItem *settingsButton;
+@property NSMutableArray *allInvoicesArray;
+@property NSMutableArray *pendingInvoicesArray;
 @property NSMutableArray *actualInvoicesArray;
 @property UITableView *invoiceTableView;
 @property UISegmentedControl *invoiceSegmentedControl;
@@ -25,7 +27,6 @@
 @end
 
 static BWRCompleteInvoice *actualInvoice;
-static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 
 @implementation BWRInvoiceHistoryViewController
 
@@ -33,6 +34,8 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 @synthesize invoiceImage;
 @synthesize settingsButton;
 @synthesize invoiceTableView;
+@synthesize allInvoicesArray;
+@synthesize pendingInvoicesArray;
 @synthesize actualInvoicesArray;
 @synthesize invoiceSegmentedControl;
 
@@ -40,8 +43,10 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     [super viewDidLoad];
     
     //Load invoices from core data
-    actualInvoicesArray = [[NSMutableArray alloc] init];
-    [self loadInvoicesFromCoreData: @"Todas"];
+    allInvoicesArray = [[NSMutableArray alloc] init];
+    pendingInvoicesArray = [[NSMutableArray alloc] init];
+    [self loadInvoicesFromCoreData];
+    actualInvoicesArray = allInvoicesArray;
     
     //Measures
     NSInteger widthScreen = self.view.frame.size.width;
@@ -56,7 +61,7 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     [self.view addSubview:invoiceTableView];
     
     //Segmented control
-    invoiceSegmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Todas", @"Listas", @"Pendientes", @"Error", nil]];
+    invoiceSegmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Todas", @"Pendientes", nil]];
     invoiceSegmentedControl.frame = CGRectMake(10, 70, widthScreen-20, 30);
     invoiceSegmentedControl.selectedSegmentIndex = 0;
     invoiceSegmentedControl.tintColor = [UIColor blueColor];
@@ -97,14 +102,6 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     }
 }
 
-/** Go to BWRInvoiceConfirmationViewController.
-
- Use segue to continue the ticket invoice in other view.
- */
--(void)confirmInvoice{
-    [self performSegueWithIdentifier:@"invoiceConfirmationSegue" sender:self];
-}
-
 -(void)showSettingsMenu{
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
         [self performSegueWithIdentifier:@"showMyAccountSegue" sender:self];
@@ -121,7 +118,7 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
  
  @param invoiceType String invoice type ("Todas", "Facturada", "Pendiente", "Error").
  */
-- (void) loadInvoicesFromCoreData: (NSString *)invoiceType{
+- (void) loadInvoicesFromCoreData{
     
     //Get invoices from data base
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
@@ -140,10 +137,9 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
         
         for(BWRInvoice *invoice in invoicesResult){
             BWRCompleteInvoice *completeInvoice = [[BWRCompleteInvoice alloc] initFromCoreDataWithInvoice:invoice];
-            if([invoiceType isEqualToString:completeInvoice.status]){
-                [actualInvoicesArray addObject:completeInvoice];
-            }else if([invoiceType isEqualToString:@"Todas"]){
-                [actualInvoicesArray addObject:completeInvoice];
+            [allInvoicesArray addObject:completeInvoice];
+            if([@"Pendiente" isEqualToString:completeInvoice.status]){
+                [pendingInvoicesArray addObject:completeInvoice];
             }
         }
         
@@ -177,18 +173,14 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 - (void)valueChanged:(UISegmentedControl *)segment {
     
     if(segment.selectedSegmentIndex == 0) {
-        [self loadInvoicesFromCoreData:@"Todas"];
+        actualInvoicesArray = allInvoicesArray;
     }else if(segment.selectedSegmentIndex == 1){
-        [self loadInvoicesFromCoreData:@"Facturada"];
-    }else if(segment.selectedSegmentIndex == 2){
-        [self loadInvoicesFromCoreData:@"Pendiente"];
-    }else if(segment.selectedSegmentIndex==3){
-        [self loadInvoicesFromCoreData:@"Error"];
+        actualInvoicesArray = pendingInvoicesArray;
     }
     [invoiceTableView reloadData];
 }
 
-#pragma mark - Captura de imagen
+#pragma mark - Capture of invoice
 /** Method to capture ticket from camara.
  
  Prepare the camara to take the ticket photo
@@ -223,6 +215,14 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
     }
 }
 
+/** Get the ticket from data
+ 
+ Invoke BWRConfirmationViewController view to fill ticket data.
+ */
+-(void)captureInvoiceFromData{
+    [self performSegueWithIdentifier:@"InvoiceConfirmationDataSegue" sender:self];
+}
+
 #pragma mark - UIActionSheetDelegate
 /** Invoke the method according to the selected option in action sheet.
  
@@ -239,6 +239,7 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
             [self captureInvoiceFromPhotoLibrary];
             break;
         default:
+            [self captureInvoiceFromData];
             break;
     }
 }
@@ -302,9 +303,8 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 
     if(tableView == invoiceTableView){
         actualInvoice = [actualInvoicesArray objectAtIndex:indexPath.row];
+        [self editInvoice];
     }
-    
-    [self performSegueWithIdentifier:@"EditInvoiceSegue" sender:self];
 }
 
 /** Select the tableview row to edit.
@@ -346,6 +346,22 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 }
 
 #pragma mark - Navegation
+/** Go to BWRInvoiceConfirmationViewController.
+ 
+ Use segue to continue the ticket invoice in other view.
+ */
+-(void)confirmInvoice{
+    [self performSegueWithIdentifier:@"invoiceConfirmationSegue" sender:self];
+}
+
+/** Go to BWREditInvoiceViewController.
+ 
+ Use segue to edit the ticket invoice information.
+ */
+-(void)editInvoice{
+    [self performSegueWithIdentifier:@"EditInvoiceSegue" sender:self];
+}
+
 /** Prepare the reciver class before the segue.
  
  If the segue identifier is invoiceConfirmationSegue, send invoiceImage and indication of don't resend invoice.
@@ -355,12 +371,14 @@ static NSInteger typeActualInvoice;         //0->solo visualizacion 2->update
 {
     if([[segue identifier] isEqualToString:@"invoiceConfirmationSegue"]){
         BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [segue destinationViewController];
-        confirmInvoiceViewController.invoiceResending = NO;
+        confirmInvoiceViewController.invoiceAction = 0;
         confirmInvoiceViewController.invoiceImage = invoiceImage;
     }else if([[segue identifier] isEqualToString:@"EditInvoiceSegue"]){
         BWREditInvoiceViewController *editIvoiceViewController = [segue destinationViewController];
         editIvoiceViewController.completeInvoice = actualInvoice;
-        editIvoiceViewController.typeInvoice = typeActualInvoice;
+    }else if([[segue identifier] isEqualToString:@"InvoiceConfirmationDataSegue"]){
+        BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [segue destinationViewController];
+        confirmInvoiceViewController.invoiceAction = 2;
     }
 }
 

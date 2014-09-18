@@ -41,7 +41,7 @@
 @implementation BWRInvoiceConfirmationViewController
 @synthesize actualRFC;
 @synthesize completeInvoice;
-@synthesize invoiceResending;
+@synthesize invoiceAction;
 //Page1
 @synthesize invoiceLabel;
 @synthesize invoiceText;
@@ -124,8 +124,61 @@
     ticketScrollView.contentSize=CGSizeMake(screenWidth,screenHeight);
     ticketScrollView.hidden = NO;
     
+    //PAGE 2 --------------------------------------------------------------------------------
+    //If action is send or resend invoice, creates page 2
+    if(invoiceAction == 0 || invoiceAction == 1){
+        [self initPage2];
+    }
     
+    //CONTROL ------------------------------------------------------------------------------
+    UICollectionViewFlowLayout *ticketDataLayout = [[UICollectionViewFlowLayout alloc] init];
+    ticketDataLayout.minimumLineSpacing = 0.0;
+    ticketDataLayout.itemSize = CGSizeMake(screenWidth-10, screenHeight-100);
+    ticketDataLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     
+    ticketData = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight-60) collectionViewLayout:ticketDataLayout];
+    ticketData.dataSource = self;
+    ticketData.delegate = self;
+    ticketData.backgroundColor = [UIColor whiteColor];
+    ticketData.pagingEnabled = YES;
+    ticketData.showsHorizontalScrollIndicator = NO;
+    [ticketData registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"ticketCell"];
+    [self.view addSubview:ticketData];
+
+    ticketDataPageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, screenHeight-70, screenWidth, 20)];
+    ticketDataPageControl.backgroundColor = [UIColor whiteColor];
+    ticketDataPageControl.userInteractionEnabled = NO;
+    ticketDataPageControl.currentPageIndicatorTintColor = [UIColor redColor];
+    ticketDataPageControl.pageIndicatorTintColor = [UIColor colorWithWhite:0.92 alpha:1.0];
+    [self.view addSubview:ticketDataPageControl];
+    
+    //Send Button
+    UIBarButtonItem *bt_enviar = [[UIBarButtonItem alloc] initWithTitle:@"Enviar" style:UIBarButtonItemStylePlain target:self action:@selector(goToWebview)];
+    self.navigationItem.rightBarButtonItem = bt_enviar;
+    
+    self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    self.title = @"Confirmación de factura";
+    
+    //If resending invoice
+    switch (invoiceAction) {
+        case 0: // Send Invoice
+            [self performSelectorInBackground:@selector(processImage) withObject:nil]; // Modificar por GCD
+            ticketDataPageControl.numberOfPages = 2;
+            break;
+            
+        case 1: //Resend invoice
+            [self sendInvoiceDirectly];
+            ticketDataPageControl.numberOfPages = 2;
+            break;
+            
+        default: //Put Data
+            ticketDataPageControl.numberOfPages = 1;
+            break;
+    }
+    
+}
+
+-(void)initPage2{
     //PAGE 2 --------------------------------------------------------------------------------
     //Ticket image
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
@@ -151,44 +204,9 @@
     invoiceLabel.editable = NO;
     invoiceLabel.scrollEnabled = YES;
     invoiceLabel.text = @"Procesando";
-    
-    //CONTROL ------------------------------------------------------------------------------
-    UICollectionViewFlowLayout *ticketDataLayout = [[UICollectionViewFlowLayout alloc] init];
-    ticketDataLayout.minimumLineSpacing = 0.0;
-    ticketDataLayout.itemSize = CGSizeMake(screenWidth-10, screenHeight-100);
-    ticketDataLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    
-    ticketData = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight-60) collectionViewLayout:ticketDataLayout];
-    ticketData.dataSource = self;
-    ticketData.delegate = self;
-    ticketData.backgroundColor = [UIColor whiteColor];
-    ticketData.pagingEnabled = YES;
-    ticketData.showsHorizontalScrollIndicator = NO;
-    [ticketData registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"ticketCell"];
-    [self.view addSubview:ticketData];
+}
 
-    
-    ticketDataPageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, screenHeight-70, screenWidth, 20)];
-    ticketDataPageControl.backgroundColor = [UIColor whiteColor];
-    ticketDataPageControl.userInteractionEnabled = NO;
-    ticketDataPageControl.currentPageIndicatorTintColor = [UIColor redColor];
-    ticketDataPageControl.numberOfPages = 2;
-    ticketDataPageControl.pageIndicatorTintColor = [UIColor colorWithWhite:0.92 alpha:1.0];
-    [self.view addSubview:ticketDataPageControl];
-    
-    //Send Button
-    UIBarButtonItem *bt_enviar = [[UIBarButtonItem alloc] initWithTitle:@"Enviar" style:UIBarButtonItemStylePlain target:self action:@selector(goToWebview)];
-    self.navigationItem.rightBarButtonItem = bt_enviar;
-    
-    self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    self.title = @"Confirmación de factura";
-    
-    //If resending invoice
-    if(invoiceResending){
-        [self sendInvoiceDirectly];
-    }else{
-        [self performSelectorInBackground:@selector(processImage) withObject:nil]; // Modificar por GCD
-    }
+-(void)resendInvoice{
     
 }
 
@@ -370,7 +388,11 @@
         empresaTextField.text = [[completeStringsArray objectAtIndex:indexPath.row] valueForKey:@"name"];
         completeTableView.hidden = YES;
         [self createTicketViewElemetsWithId: [[[completeStringsArray objectAtIndex:indexPath.row] valueForKey:@"id"] intValue]];
-        [self performSelectorInBackground:@selector(processRecognition) withObject:nil];
+        
+        //Only when the action is send invoice.
+        if(invoiceAction==0){
+            [self performSelectorInBackground:@selector(processRecognition) withObject:nil];
+        }
     
     //ViewElement table
     }else{
@@ -566,7 +588,7 @@
     if([self validationInvoiceData] && !([invoiceLabel.text isEqualToString:@"Procesando"])){
         
         //If don't resend invoice
-        if(!invoiceResending){
+        if(invoiceAction == 0 || invoiceAction == 2){
             
             //Put TextField text in selectionValue
             for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
