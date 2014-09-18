@@ -16,8 +16,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "184"
             endingLineNumber = "184"
-            landmarkName = "-captureInvoiceFromCamera"
-            landmarkType = "5">
+            landmarkName = "@implementation BWRInvoiceHistoryViewController"
+            landmarkType = "3">
             <Actions>
                <BreakpointActionProxy
                   ActionExtensionID = "Xcode.BreakpointAction.Log">
@@ -105,7 +105,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "145"
             endingLineNumber = "145"
-            landmarkName = "-sendAllPendingInvoices"
+            landmarkName = "-loadInvoicesFromCoreData"
             landmarkType = "5">
             <Actions>
                <BreakpointActionProxy

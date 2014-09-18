@@ -259,12 +259,12 @@
     return nil;
 }
 
--(NSString *)stringDateFormatterFromDate: (NSDate *)date{
+-(NSString *)stringDateFormatterFromDate: (NSDate *)mDate{
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd/HH:mm:ss"];
     [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-    NSString *stringDate = [dateFormatter stringFromDate:date];
+    NSString *stringDate = [dateFormatter stringFromDate:mDate];
     
     return stringDate;
 }

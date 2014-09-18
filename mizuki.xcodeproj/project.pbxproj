@@ -862,7 +862,7 @@
 				TargetAttributes = {
 					2B1327E319BE5BA700D36AC0 = {
 						CreatedOnToolsVersion = 6.0;
-						DevelopmentTeam = PQL8DY4A57;
+						DevelopmentTeam = 699336Z43R;
 						SystemCapabilities = {
 							com.apple.iOS = {
 								enabled = 0;
