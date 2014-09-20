@@ -35,10 +35,10 @@
     else if([property isEqualToString:@"apellidos"]){
         value = [NSString stringWithFormat:@"%@ %@",self.apellidoPaterno, self.apellidoMaterno];
     }
-    else if([property isEqualToString:@"razonsocial"]){
+    else if([property isEqualToString:@"razonSocial"]){
         value = [NSString stringWithFormat:@"%@ %@ %@", self.nombre, self.apellidoPaterno, self.apellidoMaterno];
     }
-    else if ([property isEqualToString:@"homoclave"]){
+    else if ([property isEqualToString:@"homoClave"]){
         value = [NSString stringWithFormat:@"%c%c%c", [self.rfc characterAtIndex:self.rfc.length-2], [self.rfc characterAtIndex:self.rfc.length-1], [self.rfc characterAtIndex:self.rfc.length]];
         
     }else if ([property isEqualToString:@"email"]){

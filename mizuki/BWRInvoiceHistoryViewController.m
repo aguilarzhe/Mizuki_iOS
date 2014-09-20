@@ -39,6 +39,7 @@ static BWRCompleteInvoice *actualInvoice;
 @synthesize pendingInvoicesArray;
 @synthesize actualInvoicesArray;
 @synthesize invoiceSegmentedControl;
+@synthesize myImagePickerController;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -81,7 +82,6 @@ static BWRCompleteInvoice *actualInvoice;
     self.toolbarItems = @[flexibleItem, settingsButton];
     
     self.title = NSLocalizedString(@"Mis facturas", nil);
-    
     
 }
 

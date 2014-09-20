@@ -117,7 +117,13 @@
     for(BWRTicketViewElement *viewElement in invoicePageRules){
         if ([viewElement.formFieldType isEqualToString:@"submit"]) {
             [javascript appendFormat:@"document.getElementById('%@').click();\n", viewElement.formField];
-        }else{
+        }
+        
+        else if([viewElement.formFieldType isEqualToString:@"js_code"]){
+            [javascript appendString:viewElement.formField];
+        }
+        
+        else{
             [javascript appendFormat:@"document.getElementById('%@').value = '%@';\n", viewElement.formField, viewElement.selectionValue];
         }
     }

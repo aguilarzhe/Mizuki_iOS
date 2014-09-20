@@ -9,6 +9,7 @@
 #import "BWRInitialConfigurationDataUserViewController.h"
 #import "BWRInvoiceDataViewController.h"
 #import "BWRUserPreferences.h"
+#import "BWRInvoiceHistoryViewController.h"
 #import <GoogleOpenSource/GoogleOpenSource.h>
 #import <GooglePlus/GooglePlus.h>
 
@@ -88,7 +89,10 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
 {
     if([[segue identifier] isEqualToString:@"invoiceDataSegue"]){
         BWRInvoiceDataViewController *configurationInvoiceData = [segue destinationViewController];
-        [configurationInvoiceData initWithFirstRFC:@"bienvenido"];
+        [configurationInvoiceData initWithFirstRFC:@"Bienvenido"];
+    }
+    else if([[segue identifier] isEqualToString:@"invoiceCompleteDataSegue"]){
+        BWRInvoiceHistoryViewController *invoicesHistory = [segue destinationViewController];
     }
 }
 

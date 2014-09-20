@@ -9,9 +9,12 @@
 #import "AppDelegate.h"
 #import <GooglePlus/GooglePlus.h>
 #import "BWRGoCamaraViewController.h"
+#import "BWRInvoiceHistoryViewController.h"
+#import "BWRInvoiceConfirmationViewController.h"
 
 @interface AppDelegate ()
-            
+
+@property NSString *token;
 
 @end
 
@@ -20,6 +23,7 @@
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+@synthesize token;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
@@ -43,6 +47,12 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    if([token isEqualToString:@"9204265553"]){
+        BWRGoCamaraViewController *goCamara = [[BWRGoCamaraViewController alloc]init];
+        //UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:goCamara];
+        //[self.window addSubview:navigationController.view];
+        [[[[UIApplication sharedApplication] delegate] window] setRootViewController:goCamara];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -72,9 +82,18 @@
     //Go to camara
     NSDictionary *queryDict = [self parseQueryToDictionary:[url query]];
     if([[queryDict valueForKey:@"token"] isEqualToString:@"9204265553"]){
-        BWRGoCamaraViewController *goCamara = [[BWRGoCamaraViewController alloc]init];
+        /*BWRGoCamaraViewController *goCamara = [[BWRGoCamaraViewController alloc]init];
         //[[[[UIApplication sharedApplication] delegate] window] setRootViewController:goCamara];
-        [goCamara viewDidAppear:true];
+        BWRInvoiceConfirmationViewController *invoiceConf = [[BWRInvoiceConfirmationViewController alloc] init];
+        //UITabBarController *tabVC = [[UITabBarController alloc] init];
+        //tabVC.viewControllers = @[goCamara, invoiceConf];
+        //self.window.rootViewController = tabVC;
+        //[[[[UIApplication sharedApplication] delegate] window] setRootViewController:invoiceHistory];
+        
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:goCamara];
+        [self.window addSubview:navigationController.view];
+        self.window.rootViewController = goCamara;*/
+        token = [queryDict valueForKey:@"token"];
     }
     
     return [GPPURLHandler handleURL:url

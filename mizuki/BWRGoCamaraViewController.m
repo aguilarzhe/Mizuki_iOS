@@ -33,15 +33,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self captureInvoiceFromCamera];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(captureInvoiceFromCamera)
-                                                 name:UIApplicationWillEnterForegroundNotification
-                                               object:nil];
+    //[self.navigationController pushViewController:self animated:YES];
+    //[self viewDidLoad];
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    self.navigationController.navigationBarHidden = NO;
+    [self captureInvoiceFromCamera];
 }
 
 - (void)didReceiveMemoryWarning
@@ -75,7 +75,12 @@
 }
 
 -(void)confirmInvoice{
-    [self performSegueWithIdentifier:@"invoiceCamaraConfirmationSegue" sender:self];
+    NSLog(@"NavegationController: %@", self.navigationController);
+    [self.navigationController performSegueWithIdentifier:@"invoiceCamaraConfirmationSegue" sender:self];
+    /*BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [[BWRInvoiceConfirmationViewController alloc] init];
+    confirmInvoiceViewController.invoiceAction = 0;
+    confirmInvoiceViewController.invoiceImage = invoiceImage;
+    [self.navigationController pushViewController:confirmInvoiceViewController animated:YES];*/
 }
 
 #pragma mark - Navegation

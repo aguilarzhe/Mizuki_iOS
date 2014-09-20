@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface BWRGoCamaraViewController : UIViewController <UIImagePickerControllerDelegate>
+@interface BWRGoCamaraViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @end

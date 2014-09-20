@@ -98,7 +98,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y0j-XJ-nVU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1024" y="787"/>
+            <point key="canvasLocation" x="1086" y="801"/>
         </scene>
         <!--Go Camara View Controller-->
         <scene sceneID="6vj-To-rA5">
@@ -114,13 +114,14 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
+                    <navigationItem key="navigationItem" id="J7c-nK-YGh"/>
                     <connections>
                         <segue destination="rL8-FQ-150" kind="show" identifier="invoiceCamaraConfirmationSegue" id="v4g-2V-dkS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wFc-Cd-AjP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1024" y="1349"/>
+            <point key="canvasLocation" x="1064" y="1357"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="OXi-Gn-ci7">
@@ -208,8 +209,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="EEB-jF-FMT"/>
         <segue reference="q3W-YU-4gn"/>
         <segue reference="GoA-VB-Kl5"/>
+        <segue reference="v4g-2V-dkS"/>
     </inferredMetricsTieBreakers>
 </document>
