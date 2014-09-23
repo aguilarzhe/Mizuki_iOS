@@ -36,6 +36,10 @@ static bool confirmation;
             [alertView setTitle:@"Error al recuperar"];
             break;
             
+        case 2://Error to get information from server
+            [alertView setTitle:@"Error en el servidor"];
+            break;
+            
         default://Uknown error
             [alertView setTitle:@"Uknown error"];
             break;

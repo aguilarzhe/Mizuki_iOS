@@ -88,10 +88,29 @@ static UITextField *activeField;
                 depth = -20;
                 padding += longWidth + (padding * 2);
             }
-        }else{
-            ((UITextField *)viewElement).inputAccessoryView = toolbar;
+            viewElement.frame = CGRectMake(padding, depth+=40, longWidth, height);
         }
-        viewElement.frame = CGRectMake(padding, depth+=40, longWidth, height);
+        //Textfield
+        else{
+            ((UITextField *)viewElement).inputAccessoryView = toolbar;
+            
+            //Specifict conditions
+            NSInteger index = [textFieldsArray indexOfObject:viewElement];
+            switch (index) {
+                case 6: //Internal number
+                    viewElement.frame = CGRectMake(padding, depth+=40, shortWidth, height);
+                    break;
+                
+                case 7: //External number
+                    viewElement.frame = CGRectMake(padding*2+shortWidth, depth, shortWidth, height);
+                    break;
+                    
+                default: //Others
+                    viewElement.frame = CGRectMake(padding, depth+=40, longWidth, height);
+                    break;
+            }
+        }
+        //Add view to scrollview
         [scrollView addSubview:viewElement];
     }
     

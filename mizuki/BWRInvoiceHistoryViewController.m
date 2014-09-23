@@ -54,21 +54,21 @@ static BWRCompleteInvoice *actualInvoice;
     NSInteger widthScreen = self.view.frame.size.width;
     NSInteger heightScreen = self.view.frame.size.height;
     
+    //Segmented control
+    invoiceSegmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Todas", @"Pendientes", nil]];
+    invoiceSegmentedControl.frame = CGRectMake(10, 75, widthScreen-20, 30);
+    invoiceSegmentedControl.selectedSegmentIndex = 0;
+    invoiceSegmentedControl.tintColor = [UIColor blueColor];
+    [invoiceSegmentedControl addTarget:self action:@selector(valueChanged:) forControlEvents: UIControlEventValueChanged];
+    [self.view addSubview:invoiceSegmentedControl];
+    
     //Invoice Table View
-    invoiceTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, 55, widthScreen, heightScreen) style:UITableViewStylePlain];
+    invoiceTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, 115, widthScreen, heightScreen-115) style:UITableViewStylePlain];
     invoiceTableView.delegate = self;
     invoiceTableView.dataSource = self;
     invoiceTableView.scrollEnabled = YES;
     invoiceTableView.hidden = NO;
     [self.view addSubview:invoiceTableView];
-    
-    //Segmented control
-    invoiceSegmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Todas", @"Pendientes", nil]];
-    invoiceSegmentedControl.frame = CGRectMake(10, 70, widthScreen-20, 30);
-    invoiceSegmentedControl.selectedSegmentIndex = 0;
-    invoiceSegmentedControl.tintColor = [UIColor blueColor];
-    [invoiceSegmentedControl addTarget:self action:@selector(valueChanged:) forControlEvents: UIControlEventValueChanged];
-    [self.view addSubview:invoiceSegmentedControl];
 
     //Navegation buttons
     UIBarButtonItem *imageInvoiceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showImageInvoceActionSheet:)];

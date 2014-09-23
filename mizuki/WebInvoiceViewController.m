@@ -47,6 +47,10 @@
         NSURLRequest *urlRequest = [NSURLRequest requestWithURL:companyURL];
         [invoiceWebView loadRequest:urlRequest];
     }
+    //If there is't conection or doesn't correspond
+    else{
+        [completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:@"Pendiente"];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -140,10 +144,11 @@
     if(loadError){
         status = @"Error";
     }
-    [completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:status];
     
-    //Go to history
-    [self performSegueWithIdentifier:@"InvoiceCompleteSegue" sender:self];
+    if([completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:status]){
+        //Go to history
+        [self performSegueWithIdentifier:@"InvoiceCompleteSegue" sender:self];
+    }
     
 }
 

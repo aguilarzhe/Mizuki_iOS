@@ -293,8 +293,25 @@
     
     //Get id company
     NSArray *stringCompanyArray = [BWRWebConnection companyListWithSubstring:completeInvoice.company];
-    NSDictionary *companyDictionary = [stringCompanyArray objectAtIndex:0];
-    int idCompany = [[companyDictionary valueForKey:@"id"] integerValue];
+    int idCompany;
+    if(stringCompanyArray!=nil){
+        //Get data company
+        NSDictionary *companyDictionary = [stringCompanyArray objectAtIndex:0];
+        if(companyDictionary!=nil){
+            idCompany = [[companyDictionary valueForKey:@"id"] integerValue];
+        }
+        //If can't get company data
+        else{
+            NSLog(@"No se pudo obtener diccionario de datos de la comañia");
+            return;
+        }
+    }
+    //If can't get company identifier
+    else{
+        NSLog(@"No se pudo obtener el id de la compañia");
+        return;
+    }
+    
     
     //Get url, pagesArray and ticketViewElementsArray
     [self createTicketViewElemetsWithId:idCompany];
@@ -424,39 +441,42 @@
     
     //Get company dictionary
     NSDictionary *companyDataDictionary = [BWRWebConnection viewElementsWithCompany:identificador];
-    NSArray *rulesBlockArray = [companyDataDictionary valueForKey:@"rules_block"];
-    _tiendaURL = [companyDataDictionary valueForKey:@"url"];
-    
-    _invoicePagesArray = [[NSMutableArray alloc] init];
-    ticketScrollView.hidden=NO;
-    
-    //Recorrer rules_block
-    for(NSDictionary *pageDictionary in rulesBlockArray){
+    if(companyDataDictionary!=nil){
         
-        BWRInvoiceTicketPage *invoicePage = [[BWRInvoiceTicketPage alloc] initWithData:[pageDictionary valueForKey:@"name"] pageNumber:[pageDictionary valueForKey:@"page_num"]];
-        NSArray *rulesArray = [pageDictionary valueForKey:@"rules"];
+        NSArray *rulesBlockArray = [companyDataDictionary valueForKey:@"rules_block"];
+        _tiendaURL = [companyDataDictionary valueForKey:@"url"];
+        
+        _invoicePagesArray = [[NSMutableArray alloc] init];
+        ticketScrollView.hidden=NO;
+        
+        //Recorrer rules_block
+        for(NSDictionary *pageDictionary in rulesBlockArray){
             
-        //Recorrer rules
-        for(NSDictionary *ticketElement in rulesArray){
-            BWRTicketViewElement *ticketViewElement = [[BWRTicketViewElement alloc] initWithDictionary:ticketElement];
+            BWRInvoiceTicketPage *invoicePage = [[BWRInvoiceTicketPage alloc] initWithData:[pageDictionary valueForKey:@"name"] pageNumber:[pageDictionary valueForKey:@"page_num"]];
+            NSArray *rulesArray = [pageDictionary valueForKey:@"rules"];
             
-            //User data
-            if([ticketViewElement.dataSource isEqualToString:@"user_info"]){
-                [ticketViewElementsArray addObject:ticketViewElement];
+            //Recorrer rules
+            for(NSDictionary *ticketElement in rulesArray){
+                BWRTicketViewElement *ticketViewElement = [[BWRTicketViewElement alloc] initWithDictionary:ticketElement];
                 
-            //Ticket data
-            }else if([ticketViewElement.dataSource isEqualToString:@"ticket_info"]){
-                [ticketViewElement createViewWithRect:padding y:depth width:width height:heigth/**[ticketViewElement.valueCampoTicket count]*/ delegate:self];
-                [ticketViewElementsArray addObject:ticketViewElement];
-                [ticketScrollView addSubview:ticketViewElement.viewTicketElement];
-                depth = depth + (heigth /** [ticketViewElement.valueCampoTicket count]*/) +10;
+                //User data
+                if([ticketViewElement.dataSource isEqualToString:@"user_info"]){
+                    [ticketViewElementsArray addObject:ticketViewElement];
+                    
+                    //Ticket data
+                }else if([ticketViewElement.dataSource isEqualToString:@"ticket_info"]){
+                    [ticketViewElement createViewWithRect:padding y:depth width:width height:heigth/**[ticketViewElement.valueCampoTicket count]*/ delegate:self];
+                    [ticketViewElementsArray addObject:ticketViewElement];
+                    [ticketScrollView addSubview:ticketViewElement.viewTicketElement];
+                    depth = depth + (heigth /** [ticketViewElement.valueCampoTicket count]*/) +10;
+                }
+                
+                [invoicePage.rules addObject:ticketViewElement];
+                
             }
-            
-            [invoicePage.rules addObject:ticketViewElement];
+            [_invoicePagesArray addObject:invoicePage];
             
         }
-        [_invoicePagesArray addObject:invoicePage];
-        
     }
     
 }
