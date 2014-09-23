@@ -40,7 +40,7 @@
     //Button item - galery
     UIBarButtonItem *galeryButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(invoiceWithGalery)];
     //Button item - data
-    UIBarButtonItem *dataButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(invoiceWithData)];*/
+    UIBarButtonItem *dataButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(invoiceWithData)];
     //Button item - camara
     UIBarButtonItem *camaraButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(invoiceWithCamara)];
     UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -49,7 +49,7 @@
     toolbar.items = @[flexibleItem, camaraButton];
     toolbar.barTintColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
     
-    [self.view addSubview:toolbar];
+    [self.view addSubview:toolbar];*/
 }
 
 - (void)didReceiveMemoryWarning {

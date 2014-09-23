@@ -16,6 +16,7 @@
 @property BOOL opcion;
 @property BWRRFCInfo *updateRFC;
 @property BOOL firstRFC;
+@property NSArray *textFieldsArray;
 @end
 
 @implementation BWRInvoiceDataViewController
@@ -39,6 +40,9 @@
 @synthesize lb_direccion;
 @synthesize bt_listo;
 @synthesize firstRFC;
+@synthesize textFieldsArray;
+
+static UITextField *activeField;
 
 - (void)viewDidLoad
 {
@@ -48,7 +52,7 @@
     NSInteger screenWidth = self.view.frame.size.width;
     NSInteger height = 31;
     NSInteger padding = 20;
-    NSInteger depth = 20;
+    NSInteger depth = -20;
     NSInteger longWidth;
     NSInteger shortWidth;
     
@@ -66,52 +70,30 @@
         shortWidth = (longWidth/2)-(padding/2);
     }
     
+    //Scroll view
     UIScrollView *scrollView=(UIScrollView *)self.view;
     CGRect fullScreenRect=[[UIScreen mainScreen] applicationFrame];
     scrollView=[[UIScrollView alloc] initWithFrame:fullScreenRect];
-    scrollView.contentSize=CGSizeMake(320,740);
+    scrollView.contentSize=CGSizeMake(320,800);
     
-    // Personal info
-    tf_rfc.frame = CGRectMake(padding, depth, longWidth, height);
-    [scrollView addSubview:tf_rfc];
-    tf_nombre.frame = CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_nombre];
-    tf_apaterno.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_apaterno];
-    tf_amaterno.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_amaterno];
+    //Get keyboard tool
+    UIToolbar *toolbar = [self getUIToolBarToKeyboard:screenWidth];
     
-    // If is firstRFC capture and the device is a iPad
-    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && firstRFC){
-        depth = -20;
-        padding += longWidth + (padding * 2);
+    // Information
+    for(UIView *viewElement in textFieldsArray){
+        //When arrive to address
+        if([viewElement isKindOfClass:[UILabel class]]){
+            // If is firstRFC capture and the device is a iPad
+            if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && firstRFC){
+                depth = -20;
+                padding += longWidth + (padding * 2);
+            }
+        }else{
+            ((UITextField *)viewElement).inputAccessoryView = toolbar;
+        }
+        viewElement.frame = CGRectMake(padding, depth+=40, longWidth, height);
+        [scrollView addSubview:viewElement];
     }
-    
-    // Address user info
-    lb_direccion.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:lb_direccion];
-    tf_calle.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_calle];
-    //Numero interior
-    tf_noint.frame =CGRectMake(padding, depth+=40, shortWidth, height);
-    [scrollView addSubview:tf_noint];
-    //Numero exterior
-    tf_noext.frame =CGRectMake(padding*2+shortWidth, depth, shortWidth, height);
-    [scrollView addSubview:tf_noext];
-    tf_colonia.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_colonia];
-    tf_delegacion.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_delegacion];
-    tf_estado.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_estado];
-    tf_ciudad.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_ciudad];
-    tf_localidad.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_localidad];
-    //Codigo Postal
-    tf_cp.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_cp];
-    
     
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && !firstRFC){
         UIButton *listoButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -147,69 +129,49 @@
 {
     //RFC
     tf_rfc = [[UITextField alloc] init];
-    tf_rfc.borderStyle = UITextBorderStyleRoundedRect;
-    //tf_rfc.backgroundColor = [UIColor redColor];
-    tf_rfc.delegate = self;
     //Nombre
     tf_nombre = [[UITextField alloc] init];
-    tf_nombre.borderStyle = UITextBorderStyleRoundedRect;
-    tf_nombre.delegate = self;
     //Apellido paterno
     tf_apaterno = [[UITextField alloc] init];
-    tf_apaterno.borderStyle = UITextBorderStyleRoundedRect;
-    tf_apaterno.delegate = self;
     //Apellido materno
     tf_amaterno = [[UITextField alloc] init];
-    tf_amaterno.borderStyle = UITextBorderStyleRoundedRect;
-    tf_amaterno.delegate = self;
-    
     //Direccion
     lb_direccion = [[UILabel alloc] init];
-    lb_direccion.text = @"Dirección";
     //Calle
     tf_calle = [[UITextField alloc] init];
-    tf_calle.borderStyle = UITextBorderStyleRoundedRect;
-    tf_calle.delegate = self;
-    
     //Numero interior
     tf_noint = [[UITextField alloc] init];
-    tf_noint.borderStyle = UITextBorderStyleRoundedRect;
-    tf_noint.delegate = self,
-    
     //Numero exterior
     tf_noext = [[UITextField alloc] init];
-    tf_noext.borderStyle = UITextBorderStyleRoundedRect;
-    tf_noext.delegate = self;
-    
     //Colonia
     tf_colonia = [[UITextField alloc] init];
-    tf_colonia.borderStyle = UITextBorderStyleRoundedRect;
-    tf_colonia.delegate = self;
-
     //Delegacion
     tf_delegacion = [[UITextField alloc] init];
-    tf_delegacion.borderStyle = UITextBorderStyleRoundedRect;
-    tf_delegacion.delegate = self;
-    
     //Estado
     tf_estado = [[UITextField alloc] init];
-    tf_estado.borderStyle = UITextBorderStyleRoundedRect;
-    tf_estado.delegate = self;
-    
     //Ciudad
     tf_ciudad = [[UITextField alloc] init];
-    tf_ciudad.borderStyle = UITextBorderStyleRoundedRect;
-    tf_ciudad.delegate = self;
-    
     //Localidad
     tf_localidad = [[UITextField alloc] init];
-    tf_localidad.borderStyle = UITextBorderStyleRoundedRect;
-    tf_localidad.delegate = self;
-    
     //Codigo Postal
     tf_cp = [[UITextField alloc] init];
-    tf_cp.borderStyle = UITextBorderStyleRoundedRect;
-    tf_cp.delegate = self;
+    
+    //Init Array
+    textFieldsArray = [[NSArray alloc] initWithObjects:tf_rfc, tf_nombre, tf_apaterno, tf_amaterno, lb_direccion, tf_calle, tf_noint, tf_noext, tf_colonia, tf_delegacion, tf_estado, tf_ciudad, tf_localidad, tf_cp, nil];
+    
+    //Init view elements
+    for(UIView *viewElement in textFieldsArray){
+        //TextField
+        if([viewElement isKindOfClass:[UITextField class]]){
+            UITextField *textField = (UITextField *)viewElement;
+            textField.borderStyle = UITextBorderStyleRoundedRect;
+            textField.delegate=self;
+        //Label
+        }else{
+            UILabel *label = (UILabel *)viewElement;
+            label.text = @"Dirección";
+        }
+    }
     
     //Ready button
     bt_listo = [[UIBarButtonItem alloc] initWithTitle:@"Listo" style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
@@ -401,10 +363,70 @@
     return YES;
 }
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    activeField = textField;
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [textField resignFirstResponder];
-    return YES;
+    /*NSInteger nextTag = textField.tag + 1;
+    // Try to find next responder
+    UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
+    if (nextResponder) {
+        // Found next responder, so set it.
+        [nextResponder becomeFirstResponder];
+    } else {*/
+        // Not found, so remove keyboard.
+        [textField resignFirstResponder];
+    //}
+    return NO;
+}
+
+-(UIToolbar *)getUIToolBarToKeyboard: (CGFloat)width{
+    
+    UIToolbar *keyboardToolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, width, 44)];
+    
+    UIBarButtonItem *extraSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
+    
+    UIBarButtonItem *nextBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Sigueinte" style:UIBarButtonItemStylePlain target:self action:@selector(nextField)];
+    UIBarButtonItem *previousBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Anterior" style:UIBarButtonItemStylePlain target:self action:@selector(previousField)];
+    
+    UIBarButtonItem *doneBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(resignKeyboard)];
+    
+    [keyboardToolBar setItems:[[NSArray alloc] initWithObjects:doneBarButton, extraSpace, previousBarButton, nextBarButton, nil]];
+    
+    return keyboardToolBar;
+}
+
+-(void)nextField{
+    NSInteger index = [textFieldsArray indexOfObject:activeField];
+    
+    if(index < textFieldsArray.count-1){
+        if(index==3){
+            index++;
+        }
+        activeField = [textFieldsArray objectAtIndex:index+1];
+    }
+    
+    [activeField becomeFirstResponder];
+}
+
+-(void)previousField{
+    NSInteger index = [textFieldsArray indexOfObject:activeField];
+    
+    if(index > 0){
+        if(index==5){
+            index--;
+        }
+        activeField = [textFieldsArray objectAtIndex:index-1];
+    }
+    
+    [activeField becomeFirstResponder];
+}
+
+-(void)resignKeyboard{
+    [activeField resignFirstResponder];
 }
 
 @end
