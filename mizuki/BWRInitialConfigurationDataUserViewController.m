@@ -31,7 +31,7 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
 {
     [super viewDidLoad];
     
-    self.title = @"¡Bienvenido!";
+    self.title = NSLocalizedString(@"Bienvenido", nil);
     
     // GPlus Login
     signIn = [GPPSignIn sharedInstance];
@@ -89,7 +89,7 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
 {
     if([[segue identifier] isEqualToString:@"invoiceDataSegue"]){
         BWRInvoiceDataViewController *configurationInvoiceData = [segue destinationViewController];
-        [configurationInvoiceData initWithFirstRFC:@"Bienvenido"];
+        [configurationInvoiceData initWithFirstRFC:NSLocalizedString(@"Bienvenido",nil)];
     }
     else if([[segue identifier] isEqualToString:@"invoiceCompleteDataSegue"]){
         BWRInvoiceHistoryViewController *invoicesHistory = [segue destinationViewController];

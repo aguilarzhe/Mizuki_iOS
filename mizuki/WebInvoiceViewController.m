@@ -142,7 +142,7 @@
     //Update invoice with new status
     NSString *status = @"Facturada";
     if(loadError){
-        status = @"Error";
+        status = @"Pendiente";
     }
     
     if([completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:status]){

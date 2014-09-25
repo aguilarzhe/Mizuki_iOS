@@ -9,6 +9,7 @@
 #import "BWRInvoiceDataViewController.h"
 #import "BWRInvoiceHistoryViewController.h"
 #import "BWRUserPreferences.h"
+#import "BWRMessagesToUser.h"
 #import "AppDelegate.h"
 
 @interface BWRInvoiceDataViewController () <NSFetchedResultsControllerDelegate, UITextFieldDelegate>
@@ -38,7 +39,7 @@
 @synthesize tf_localidad;
 @synthesize tf_cp;
 @synthesize lb_direccion;
-@synthesize bt_listo;
+@synthesize bt_save;
 @synthesize firstRFC;
 @synthesize textFieldsArray;
 
@@ -116,7 +117,7 @@ static UITextField *activeField;
     
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && !firstRFC){
         UIButton *listoButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [listoButton setTitle:@"Guardar" forState:UIControlStateNormal];
+        [listoButton setTitle:NSLocalizedString(@"Guardar",nil) forState:UIControlStateNormal];
         [listoButton addTarget:self action:@selector(saveInfoRFC) forControlEvents:UIControlEventTouchUpInside];
         listoButton.frame = CGRectMake(padding, depth+=40, longWidth, height);
         [scrollView addSubview:listoButton];
@@ -127,7 +128,7 @@ static UITextField *activeField;
     managedObjectContext = appDelegate.managedObjectContext;
     
     //Ready button
-    self.navigationItem.rightBarButtonItem = bt_listo;
+    self.navigationItem.rightBarButtonItem = bt_save;
     
     //SCROLL VIEW
     self.view=scrollView;
@@ -188,17 +189,17 @@ static UITextField *activeField;
         //Label
         }else{
             UILabel *label = (UILabel *)viewElement;
-            label.text = @"Dirección";
+            label.text = NSLocalizedString(@"Dirección", nil);
         }
     }
     
     //Ready button
-    bt_listo = [[UIBarButtonItem alloc] initWithTitle:@"Listo" style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
+    bt_save = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Guardar", nil) style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
     
     self.view.backgroundColor = [UIColor whiteColor];
     tf_cp.delegate = self;
     
-    [self setTitle:@"Datos de facturación"];
+    [self setTitle:NSLocalizedString(@"Datos de facturación",nil)];
 }
 
 
@@ -236,29 +237,29 @@ static UITextField *activeField;
     //RFC
     tf_rfc.placeholder = @"RFC";
     //Nombre
-    tf_nombre.placeholder = @"Nombre";
+    tf_nombre.placeholder = NSLocalizedString(@"Nombre",nil);
     //Apellido paterno
-    tf_apaterno.placeholder = @"Apellido Paterno";
+    tf_apaterno.placeholder = NSLocalizedString(@"Apellido Paterno",nil);
     //Apellido materno
-    tf_amaterno.placeholder = @"Apellido Materno";
+    tf_amaterno.placeholder = NSLocalizedString(@"Apellido Materno", nil);
     //Calle
-    tf_calle.placeholder = @"Calle";
+    tf_calle.placeholder = NSLocalizedString(@"Calle",nil);
     //Numero interior
-    tf_noint.placeholder = @"No Interior";
+    tf_noint.placeholder = NSLocalizedString(@"No Interior",nil);
     //Numero exterior
-    tf_noext.placeholder = @"No Exterior";
+    tf_noext.placeholder = NSLocalizedString(@"No Exterior",nil);
     //Colonia
-    tf_colonia.placeholder = @"Colonia";
+    tf_colonia.placeholder = NSLocalizedString(@"Colonia",nil);
     //Delegacion
-    tf_delegacion.placeholder = @"Delegación";
+    tf_delegacion.placeholder = NSLocalizedString(@"Delegación",nil);
     //Estado
-    tf_estado.placeholder = @"Estado";
+    tf_estado.placeholder = NSLocalizedString(@"Estado",nil);
     //Ciudad
-    tf_ciudad.placeholder = @"Ciudad";
+    tf_ciudad.placeholder = NSLocalizedString(@"Ciudad",nil);
     //Localidad
-    tf_localidad.placeholder = @"Localidad";
+    tf_localidad.placeholder = NSLocalizedString(@"Localidad",nil);
     //Codigo Postal
-    tf_cp.placeholder = @"C.P.";
+    tf_cp.placeholder = NSLocalizedString(@"C.P.",nil);
     
 }
 
@@ -344,33 +345,31 @@ static UITextField *activeField;
         
         NSError *error = nil;
         //Save changes in data base
-        /*if (*/[managedObjectContext save:&error];//) {
+        /*if (*/[managedObjectContext save:&error];//){
             if (![BWRUserPreferences getStringValueForKey:@"rfc"]) {
                 [BWRUserPreferences setStringValue:rfcInfo.rfc forKey:@"rfc"];
             }
         
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && !firstRFC){
-            [self dismissViewControllerAnimated:YES completion:nil];
-        }else{
-            [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
-        }
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && !firstRFC){
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }else{
+                [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
+            }
         
         /*}else{
             NSLog(@"Error guardando elemento en base de datos %@", error);
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Datos no válidos" message:@"Verifique los datos." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
             
             NSDictionary *userInfo = error.userInfo;
             NSError *aux;
             NSString *validationErrorKey;
             if ((validationErrorKey = userInfo[@"NSValidationErrorKey"])) {
                 NSLog(@"%@", validationErrorKey);
-                [alertView setMessage:[NSString stringWithFormat:@"Hay un error en %@", validationErrorKey]];
+                [BWRMessagesToUser Error:error code:0 message:[NSString stringWithFormat:@"%@%@",NSLocalizedString(@"Hay un error en ",nil), NSLocalizedString(validationErrorKey,nil)]];
             }else if((aux = userInfo[@"NSDetailedErrors"][0])){
                 NSLog(@"%@", aux.userInfo[@"NSValidationErrorKey"]);
-                [alertView setMessage:[NSString stringWithFormat:@"Hay un error en %@", aux.userInfo[@"NSValidationErrorKey"]]];
+                [BWRMessagesToUser Error:error code:0 message:[NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Hay un error en ",nil), NSLocalizedString(aux.userInfo[@"NSValidationErrorKey"],nil)]];
             }
             
-            [alertView show];
         }*/
 
     }
@@ -389,27 +388,19 @@ static UITextField *activeField;
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    /*NSInteger nextTag = textField.tag + 1;
-    // Try to find next responder
-    UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
-    if (nextResponder) {
-        // Found next responder, so set it.
-        [nextResponder becomeFirstResponder];
-    } else {*/
-        // Not found, so remove keyboard.
-        [textField resignFirstResponder];
-    //}
+    [textField resignFirstResponder];
     return NO;
 }
 
+#pragma mark - KeyboardToolBar
 -(UIToolbar *)getUIToolBarToKeyboard: (CGFloat)width{
     
     UIToolbar *keyboardToolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, width, 44)];
     
     UIBarButtonItem *extraSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
     
-    UIBarButtonItem *nextBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Sigueinte" style:UIBarButtonItemStylePlain target:self action:@selector(nextField)];
-    UIBarButtonItem *previousBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Anterior" style:UIBarButtonItemStylePlain target:self action:@selector(previousField)];
+    UIBarButtonItem *nextBarButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Siguiente",nil) style:UIBarButtonItemStylePlain target:self action:@selector(nextField)];
+    UIBarButtonItem *previousBarButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Anterior",nil) style:UIBarButtonItemStylePlain target:self action:@selector(previousField)];
     
     UIBarButtonItem *doneBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(resignKeyboard)];
     

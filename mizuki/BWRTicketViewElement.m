@@ -89,7 +89,7 @@
     //If is button
     else if ([formFieldType isEqualToString:@"submit"]){
         UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [button setTitle:@"Enviar" forState:UIControlStateNormal];
+        [button setTitle:NSLocalizedString(@"Enviar",nil) forState:UIControlStateNormal];
         button.frame = CGRectMake(x, y, width, height);
         viewTicketElement = button;
     }
@@ -105,7 +105,7 @@
     if (match) {
         ((UITextField *)viewTicketElement).text = [resultOCR substringWithRange:match.range];
     }else{
-        ((UITextField *)viewTicketElement).text = [NSString stringWithFormat:@"%@ no reconocido",selectionValue];
+        ((UITextField *)viewTicketElement).text = [NSString stringWithFormat:@"%@ %@", selectionValue, NSLocalizedString(@"no reconocido",nil)];
     }
     
 }
@@ -120,7 +120,7 @@
         ((UITextField *)viewTicketElement).text = [((UITextField *)viewTicketElement).text substringWithRange:match.range];
         return TRUE;
     }else{
-        [BWRMessagesToUser Alert:@"Datos no válidos" message:[NSString stringWithFormat:@"Error en el campo: %@", ticketField]];
+        [BWRMessagesToUser Alert:@"Datos no válidos" message:[NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Error en el campo: ",nil), ticketField]];
         return FALSE;
     }
 }

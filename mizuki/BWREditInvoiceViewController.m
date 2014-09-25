@@ -66,7 +66,7 @@
     //TEMPORAL*************************************
     UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [sendButton addTarget:self action:@selector(sendInvoice) forControlEvents:UIControlEventTouchDown];
-    [sendButton setTitle:@"Reenviar" forState:UIControlStateNormal];
+    [sendButton setTitle:NSLocalizedString(@"Reenviar",nil) forState:UIControlStateNormal];
     sendButton.frame = CGRectMake(0, depth+=height+10, widthScreen, height);
     [self.view addSubview:sendButton];
     //*********************************************
@@ -82,7 +82,7 @@
     //Company TextView
     companyTextField = [[UITextField alloc] initWithFrame:CGRectMake(padding, depth+=height+10, width, height)];
     companyTextField.enabled = NO;
-    companyTextField.text = [NSString stringWithFormat:@"Empresa: %@", completeInvoice.company];
+    companyTextField.text = [NSString stringWithFormat:@"%@: %@", NSLocalizedString(@"Empresa",nil), completeInvoice.company];
     //companyTextField.scrollEnabled = NO;
     [self.view addSubview:companyTextField];
     
@@ -102,7 +102,7 @@
     //If invoice is not right
     if(![completeInvoice.status isEqualToString:@"Facturada"]){
         //Save Button
-        UIBarButtonItem *bt_save = [[UIBarButtonItem alloc] initWithTitle:@"Guardar" style:UIBarButtonItemStylePlain target:self action:@selector(saveInvoiceChanges)];
+        UIBarButtonItem *bt_save = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Guardar",nil) style:UIBarButtonItemStylePlain target:self action:@selector(saveInvoiceChanges)];
         self.navigationItem.rightBarButtonItem = bt_save;
     }
     
@@ -123,10 +123,6 @@
         if ([viewElement.viewTicketElement isKindOfClass:[UITextField class]]){
             viewElement.selectionValue = ((UITextField *)viewElement.viewTicketElement).text;
         }
-    }
-    
-    if([completeInvoice.status isEqualToString:@"Error"]){
-        completeInvoice.status = @"Pendiente";
     }
     
     [completeInvoice updateCompleteInvoiceWithRFC:rfcSelected status:completeInvoice.status];

@@ -14,6 +14,9 @@
 "Galeria" = "Galery";
 "Capturar datos" = "Capture data";
 
+//BWRProcessImage
+"Imagen demasiado obscura o demasiado clara" = "Too light or too dark image ";
+
 // BWRMyAccountViewController
 "Datos de usuario" = "User info";
 "Correo" = "Email";
@@ -25,3 +28,93 @@
 "Solo wifi" = "Only WIFI";
 "Notificaciones" = "Notifications";
 "Sonido" = "Sound";
+
+"Cerrar sesión" = "Logout";
+"Opciones RFC" = "RFC options";
+"Cancelar" = "Cancel";
+"Eliminar" = "Delete";
+"Seleccionar" = "Select";
+"Editar" = "Edit";
+
+"Máximo número de rfc's" = "Maximum number of rfc's";
+"No se puede tener más de 5 rfc" = "You can't have more than 5 things";
+"No es posible eliminar" = "Can't delete";
+"Error RFC" = "RFC error";
+"El rfc a eliminar es el seleccionado para facturar. Seleccione otro para poder eliminarlo" = "RFC to delete is selected for invoicing. Select another rfc to can deleted it";
+"No se puede eliminar. Debe de haber al menos un RFC" = "Can't delete. Must be at least one RFC";
+"Error al recuperar rfc's" = "Error to recover rfc's";
+
+//BWRInvoiceHistoryViewController
+"Todas" = "All";
+"Pendientes" = "Pending";
+"Error al recuperar facturas" = "Error to recover invoices";
+
+//BWRInitialConfigurationCViewController
+"Bienvenido" = "Welcome";
+
+//BWRInvoiceDataViewController
+"Datos de Facturación" = "Invoicing data";
+"Guardar" = "Save";
+"Dirección" = "Address";
+"Nombre" = "Name";
+"nombre" = "Name";
+"Apellido Paterno" = "Father lastname";
+"apellidoPaterno" = "Father lastname";
+"Apellido Materno" = "Mother lastname";
+"apellidoMaterno" = "Mother lastname";
+"Calle" = "Steet";
+"calle" = "Street";
+"No Interior" = "Internal No";
+"numInterior" = "Internal No";
+"No Exterior" = "External No";
+"numExterior" = "External No";
+"Colonia" = "Colony";
+"colonia" = "Colony";
+"Delegación" = "Delegation";
+"delegacion" = "Delegation";
+"Estado" = "State";
+"estado" = "State";
+"Ciudad" = "City";
+"ciudad" = "City";
+"Localidad" = "Town";
+"localidad" = "town";
+"C.P." = "P.C.";
+"codigoPostal" = "Post code";
+"Siguiente" = "Next";
+"Anterior" = "Previous";
+"Hay un error en " = "There is an error in ";
+
+//BWRInvoiceConfirmationViewController
+"Empresa" = "Company";
+"Enviar" = "Send";
+"Confirmación de factura" = "Confirm Invoice";
+"Procesando" = "Loading";
+"Seleccionar RFC" = "Select RFC";
+
+//BWRWebConnection
+"No se pudieron obtener datos del servidor" = "Could't get dato from server";
+"Verifique su conexión" = "Check your conection";
+"No hay conexión a internet" = "No internet conection";
+"Solo wifi está activado" = "Wifi is enabled only";
+
+//BWRTicketViewElement
+"no reconocido" = "don't recognized";
+"Datos no válidos" = "Invalid Data";
+"Error en el campo: " = "Error in field: ";
+
+//BWREditInvoiceViewController
+"Editar Factura" = "Edit Invoice";
+"Reenviar" = "Resend"; //TEMPORAL -------------
+
+//BWRCompleteInvoice
+"Error al agregar factura" = "Error to add invoice";
+"Error al actualizar factura" = "Error to update invoice";
+"Error al eliminar factura" = "Error to delete invoice";
+
+//BWRMessagesToUser
+"Confirmacion" = "Confirmation";
+"Si" = "Yes";
+"Error base de datos" = "Error data base";
+"Error al recuperar" = "Error to recover";
+"Error en el servidor" = "Error in server";
+"Error desconocido" = "Uknown error";

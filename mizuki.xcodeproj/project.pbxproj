@@ -26,6 +26,7 @@
 		2B3BEA8B199BD84D007466E2 /* BWRCompleteInvoice.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3BEA8A199BD84D007466E2 /* BWRCompleteInvoice.m */; };
 		2B4496101976E47E00BFDBDB /* BWRTicketViewElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B44960F1976E47E00BFDBDB /* BWRTicketViewElement.m */; };
 		2B73652D1975DE6900726BCC /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B73652C1975DE6900726BCC /* opencv2.framework */; };
+		2BB862AA19D3C29400DDFB4A /* BWRRFCInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BB862A919D3C29400DDFB4A /* BWRRFCInfoController.m */; };
 		2BBBE1BA199FDE0400B94C1C /* BWREditInvoiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BBBE1B9199FDE0400B94C1C /* BWREditInvoiceViewController.m */; };
 		2BCEE57B197DC24900E00667 /* WebInvoiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BCEE57A197DC24900E00667 /* WebInvoiceViewController.m */; };
 		2BD9F064198993B400C3E5AF /* BWRInvoiceTicketPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BD9F063198993B400C3E5AF /* BWRInvoiceTicketPage.m */; };
@@ -139,6 +140,8 @@
 		2B44960F1976E47E00BFDBDB /* BWRTicketViewElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRTicketViewElement.m; sourceTree = "<group>"; };
 		2B4496111976E49100BFDBDB /* BWRTicketViewElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BWRTicketViewElement.h; sourceTree = "<group>"; };
 		2B73652C1975DE6900726BCC /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		2BB862A919D3C29400DDFB4A /* BWRRFCInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRRFCInfoController.m; sourceTree = "<group>"; };
+		2BB862AB19D3C2B400DDFB4A /* BWRRFCInfoController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BWRRFCInfoController.h; sourceTree = "<group>"; };
 		2BBBE1B8199FDE0400B94C1C /* BWREditInvoiceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWREditInvoiceViewController.h; sourceTree = "<group>"; };
 		2BBBE1B9199FDE0400B94C1C /* BWREditInvoiceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWREditInvoiceViewController.m; sourceTree = "<group>"; };
 		2BCEE579197DC23C00E00667 /* WebInvoiceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebInvoiceViewController.h; sourceTree = "<group>"; };
@@ -775,6 +778,8 @@
 				2B3BEA87199BD806007466E2 /* BWRRule.m */,
 				2B3BEA89199BD839007466E2 /* BWRCompleteInvoice.h */,
 				2B3BEA8A199BD84D007466E2 /* BWRCompleteInvoice.m */,
+				2BB862A919D3C29400DDFB4A /* BWRRFCInfoController.m */,
+				2BB862AB19D3C2B400DDFB4A /* BWRRFCInfoController.h */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -962,6 +967,7 @@
 				2BBBE1BA199FDE0400B94C1C /* BWREditInvoiceViewController.m in Sources */,
 				2B351E6C1991CD84000D8611 /* BWRWebConnection.m in Sources */,
 				2B182FB519B9537D00743BD7 /* BWRMessagesToUser.m in Sources */,
+				2BB862AA19D3C29400DDFB4A /* BWRRFCInfoController.m in Sources */,
 				2BDB2F1D19509B0B00AD8F67 /* Tesseract.mm in Sources */,
 				2B23A60319589FED0054FB8A /* OpenCV.mm in Sources */,
 				2F7D5CB51964E0EE003BBAB6 /* BWRMyAccountViewController.m in Sources */,

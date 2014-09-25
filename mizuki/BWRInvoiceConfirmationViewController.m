@@ -105,7 +105,7 @@
     //Company TextField
     empresaTextField = [[UITextField alloc] initWithFrame:CGRectMake(padding, depth+=height+10, width, height)];
     empresaTextField.borderStyle = UITextBorderStyleRoundedRect;
-    empresaTextField.placeholder = @"Empresa";
+    empresaTextField.placeholder = NSLocalizedString(@"Empresa",nil);
     empresaTextField.delegate = self;
    
     //Autocomplete table
@@ -153,11 +153,11 @@
     [self.view addSubview:ticketDataPageControl];
     
     //Send Button
-    UIBarButtonItem *bt_enviar = [[UIBarButtonItem alloc] initWithTitle:@"Enviar" style:UIBarButtonItemStylePlain target:self action:@selector(goToWebview)];
+    UIBarButtonItem *bt_enviar = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Enviar",nil) style:UIBarButtonItemStylePlain target:self action:@selector(goToWebview)];
     self.navigationItem.rightBarButtonItem = bt_enviar;
     
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    self.title = @"Confirmación de factura";
+    self.title = NSLocalizedString(@"Confirmación de factura",nil);
     
     //If resending invoice
     switch (invoiceAction) {
@@ -203,7 +203,7 @@
     //Tesseract result
     invoiceLabel.editable = NO;
     invoiceLabel.scrollEnabled = YES;
-    invoiceLabel.text = @"Procesando";
+    invoiceLabel.text = NSLocalizedString(@"Procesando",nil);
 }
 
 -(void)resendInvoice{
@@ -225,7 +225,7 @@
 #pragma mark - ConfirmationViewControllerSources
 
 - (void) processRecognition{
-    while ([invoiceLabel.text isEqualToString:@"Procesando"]);
+    while ([invoiceLabel.text isEqualToString:NSLocalizedString(@"Procesando",nil)]);
     
     [self performSelectorOnMainThread:@selector(invoiceDataRecognition) withObject:nil waitUntilDone:YES];
 }
@@ -391,7 +391,7 @@
     //RFC table
     if(tableView == rfcTableView){
 
-        rfcActionSheet = [[UIActionSheet alloc] initWithTitle:@"Seleccionar RFC" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+        rfcActionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Seleccionar RFC",nil) delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
         
         for (int index=0; index<[fetchedResults count]; index++) {
             BWRRFCInfo *rfcInfo = [fetchedResults objectAtIndex:index];
@@ -605,7 +605,7 @@
 #pragma mark - Navegation
 - (void)goToWebview{
     
-    if([self validationInvoiceData] && !([invoiceLabel.text isEqualToString:@"Procesando"])){
+    if([self validationInvoiceData] && !([invoiceLabel.text isEqualToString:NSLocalizedString(@"Procesando",nil)])){
         
         //If don't resend invoice
         if(invoiceAction == 0 || invoiceAction == 2){

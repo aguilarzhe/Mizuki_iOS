@@ -11,6 +11,7 @@
 #import "BWREditInvoiceViewController.h"
 #import "BWRMyAccountViewController.h"
 #import "BWRCompleteInvoice.h"
+#import "BWRMessagesToUser.h"
 #import "AppDelegate.h"
 
 @interface BWRInvoiceHistoryViewController ()
@@ -55,7 +56,7 @@ static BWRCompleteInvoice *actualInvoice;
     NSInteger heightScreen = self.view.frame.size.height;
     
     //Segmented control
-    invoiceSegmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Todas", @"Pendientes", nil]];
+    invoiceSegmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:NSLocalizedString(@"Todas", nil), NSLocalizedString(@"Pendientes", nil), nil]];
     invoiceSegmentedControl.frame = CGRectMake(10, 75, widthScreen-20, 30);
     invoiceSegmentedControl.selectedSegmentIndex = 0;
     invoiceSegmentedControl.tintColor = [UIColor blueColor];
@@ -146,6 +147,7 @@ static BWRCompleteInvoice *actualInvoice;
         
     } else {
         NSLog(@"Error al recuperar.");
+        [BWRMessagesToUser Error:error code:1 message:@"Error al recuperar facturas"];
     }
 }
 
@@ -249,8 +251,10 @@ static BWRCompleteInvoice *actualInvoice;
         case 1:
             [self captureInvoiceFromPhotoLibrary];
             break;
-        default:
+        case 2:
             [self captureInvoiceFromData];
+            break;
+        default:
             break;
     }
 }

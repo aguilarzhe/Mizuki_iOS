@@ -42,7 +42,7 @@
 
     
     if(!processImage){
-        return @"Imagen demasiado obscura o demasiado clara";
+        return NSLocalizedString(@"Imagen demasiado obscura o demasiado clara",nil);
     }
     
     //Recognize text
