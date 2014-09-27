@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Mizuki-widget.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>mizuki.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -12,6 +17,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>2B1327E319BE5BA700D36AC0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>2F397D661948BD6F004CC963</key>
 		<dict>
 			<key>primary</key>
