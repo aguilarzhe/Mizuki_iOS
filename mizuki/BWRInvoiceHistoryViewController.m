@@ -31,7 +31,6 @@
 static BWRCompleteInvoice *actualInvoice;
 
 @implementation BWRInvoiceHistoryViewController
-@synthesize myImagePickerController;
 @synthesize imageInvoiceActionSheet;
 @synthesize invoiceImage;
 @synthesize settingsButton;
