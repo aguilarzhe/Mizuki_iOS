@@ -48,7 +48,8 @@ static BWRCompleteInvoice *actualInvoice;
     //Load invoices from core data
     allInvoicesArray = [[NSMutableArray alloc] init];
     pendingInvoicesArray = [[NSMutableArray alloc] init];
-    [self loadInvoicesFromCoreData];
+    //[self loadInvoicesFromCoreData];
+    [self performSelectorInBackground:@selector(loadInvoices) withObject:nil];
     actualInvoicesArray = allInvoicesArray;
     
     //Measures
@@ -91,6 +92,10 @@ static BWRCompleteInvoice *actualInvoice;
 
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [self performSelectorInBackground:@selector(loadInvoices) withObject:nil];
+}
+
 #pragma mark - BWRInvoiceHistorySources
 /** Show the options to invoice the ticket.
  */
@@ -114,6 +119,20 @@ static BWRCompleteInvoice *actualInvoice;
     }
 }
 
+-(void)loadInvoices{
+    while (1){
+        [self performSelectorOnMainThread:@selector(loadNewInvoices) withObject:nil waitUntilDone:YES];
+        [NSThread sleepForTimeInterval:10];
+    }
+}
+
+-(void)loadNewInvoices{
+    [pendingInvoicesArray removeAllObjects];
+    [allInvoicesArray removeAllObjects];
+    [self loadInvoicesFromCoreData];
+    [invoiceTableView reloadData];
+}
+
 /** Get the invoices in array according to type.
  
  Put all invoices that match with the type (rigth, pending or error) in array actualInvoicesArray.
@@ -135,7 +154,6 @@ static BWRCompleteInvoice *actualInvoice;
     
     [actualInvoicesArray removeAllObjects];
     if(!error){
-        NSLog(@"Recuperación satisfactoria. %d", [invoicesResult count]);
         
         for(BWRInvoice *invoice in invoicesResult){
             BWRCompleteInvoice *completeInvoice = [[BWRCompleteInvoice alloc] initFromCoreDataWithInvoice:invoice];

@@ -118,3 +118,8 @@
 "Error al recuperar" = "Error to recover";
 "Error en el servidor" = "Error in server";
 "Error desconocido" = "Uknown error";
+
+//BWRRFCInfoController
+"Error al agregar rfc" = "Error to add rfc";
+"Error al actualizar rfc" = "Error to update rfc";
+

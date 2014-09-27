@@ -250,7 +250,8 @@
         case 2://Edit a RFC
             [self performSegueWithIdentifier:@"editInvoiceDataSegue" sender:self];
             break;
-        default:
+            
+        default://Cancelar
             break;
     }
 }

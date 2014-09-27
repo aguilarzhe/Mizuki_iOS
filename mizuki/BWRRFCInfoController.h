@@ -25,4 +25,10 @@
 @property  NSString *ciudad;
 @property  NSString *localidad;
 
+-(void)createRFCwithData: (NSString *)rfcData name:(NSString *)name fatherLastname:(NSString *)fatherLastname motherLastname:(NSString *)motherLastname country:(NSString *)country state:(NSString *)state delegation:(NSString *)delegation colony:(NSString *)colony street:(NSString *)street internalNum:(NSString *)internalNum externalNum:(NSString *)externalNum postCode:(NSString *)postCode city:(NSString *)city town:(NSString *)town;
+-(BOOL)validateRFCData;
+-(BOOL)addRFCInfo;
+-(BOOL)updateRFCInfoWithRFC: (BWRRFCInfo *)upRFCInfo;
+
+
 @end

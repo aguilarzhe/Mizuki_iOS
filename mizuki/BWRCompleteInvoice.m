@@ -251,7 +251,6 @@
         for(BWRRule *rule in fetchedObjects){
             BWRTicketViewElement *viewElement = [[BWRTicketViewElement alloc] initTicketInfoWithElements:rule.ticketField mask:rule.ticketMask form:rule.formField type:rule.formFieldType value:rule.fieldValue];
             [resultArray addObject:viewElement];
-            NSLog(@"ViewElement: %@", viewElement.ticketField);
         }
         
         return resultArray;
@@ -268,5 +267,6 @@
     
     return stringDate;
 }
+
 
 @end

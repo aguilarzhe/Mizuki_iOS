@@ -316,9 +316,10 @@
     //Get url, pagesArray and ticketViewElementsArray
     [self createTicketViewElemetsWithId:idCompany];
     
-    //Change actual rfc and invoice Label
+    //Change actual rfc, invoice Label and company
     actualRFC = completeInvoice.rfc;
     invoiceLabel.text = completeInvoice.resultOCR;
+    empresaTextField.text = completeInvoice.company;
     
     //
     for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
@@ -607,8 +608,13 @@
     
     if([self validationInvoiceData] && !([invoiceLabel.text isEqualToString:NSLocalizedString(@"Procesando",nil)])){
         
+        //If resend invoice
+        if(invoiceAction==1){
+            [completeInvoice delateCompleteInvoice];
+        }
+        
         //If don't resend invoice
-        if(invoiceAction == 0 || invoiceAction == 2){
+        //if(invoiceAction == 0 || invoiceAction == 2){
             
             //Put TextField text in selectionValue
             for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
@@ -624,7 +630,7 @@
             if(completeInvoice==nil){
                 return;
             }
-        }
+        //}
         
         //Put rfc user_info fields
         [self updateViewsWhitSelectedRFC];
@@ -658,13 +664,14 @@
     BWRCompleteInvoice *newCompleteInvoice=[[BWRCompleteInvoice alloc] initWithData:viewsArray rfc:actualRFC ticketImage:invoiceImage stringOCR:invoiceLabel.text company:empresaTextField.text];
     
     //Add invoice to data base
-    if([newCompleteInvoice addCompleteInvoiceWithStatus:@"Pendiente"]){
+    /*if([newCompleteInvoice addCompleteInvoiceWithStatus:@"Pendiente"]){
         NSLog(@"SE REALIZO EL ADD CORRECTAMENTE: %@", completeInvoice.idInvoice);
         return newCompleteInvoice;
     }else{
         NSLog(@"ERROR EN EL ADD");
         return nil;
-    }
+    }*/
+    return newCompleteInvoice;
 }
 
 @end

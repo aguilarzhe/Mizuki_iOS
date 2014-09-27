@@ -10,6 +10,7 @@
 #import "BWRInvoiceHistoryViewController.h"
 #import "BWRUserPreferences.h"
 #import "BWRMessagesToUser.h"
+#import "BWRRFCInfoController.h"
 #import "AppDelegate.h"
 
 @interface BWRInvoiceDataViewController () <NSFetchedResultsControllerDelegate, UITextFieldDelegate>
@@ -317,7 +318,25 @@ static UITextField *activeField;
  */
 - (void)saveInfoRFC
 {
-    BWRRFCInfo *rfcInfo;
+    BWRRFCInfoController *rfcInfoController = [[BWRRFCInfoController alloc] init];
+    [rfcInfoController createRFCwithData:tf_rfc.text name:tf_nombre.text fatherLastname:tf_apaterno.text motherLastname:tf_amaterno.text country:@"MEXICO" state:tf_estado.text delegation:tf_delegacion.text colony:tf_colonia.text street:tf_calle.text internalNum:tf_noint.text externalNum:tf_noext.text postCode:tf_cp.text city:tf_ciudad.text town:tf_localidad.text];
+    
+    if([rfcInfoController validateRFCData]){
+        //If option is add
+        if(opcion){
+            if([rfcInfoController addRFCInfo]){
+                [self goToMyAccount:rfcInfoController.rfc];
+            }
+        }
+        //If option is update
+        else{
+            if([rfcInfoController updateRFCInfoWithRFC:updateRFC]){
+                [self goToMyAccount:rfcInfoController.rfc];
+            }
+        }
+    }
+    
+    /*BWRRFCInfo *rfcInfo;
     
     if(opcion){
         rfcInfo = [NSEntityDescription insertNewObjectForEntityForName:@"RFCInfo" inManagedObjectContext:managedObjectContext];
@@ -343,9 +362,11 @@ static UITextField *activeField;
         rfcInfo.ciudad = tf_ciudad.text;
         rfcInfo.localidad = tf_localidad.text;
         
+        
+        
         NSError *error = nil;
         //Save changes in data base
-        /*if (*/[managedObjectContext save:&error];//){
+        if ([managedObjectContext save:&error];//){
             if (![BWRUserPreferences getStringValueForKey:@"rfc"]) {
                 [BWRUserPreferences setStringValue:rfcInfo.rfc forKey:@"rfc"];
             }
@@ -356,7 +377,7 @@ static UITextField *activeField;
                 [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
             }
         
-        /*}else{
+        }else{
             NSLog(@"Error guardando elemento en base de datos %@", error);
             
             NSDictionary *userInfo = error.userInfo;
@@ -370,8 +391,21 @@ static UITextField *activeField;
                 [BWRMessagesToUser Error:error code:0 message:[NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Hay un error en ",nil), NSLocalizedString(aux.userInfo[@"NSValidationErrorKey"],nil)]];
             }
             
-        }*/
+        }
 
+    }*/
+}
+                 
+#pragma mark - Navegation
+- (void) goToMyAccount: (NSString *)rfc{
+    if (![BWRUserPreferences getStringValueForKey:@"rfc"]) {
+        [BWRUserPreferences setStringValue:rfc forKey:@"rfc"];
+    }
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && !firstRFC){
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }else{
+        [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
     }
 }
 
