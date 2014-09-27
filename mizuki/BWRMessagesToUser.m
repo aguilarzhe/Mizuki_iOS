@@ -19,25 +19,29 @@ static bool confirmation;
 @implementation BWRMessagesToUser
 
 +(void)Alert: (NSString *)title message:(NSString *)message{
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(title,nil) message:NSLocalizedString(message,nil) delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
     [alertView show];
 }
 
 +(void)Error: (NSError *)error code:(NSInteger)errorCode message:(NSString *)message{
     
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:NSLocalizedString(message,nil) delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
     
     switch (errorCode) {
         case 0://Error to save the changes in data base
-            [alertView setTitle:@"Error base de datos"];
+            [alertView setTitle:NSLocalizedString(@"Error base de datos",nil)];
             break;
         
         case 1://Error to get information from data base
-            [alertView setTitle:@"Error al recuperar"];
+            [alertView setTitle:NSLocalizedString(@"Error al recuperar",nil)];
+            break;
+            
+        case 2://Error to get information from server
+            [alertView setTitle:NSLocalizedString(@"Error en el servidor",nil)];
             break;
             
         default://Uknown error
-            [alertView setTitle:@"Uknown error"];
+            [alertView setTitle:NSLocalizedString(@"Error desconocido",nil)];
             break;
     }
     
@@ -46,7 +50,7 @@ static bool confirmation;
 }
 
 +(BOOL)Confirmation: (NSString *)question{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirmacion" message:question delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Confirmacion",nil) message:NSLocalizedString(question,nil) delegate:self cancelButtonTitle:@"No" otherButtonTitles:NSLocalizedString(@"Si",nil), nil];
     [alert show];
     
     return confirmation;

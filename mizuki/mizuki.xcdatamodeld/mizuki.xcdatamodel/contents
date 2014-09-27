@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6172.12" systemVersion="13E28" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6172.12" systemVersion="13F34" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Invoice" representedClassName="BWRInvoice" syncable="YES">
         <attribute name="company" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
@@ -14,7 +14,7 @@
         <attribute name="apellidoPaterno" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="calle" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ciudad" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="codigoPostal" attributeType="String" minValueString="5" maxValueString="5" regularExpressionString="[0-9]{5}" syncable="YES"/>
+        <attribute name="codigoPostal" attributeType="String" minValueString="5" maxValueString="5" syncable="YES"/>
         <attribute name="colonia" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="delegacion" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="estado" optional="YES" attributeType="String" syncable="YES"/>
@@ -23,7 +23,7 @@
         <attribute name="numExterior" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="numInterior" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="pais" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="rfc" attributeType="String" minValueString="12" maxValueString="13" regularExpressionString="[a-zA-Z]{3,4}[0-9]{6}[a-zA-Z0-9]{2}[0-9]" syncable="YES"/>
+        <attribute name="rfc" attributeType="String" minValueString="12" maxValueString="13" syncable="YES"/>
     </entity>
     <entity name="Rule" representedClassName="BWRRule" syncable="YES">
         <attribute name="fieldValue" optional="YES" attributeType="String" syncable="YES"/>

@@ -9,6 +9,8 @@
 #import "BWRInvoiceDataViewController.h"
 #import "BWRInvoiceHistoryViewController.h"
 #import "BWRUserPreferences.h"
+#import "BWRMessagesToUser.h"
+#import "BWRRFCInfoController.h"
 #import "AppDelegate.h"
 
 @interface BWRInvoiceDataViewController () <NSFetchedResultsControllerDelegate, UITextFieldDelegate>
@@ -16,6 +18,7 @@
 @property BOOL opcion;
 @property BWRRFCInfo *updateRFC;
 @property BOOL firstRFC;
+@property NSArray *textFieldsArray;
 @end
 
 @implementation BWRInvoiceDataViewController
@@ -37,8 +40,11 @@
 @synthesize tf_localidad;
 @synthesize tf_cp;
 @synthesize lb_direccion;
-@synthesize bt_listo;
+@synthesize bt_save;
 @synthesize firstRFC;
+@synthesize textFieldsArray;
+
+static UITextField *activeField;
 
 - (void)viewDidLoad
 {
@@ -48,7 +54,7 @@
     NSInteger screenWidth = self.view.frame.size.width;
     NSInteger height = 31;
     NSInteger padding = 20;
-    NSInteger depth = 20;
+    NSInteger depth = -20;
     NSInteger longWidth;
     NSInteger shortWidth;
     
@@ -66,56 +72,53 @@
         shortWidth = (longWidth/2)-(padding/2);
     }
     
+    //Scroll view
     UIScrollView *scrollView=(UIScrollView *)self.view;
     CGRect fullScreenRect=[[UIScreen mainScreen] applicationFrame];
     scrollView=[[UIScrollView alloc] initWithFrame:fullScreenRect];
-    scrollView.contentSize=CGSizeMake(320,740);
+    scrollView.contentSize=CGSizeMake(320,800);
     
-    // Personal info
-    tf_rfc.frame = CGRectMake(padding, depth, longWidth, height);
-    [scrollView addSubview:tf_rfc];
-    tf_nombre.frame = CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_nombre];
-    tf_apaterno.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_apaterno];
-    tf_amaterno.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_amaterno];
+    //Get keyboard tool
+    UIToolbar *toolbar = [self getUIToolBarToKeyboard:screenWidth];
     
-    // If is firstRFC capture and the device is a iPad
-    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && firstRFC){
-        depth = -20;
-        padding += longWidth + (padding * 2);
+    // Information
+    for(UIView *viewElement in textFieldsArray){
+        //When arrive to address
+        if([viewElement isKindOfClass:[UILabel class]]){
+            // If is firstRFC capture and the device is a iPad
+            if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && firstRFC){
+                depth = -20;
+                padding += longWidth + (padding * 2);
+            }
+            viewElement.frame = CGRectMake(padding, depth+=40, longWidth, height);
+        }
+        //Textfield
+        else{
+            ((UITextField *)viewElement).inputAccessoryView = toolbar;
+            
+            //Specifict conditions
+            NSInteger index = [textFieldsArray indexOfObject:viewElement];
+            switch (index) {
+                case 6: //Internal number
+                    viewElement.frame = CGRectMake(padding, depth+=40, shortWidth, height);
+                    break;
+                
+                case 7: //External number
+                    viewElement.frame = CGRectMake(padding*2+shortWidth, depth, shortWidth, height);
+                    break;
+                    
+                default: //Others
+                    viewElement.frame = CGRectMake(padding, depth+=40, longWidth, height);
+                    break;
+            }
+        }
+        //Add view to scrollview
+        [scrollView addSubview:viewElement];
     }
-    
-    // Address user info
-    lb_direccion.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:lb_direccion];
-    tf_calle.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_calle];
-    //Numero interior
-    tf_noint.frame =CGRectMake(padding, depth+=40, shortWidth, height);
-    [scrollView addSubview:tf_noint];
-    //Numero exterior
-    tf_noext.frame =CGRectMake(padding*2+shortWidth, depth, shortWidth, height);
-    [scrollView addSubview:tf_noext];
-    tf_colonia.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_colonia];
-    tf_delegacion.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_delegacion];
-    tf_estado.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_estado];
-    tf_ciudad.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_ciudad];
-    tf_localidad.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_localidad];
-    //Codigo Postal
-    tf_cp.frame =CGRectMake(padding, depth+=40, longWidth, height);
-    [scrollView addSubview:tf_cp];
-    
     
     if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && !firstRFC){
         UIButton *listoButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [listoButton setTitle:@"Guardar" forState:UIControlStateNormal];
+        [listoButton setTitle:NSLocalizedString(@"Guardar",nil) forState:UIControlStateNormal];
         [listoButton addTarget:self action:@selector(saveInfoRFC) forControlEvents:UIControlEventTouchUpInside];
         listoButton.frame = CGRectMake(padding, depth+=40, longWidth, height);
         [scrollView addSubview:listoButton];
@@ -126,7 +129,7 @@
     managedObjectContext = appDelegate.managedObjectContext;
     
     //Ready button
-    self.navigationItem.rightBarButtonItem = bt_listo;
+    self.navigationItem.rightBarButtonItem = bt_save;
     
     //SCROLL VIEW
     self.view=scrollView;
@@ -147,77 +150,57 @@
 {
     //RFC
     tf_rfc = [[UITextField alloc] init];
-    tf_rfc.borderStyle = UITextBorderStyleRoundedRect;
-    //tf_rfc.backgroundColor = [UIColor redColor];
-    tf_rfc.delegate = self;
     //Nombre
     tf_nombre = [[UITextField alloc] init];
-    tf_nombre.borderStyle = UITextBorderStyleRoundedRect;
-    tf_nombre.delegate = self;
     //Apellido paterno
     tf_apaterno = [[UITextField alloc] init];
-    tf_apaterno.borderStyle = UITextBorderStyleRoundedRect;
-    tf_apaterno.delegate = self;
     //Apellido materno
     tf_amaterno = [[UITextField alloc] init];
-    tf_amaterno.borderStyle = UITextBorderStyleRoundedRect;
-    tf_amaterno.delegate = self;
-    
     //Direccion
     lb_direccion = [[UILabel alloc] init];
-    lb_direccion.text = @"Dirección";
     //Calle
     tf_calle = [[UITextField alloc] init];
-    tf_calle.borderStyle = UITextBorderStyleRoundedRect;
-    tf_calle.delegate = self;
-    
     //Numero interior
     tf_noint = [[UITextField alloc] init];
-    tf_noint.borderStyle = UITextBorderStyleRoundedRect;
-    tf_noint.delegate = self,
-    
     //Numero exterior
     tf_noext = [[UITextField alloc] init];
-    tf_noext.borderStyle = UITextBorderStyleRoundedRect;
-    tf_noext.delegate = self;
-    
     //Colonia
     tf_colonia = [[UITextField alloc] init];
-    tf_colonia.borderStyle = UITextBorderStyleRoundedRect;
-    tf_colonia.delegate = self;
-
     //Delegacion
     tf_delegacion = [[UITextField alloc] init];
-    tf_delegacion.borderStyle = UITextBorderStyleRoundedRect;
-    tf_delegacion.delegate = self;
-    
     //Estado
     tf_estado = [[UITextField alloc] init];
-    tf_estado.borderStyle = UITextBorderStyleRoundedRect;
-    tf_estado.delegate = self;
-    
     //Ciudad
     tf_ciudad = [[UITextField alloc] init];
-    tf_ciudad.borderStyle = UITextBorderStyleRoundedRect;
-    tf_ciudad.delegate = self;
-    
     //Localidad
     tf_localidad = [[UITextField alloc] init];
-    tf_localidad.borderStyle = UITextBorderStyleRoundedRect;
-    tf_localidad.delegate = self;
-    
     //Codigo Postal
     tf_cp = [[UITextField alloc] init];
-    tf_cp.borderStyle = UITextBorderStyleRoundedRect;
-    tf_cp.delegate = self;
+    
+    //Init Array
+    textFieldsArray = [[NSArray alloc] initWithObjects:tf_rfc, tf_nombre, tf_apaterno, tf_amaterno, lb_direccion, tf_calle, tf_noint, tf_noext, tf_colonia, tf_delegacion, tf_estado, tf_ciudad, tf_localidad, tf_cp, nil];
+    
+    //Init view elements
+    for(UIView *viewElement in textFieldsArray){
+        //TextField
+        if([viewElement isKindOfClass:[UITextField class]]){
+            UITextField *textField = (UITextField *)viewElement;
+            textField.borderStyle = UITextBorderStyleRoundedRect;
+            textField.delegate=self;
+        //Label
+        }else{
+            UILabel *label = (UILabel *)viewElement;
+            label.text = NSLocalizedString(@"Dirección", nil);
+        }
+    }
     
     //Ready button
-    bt_listo = [[UIBarButtonItem alloc] initWithTitle:@"Listo" style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
+    bt_save = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Guardar", nil) style:UIBarButtonItemStylePlain target:self action:@selector(saveInfoRFC)];
     
     self.view.backgroundColor = [UIColor whiteColor];
     tf_cp.delegate = self;
     
-    [self setTitle:@"Datos de facturación"];
+    [self setTitle:NSLocalizedString(@"Datos de facturación",nil)];
 }
 
 
@@ -255,29 +238,29 @@
     //RFC
     tf_rfc.placeholder = @"RFC";
     //Nombre
-    tf_nombre.placeholder = @"Nombre";
+    tf_nombre.placeholder = NSLocalizedString(@"Nombre",nil);
     //Apellido paterno
-    tf_apaterno.placeholder = @"Apellido Paterno";
+    tf_apaterno.placeholder = NSLocalizedString(@"Apellido Paterno",nil);
     //Apellido materno
-    tf_amaterno.placeholder = @"Apellido Materno";
+    tf_amaterno.placeholder = NSLocalizedString(@"Apellido Materno", nil);
     //Calle
-    tf_calle.placeholder = @"Calle";
+    tf_calle.placeholder = NSLocalizedString(@"Calle",nil);
     //Numero interior
-    tf_noint.placeholder = @"No Interior";
+    tf_noint.placeholder = NSLocalizedString(@"No Interior",nil);
     //Numero exterior
-    tf_noext.placeholder = @"No Exterior";
+    tf_noext.placeholder = NSLocalizedString(@"No Exterior",nil);
     //Colonia
-    tf_colonia.placeholder = @"Colonia";
+    tf_colonia.placeholder = NSLocalizedString(@"Colonia",nil);
     //Delegacion
-    tf_delegacion.placeholder = @"Delegación";
+    tf_delegacion.placeholder = NSLocalizedString(@"Delegación",nil);
     //Estado
-    tf_estado.placeholder = @"Estado";
+    tf_estado.placeholder = NSLocalizedString(@"Estado",nil);
     //Ciudad
-    tf_ciudad.placeholder = @"Ciudad";
+    tf_ciudad.placeholder = NSLocalizedString(@"Ciudad",nil);
     //Localidad
-    tf_localidad.placeholder = @"Localidad";
+    tf_localidad.placeholder = NSLocalizedString(@"Localidad",nil);
     //Codigo Postal
-    tf_cp.placeholder = @"C.P.";
+    tf_cp.placeholder = NSLocalizedString(@"C.P.",nil);
     
 }
 
@@ -335,7 +318,25 @@
  */
 - (void)saveInfoRFC
 {
-    BWRRFCInfo *rfcInfo;
+    BWRRFCInfoController *rfcInfoController = [[BWRRFCInfoController alloc] init];
+    [rfcInfoController createRFCwithData:tf_rfc.text name:tf_nombre.text fatherLastname:tf_apaterno.text motherLastname:tf_amaterno.text country:@"MEXICO" state:tf_estado.text delegation:tf_delegacion.text colony:tf_colonia.text street:tf_calle.text internalNum:tf_noint.text externalNum:tf_noext.text postCode:tf_cp.text city:tf_ciudad.text town:tf_localidad.text];
+    
+    if([rfcInfoController validateRFCData]){
+        //If option is add
+        if(opcion){
+            if([rfcInfoController addRFCInfo]){
+                [self goToMyAccount:rfcInfoController.rfc];
+            }
+        }
+        //If option is update
+        else{
+            if([rfcInfoController updateRFCInfoWithRFC:updateRFC]){
+                [self goToMyAccount:rfcInfoController.rfc];
+            }
+        }
+    }
+    
+    /*BWRRFCInfo *rfcInfo;
     
     if(opcion){
         rfcInfo = [NSEntityDescription insertNewObjectForEntityForName:@"RFCInfo" inManagedObjectContext:managedObjectContext];
@@ -361,37 +362,50 @@
         rfcInfo.ciudad = tf_ciudad.text;
         rfcInfo.localidad = tf_localidad.text;
         
+        
+        
         NSError *error = nil;
         //Save changes in data base
-        /*if (*/[managedObjectContext save:&error];//) {
+        if ([managedObjectContext save:&error];//){
             if (![BWRUserPreferences getStringValueForKey:@"rfc"]) {
                 [BWRUserPreferences setStringValue:rfcInfo.rfc forKey:@"rfc"];
             }
         
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && !firstRFC){
-            [self dismissViewControllerAnimated:YES completion:nil];
-        }else{
-            [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
-        }
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && !firstRFC){
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }else{
+                [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
+            }
         
-        /*}else{
+        }else{
             NSLog(@"Error guardando elemento en base de datos %@", error);
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Datos no válidos" message:@"Verifique los datos." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
             
             NSDictionary *userInfo = error.userInfo;
             NSError *aux;
             NSString *validationErrorKey;
             if ((validationErrorKey = userInfo[@"NSValidationErrorKey"])) {
                 NSLog(@"%@", validationErrorKey);
-                [alertView setMessage:[NSString stringWithFormat:@"Hay un error en %@", validationErrorKey]];
+                [BWRMessagesToUser Error:error code:0 message:[NSString stringWithFormat:@"%@%@",NSLocalizedString(@"Hay un error en ",nil), NSLocalizedString(validationErrorKey,nil)]];
             }else if((aux = userInfo[@"NSDetailedErrors"][0])){
                 NSLog(@"%@", aux.userInfo[@"NSValidationErrorKey"]);
-                [alertView setMessage:[NSString stringWithFormat:@"Hay un error en %@", aux.userInfo[@"NSValidationErrorKey"]]];
+                [BWRMessagesToUser Error:error code:0 message:[NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Hay un error en ",nil), NSLocalizedString(aux.userInfo[@"NSValidationErrorKey"],nil)]];
             }
             
-            [alertView show];
-        }*/
+        }
 
+    }*/
+}
+                 
+#pragma mark - Navegation
+- (void) goToMyAccount: (NSString *)rfc{
+    if (![BWRUserPreferences getStringValueForKey:@"rfc"]) {
+        [BWRUserPreferences setStringValue:rfc forKey:@"rfc"];
+    }
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && !firstRFC){
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }else{
+        [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
     }
 }
 
@@ -401,10 +415,62 @@
     return YES;
 }
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    activeField = textField;
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
-    return YES;
+    return NO;
+}
+
+#pragma mark - KeyboardToolBar
+-(UIToolbar *)getUIToolBarToKeyboard: (CGFloat)width{
+    
+    UIToolbar *keyboardToolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, width, 44)];
+    
+    UIBarButtonItem *extraSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
+    
+    UIBarButtonItem *nextBarButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Siguiente",nil) style:UIBarButtonItemStylePlain target:self action:@selector(nextField)];
+    UIBarButtonItem *previousBarButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Anterior",nil) style:UIBarButtonItemStylePlain target:self action:@selector(previousField)];
+    
+    UIBarButtonItem *doneBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(resignKeyboard)];
+    
+    [keyboardToolBar setItems:[[NSArray alloc] initWithObjects:doneBarButton, extraSpace, previousBarButton, nextBarButton, nil]];
+    
+    return keyboardToolBar;
+}
+
+-(void)nextField{
+    NSInteger index = [textFieldsArray indexOfObject:activeField];
+    
+    if(index < textFieldsArray.count-1){
+        if(index==3){
+            index++;
+        }
+        activeField = [textFieldsArray objectAtIndex:index+1];
+    }
+    
+    [activeField becomeFirstResponder];
+}
+
+-(void)previousField{
+    NSInteger index = [textFieldsArray indexOfObject:activeField];
+    
+    if(index > 0){
+        if(index==5){
+            index--;
+        }
+        activeField = [textFieldsArray objectAtIndex:index-1];
+    }
+    
+    [activeField becomeFirstResponder];
+}
+
+-(void)resignKeyboard{
+    [activeField resignFirstResponder];
 }
 
 @end

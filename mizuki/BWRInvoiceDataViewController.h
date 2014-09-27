@@ -26,7 +26,7 @@
 @property UITextField *tf_cp;
 
 @property UILabel *lb_direccion;
-@property UIBarButtonItem *bt_listo;
+@property UIBarButtonItem *bt_save;
 
 - (void)initWithFirstRFC:(NSString *)title;
 - (void)initWithDefault: (NSString *)title;

@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "BWRWebConnection.h"
 #import "BWRUserPreferences.h"
+#import "BWRMessagesToUser.h"
 
 @interface BWRWebConnection ()
 
@@ -48,9 +49,15 @@ static NSData *dataCompany;
 
 + (NSData *)downloadDataOfURL:(NSString *)urlString
 {
+    NSError *error;
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
-    NSData *data = [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:nil error:nil];
+    NSData *data = [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:nil error:&error];
+    
+    //If error to get data of url
+    if(data==nil){
+        [BWRMessagesToUser Error:error code:2 message:@"No se pudieron obtener datos del servidor"];
+    }
     
     return data;
 }
@@ -67,13 +74,17 @@ static NSData *dataCompany;
     }
     //NONE
     if ([connectionType isEqualToString:@"None"]) {
-        NSLog(@"ERROR NO HAY CONECCION A INTERNET");
+        [BWRMessagesToUser Alert:@"Verifique su conexión" message:@"No hay conexión a internet"];
+        NSLog(@"ERROR NO HAY CONEXION A INTERNET");
     }
     //OTHER
     else {
         NSLog(@"SOLO WIFI ESTÁ ACTIVADO");
         if(!([BWRUserPreferences getBoolValueForKey:@"Solo wifi"])){
             return TRUE;
+        }
+        else{
+            [BWRMessagesToUser Alert:@"Verifique su conexión" message:@"Solo wifi está activado"];
         }
     }
     

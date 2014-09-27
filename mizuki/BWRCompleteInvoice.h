@@ -31,5 +31,4 @@
 -(BOOL) delateCompleteInvoice;
 -(NSMutableArray *) getRulesViewElementsOfInvoice;
 
-
 @end

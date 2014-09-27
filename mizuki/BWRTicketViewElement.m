@@ -25,27 +25,27 @@
     
     self = [super init];
     
-    //Si es textbox
-    if(![[ticketElement valueForKey:@"form_field_type"] isEqualToString:@"submit"]){
+    formField = [ticketElement valueForKey:@"form_field"];
+    formFieldType = [ticketElement valueForKey:@"form_field_type"];
+    
+    //If is textbox
+    if([[ticketElement valueForKey:@"form_field_type"] isEqualToString:@"textbox"]){
         ticketField = [ticketElement valueForKey:@"ticket_field"];
         ticketSearchRegex = [ticketElement valueForKey:@"ticket_search_regex"];
         ticketMask = [ticketElement valueForKey:@"ticket_mask"];
-        formField = [ticketElement valueForKey:@"form_field"];
-        formFieldType = [ticketElement valueForKey:@"form_field_type"];
         //valueCampoTicket = [[NSArray alloc] initWithArray:[ticketElement valueForKey:@"value_campo_ticket"]];
         dataSource = [ticketElement valueForKey:@"data_source"];
-        selectionValue = ticketField;//[valueCampoTicket objectAtIndex:0];
+    }
     
-    //Si es boton
-    }else{
-        ticketField = @"Enviar";
+    //If is button, javascript code, captcha
+    else{
+        ticketField = @"Indefinido";
         ticketMask = @"Ninguno";
-        formField = [ticketElement valueForKey:@"form_field"];
-        formFieldType = [ticketElement valueForKey:@"form_field_type"];
         //valueCampoTicket = [[NSArray alloc] initWithArray:[ticketElement valueForKey:@"value_campo_ticket"]];
         dataSource = @"Ninguno";
-        selectionValue = ticketField;//[valueCampoTicket objectAtIndex:0];
     }
+    
+    selectionValue = ticketField;//[valueCampoTicket objectAtIndex:0];
     
     return self;
 }
@@ -68,7 +68,7 @@
 
 -(void)createViewWithRect: (CGFloat)x y:(CGFloat)y width:(CGFloat)width height:(CGFloat)height delegate:(UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate> *)viewDelegate{
     
-    //Si es textbox
+    //If is textbox
     if ([formFieldType isEqualToString:@"textbox"]) {
         UITextField *campoTextField = [[UITextField alloc] initWithFrame:CGRectMake(x, y, width, height)];
         campoTextField.placeholder = selectionValue;
@@ -77,7 +77,7 @@
         viewTicketElement = campoTextField;
     }
     
-    //Si es combobox
+    //If is combobox
     else if ([formFieldType isEqualToString:@"combobox"]){
         UITableView *campoTableView = [[UITableView alloc] initWithFrame:CGRectMake(x, y, width, height) style:UITableViewStylePlain];
         campoTableView.scrollEnabled = YES;
@@ -86,10 +86,10 @@
         viewTicketElement = campoTableView;
     }
     
-    //Si es boton
-    else{
+    //If is button
+    else if ([formFieldType isEqualToString:@"submit"]){
         UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [button setTitle:@"Enviar" forState:UIControlStateNormal];
+        [button setTitle:NSLocalizedString(@"Enviar",nil) forState:UIControlStateNormal];
         button.frame = CGRectMake(x, y, width, height);
         viewTicketElement = button;
     }
@@ -105,7 +105,7 @@
     if (match) {
         ((UITextField *)viewTicketElement).text = [resultOCR substringWithRange:match.range];
     }else{
-        ((UITextField *)viewTicketElement).text = [NSString stringWithFormat:@"%@ no reconocido",selectionValue];
+        ((UITextField *)viewTicketElement).text = [NSString stringWithFormat:@"%@ %@", selectionValue, NSLocalizedString(@"no reconocido",nil)];
     }
     
 }
@@ -120,7 +120,7 @@
         ((UITextField *)viewTicketElement).text = [((UITextField *)viewTicketElement).text substringWithRange:match.range];
         return TRUE;
     }else{
-        [BWRMessagesToUser Alert:@"Datos no válidos" message:[NSString stringWithFormat:@"Error en el campo: %@", ticketField]];
+        [BWRMessagesToUser Alert:@"Datos no válidos" message:[NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Error en el campo: ",nil), ticketField]];
         return FALSE;
     }
 }

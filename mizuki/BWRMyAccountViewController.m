@@ -88,7 +88,7 @@
     //Configuring view
     self.view=scrollView;
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Cerrar sesión" style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cerrar sesión",nil) style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
     self.title = NSLocalizedString(@"Mi cuenta", nil);
 }
 
@@ -188,7 +188,7 @@
         if (indexPath.row < numRowsRFC) {
             rfcActual = [fetchedResultsController objectAtIndexPath:indexPath];
             
-            rfcActionSheet = [[UIActionSheet alloc] initWithTitle:@"Opciones RFC" delegate:self cancelButtonTitle:@"Cancelar" destructiveButtonTitle:@"Eliminar" otherButtonTitles:@"Seleccionar",@"Editar", nil];
+            rfcActionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Opciones RFC",nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Cancelar",nil) destructiveButtonTitle:NSLocalizedString(@"Eliminar",nil) otherButtonTitles:NSLocalizedString(@"Seleccionar",nil),NSLocalizedString(@"Editar",nil), nil];
             
             [rfcActionSheet showInView:self.view];
         
@@ -207,7 +207,7 @@
             if(numRowsRFC<maxNumRFC){
                 if (self.modalPresentationStyle == UIModalPresentationPopover){
                     BWRInvoiceDataViewController *createInvoiceData = [[BWRInvoiceDataViewController alloc] init];
-                    [createInvoiceData initWithDefault:@"Datos de Facturación"];
+                    [createInvoiceData initWithDefault:NSLocalizedString(@"Datos de Facturación",nil)];
                     createInvoiceData.modalPresentationStyle=UIModalPresentationOverCurrentContext;
 
                     [self presentViewController:createInvoiceData animated:YES completion:nil];
@@ -216,6 +216,7 @@
                 }
             }else{
                 NSLog(@"No se pueden tener más de 5 rfc");
+                [BWRMessagesToUser Alert:@"Máximo número de rfc's" message:@"No se puede tener más de 5 rfc"];
             }
         }
     }
@@ -249,7 +250,8 @@
         case 2://Edit a RFC
             [self performSegueWithIdentifier:@"editInvoiceDataSegue" sender:self];
             break;
-        default:
+            
+        default://Cancelar
             break;
     }
 }
@@ -260,10 +262,10 @@
 {
     if([[segue identifier] isEqualToString:@"editInvoiceDataSegue"]){
         BWRInvoiceDataViewController *editInvoiceData = [segue destinationViewController];
-        [editInvoiceData initWithBWRRFCInfo:rfcActual title:@"Datos de Facturación"];
+        [editInvoiceData initWithBWRRFCInfo:rfcActual title:NSLocalizedString(@"Datos de Facturación",nil)];
     }else{
         BWRInvoiceDataViewController *createInvoiceData = [segue destinationViewController];
-        [createInvoiceData initWithDefault:@"Datos de Facturación"];
+        [createInvoiceData initWithDefault:NSLocalizedString(@"Datos de Facturación",nil)];
     }
 }
 
@@ -282,7 +284,7 @@
             
             //Save changes in data base
             if (![managedObjectContext save:&error]) {
-                [BWRMessagesToUser Error:error code:0 message:@"Can't Delate!"];
+                [BWRMessagesToUser Error:error code:0 message:@"No es posible eliminar"];
                 
                 return;
             }
@@ -298,7 +300,7 @@
         }
     
     }else{
-        [BWRMessagesToUser Alert:@"Error RFC" message:@"Can't Delete. Debe de haber al menos un RFC"];
+        [BWRMessagesToUser Alert:@"Error RFC" message:@"No se puede eliminar. Debe de haber al menos un RFC"];
         NSLog(@"Can't Delete. Debe de haber al menos un RFC");
     }
     
@@ -322,7 +324,7 @@
         id <NSFetchedResultsSectionInfo> sectionInfo = fetchedResultsController.sections[0];
         numRowsRFC = [sectionInfo numberOfObjects];
     } else {
-        [BWRMessagesToUser Error:fetchingError code:1 message:@"No se pudieron obtener rfc's de la base"];
+        [BWRMessagesToUser Error:fetchingError code:1 message:@"Error al recuperar rfc's"];
     }
     
 }

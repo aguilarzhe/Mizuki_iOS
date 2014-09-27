@@ -36,20 +36,20 @@
     toolbar.frame = CGRectMake(0, 10, self.view.frame.size.width-40, 40);
     
     //Button intem - invoices
-    UIBarButtonItem *invoicesButton = [[UIBarButtonItem alloc] initWithTitle:@"Mis facturas" style:UIBarButtonItemStylePlain target:self action:@selector(invoiceWithHistory)];
+    /*UIBarButtonItem *invoicesButton = [[UIBarButtonItem alloc] initWithTitle:@"Mis facturas" style:UIBarButtonItemStylePlain target:self action:@selector(invoiceWithHistory)];
     //Button item - galery
-    UIBarButtonItem *camaraButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(invoiceWithCamara)];
+    UIBarButtonItem *galeryButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(invoiceWithGalery)];
     //Button item - data
     UIBarButtonItem *dataButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(invoiceWithData)];
     //Button item - camara
-    UIBarButtonItem *galeryButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(invoiceWithGalery)];
+    UIBarButtonItem *camaraButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(invoiceWithCamara)];
     UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
     //add button items
-    toolbar.items = @[flexibleItem, invoicesButton, camaraButton, dataButton, galeryButton];
+    toolbar.items = @[flexibleItem, camaraButton];
     toolbar.barTintColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
     
-    [self.view addSubview:toolbar];
+    [self.view addSubview:toolbar];*/
 }
 
 - (void)didReceiveMemoryWarning {

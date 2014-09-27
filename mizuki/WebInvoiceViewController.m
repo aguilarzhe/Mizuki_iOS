@@ -13,17 +13,19 @@
 
 @interface WebInvoiceViewController ()
 
-@property UIWebView *invoiceWebView;
+//@property UIWebView *invoiceWebView;
 @property NSURLResponse *theResponse;
 @property NSMutableData *dataRecive;
 @property BOOL loadError;
 
 @end
 
+static UIWebView *invoiceWebView;
+
 @implementation WebInvoiceViewController
 
 @synthesize invoicePagesArray;
-@synthesize invoiceWebView;
+//@synthesize invoiceWebView;
 @synthesize companyURL;
 @synthesize actualPage;
 @synthesize theResponse;
@@ -47,6 +49,17 @@
         NSURLRequest *urlRequest = [NSURLRequest requestWithURL:companyURL];
         [invoiceWebView loadRequest:urlRequest];
     }
+    //If there is't conection or doesn't correspond
+    else{
+        if([completeInvoice addCompleteInvoiceWithStatus:@"Pendiente"]){
+            NSLog(@"SE REALIZO EL ADD CORRECTAMENTE: %@", completeInvoice.idInvoice);
+        }else{
+            NSLog(@"ERROR EN EL ADD");
+        }
+        //[completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:@"Pendiente"];
+    }
+    
+    [self goToInvoiceHistory];
 }
 
 - (void)didReceiveMemoryWarning
@@ -59,14 +72,17 @@
 - (void) webViewDidFinishLoad:(UIWebView *)webView
 {
     // TODO: Change performSelectorInBackground to dispatch_async and dispatch_queue_t
-    [self performSelectorInBackground:@selector(executeJavaScriptFromWebPageDiv) withObject:nil];
+    //[self performSelectorInBackground:@selector(executeJavaScriptFromWebPageDiv) withObject:nil];
+    [self performSelectorInBackground:@selector(fillPagesAccordingToService) withObject:nil];
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
  navigationType:(UIWebViewNavigationType)navigationType {
     
-    if(actualPage==[invoicePagesArray count]-1){
-        loadError = TRUE;
+    if(actualPage==[invoicePagesArray count]){
+        NSLog(@"Ya son las paginas +++++++++++++++++++++++++ %d",[invoicePagesArray count]);
+        //loadError = TRUE;
+        [completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:@"Pendiente"];
         return FALSE;
     }
     return TRUE;
@@ -75,6 +91,7 @@
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
     NSLog(@"ERROR: %@", error);
     loadError = TRUE;
+    [completeInvoice addCompleteInvoiceWithStatus:@"Pendiente"];
 }
 
 #pragma mark - WebInvoiceViewConetroller Sources
@@ -86,17 +103,26 @@
 - (void) executeJavaScriptFromWebPageDiv{
     
     //Fill and send all forms
-    for (int index=actualPage; index<[invoicePagesArray count]; index++){
-        BWRInvoiceTicketPage *invoicePage = [invoicePagesArray objectAtIndex:index];
-        NSString *javascript = [self createJavaScriptStringWithRules:invoicePage.rules];
-        [self performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:javascript waitUntilDone:YES];
-        
-        [NSThread sleepForTimeInterval:3];
-        actualPage++;
-    }
+    //if(!loadError){
+        for (int index=actualPage; index<[invoicePagesArray count]; index++){
+            BWRInvoiceTicketPage *invoicePage = [invoicePagesArray objectAtIndex:index];
+            NSString *javascript = [self createJavaScriptStringWithRules:invoicePage.rules];
+            //[self performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:javascript waitUntilDone:YES];
+            [self stringByEvaluatingJavaScriptFromString:javascript];
+            [NSThread sleepForTimeInterval:3];
+            actualPage++;
+        }
+    //}
     
     //Finish invoicing
-    [self goToInvoiceHistory];
+    //Update invoice with new status
+    NSString *status = @"Facturada";
+    /*if(loadError){
+        status = @"Pendiente";
+    }*/
+    [completeInvoice addCompleteInvoiceWithStatus:status];
+    NSLog(@"Se agregó la factura------------------------------------------");
+    //[self goToInvoiceHistory];
     
 }
 
@@ -117,7 +143,17 @@
     for(BWRTicketViewElement *viewElement in invoicePageRules){
         if ([viewElement.formFieldType isEqualToString:@"submit"]) {
             [javascript appendFormat:@"document.getElementById('%@').click();\n", viewElement.formField];
-        }else{
+        }
+        
+        else if([viewElement.formFieldType isEqualToString:@"js_code"]){
+            [javascript appendString:viewElement.formField];
+        }
+        
+        else if([viewElement.formFieldType isEqualToString:@"captcha"]){
+            
+        }
+        
+        else{
             [javascript appendFormat:@"document.getElementById('%@').value = '%@';\n", viewElement.formField, viewElement.selectionValue];
         }
     }
@@ -130,14 +166,15 @@
 -(void)goToInvoiceHistory{
     
     //Update invoice with new status
-    NSString *status = @"Facturada";
+    /*NSString *status = @"Facturada";
     if(loadError){
-        status = @"Error";
-    }
-    [completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:status];
+        status = @"Pendiente";
+    }*/
     
-    //Go to history
-    [self performSegueWithIdentifier:@"InvoiceCompleteSegue" sender:self];
+    //if([completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:status]){
+        //Go to history
+        [self performSegueWithIdentifier:@"InvoiceCompleteSegue" sender:self];
+    //}
     
 }
 

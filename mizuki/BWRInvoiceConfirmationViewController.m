@@ -105,7 +105,7 @@
     //Company TextField
     empresaTextField = [[UITextField alloc] initWithFrame:CGRectMake(padding, depth+=height+10, width, height)];
     empresaTextField.borderStyle = UITextBorderStyleRoundedRect;
-    empresaTextField.placeholder = @"Empresa";
+    empresaTextField.placeholder = NSLocalizedString(@"Empresa",nil);
     empresaTextField.delegate = self;
    
     //Autocomplete table
@@ -153,11 +153,11 @@
     [self.view addSubview:ticketDataPageControl];
     
     //Send Button
-    UIBarButtonItem *bt_enviar = [[UIBarButtonItem alloc] initWithTitle:@"Enviar" style:UIBarButtonItemStylePlain target:self action:@selector(goToWebview)];
+    UIBarButtonItem *bt_enviar = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Enviar",nil) style:UIBarButtonItemStylePlain target:self action:@selector(goToWebview)];
     self.navigationItem.rightBarButtonItem = bt_enviar;
     
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    self.title = @"Confirmación de factura";
+    self.title = NSLocalizedString(@"Confirmación de factura",nil);
     
     //If resending invoice
     switch (invoiceAction) {
@@ -203,7 +203,7 @@
     //Tesseract result
     invoiceLabel.editable = NO;
     invoiceLabel.scrollEnabled = YES;
-    invoiceLabel.text = @"Procesando";
+    invoiceLabel.text = NSLocalizedString(@"Procesando",nil);
 }
 
 -(void)resendInvoice{
@@ -225,7 +225,7 @@
 #pragma mark - ConfirmationViewControllerSources
 
 - (void) processRecognition{
-    while ([invoiceLabel.text isEqualToString:@"Procesando"]);
+    while ([invoiceLabel.text isEqualToString:NSLocalizedString(@"Procesando",nil)]);
     
     [self performSelectorOnMainThread:@selector(invoiceDataRecognition) withObject:nil waitUntilDone:YES];
 }
@@ -293,15 +293,33 @@
     
     //Get id company
     NSArray *stringCompanyArray = [BWRWebConnection companyListWithSubstring:completeInvoice.company];
-    NSDictionary *companyDictionary = [stringCompanyArray objectAtIndex:0];
-    int idCompany = [[companyDictionary valueForKey:@"id"] integerValue];
+    int idCompany;
+    if(stringCompanyArray!=nil){
+        //Get data company
+        NSDictionary *companyDictionary = [stringCompanyArray objectAtIndex:0];
+        if(companyDictionary!=nil){
+            idCompany = [[companyDictionary valueForKey:@"id"] integerValue];
+        }
+        //If can't get company data
+        else{
+            NSLog(@"No se pudo obtener diccionario de datos de la comañia");
+            return;
+        }
+    }
+    //If can't get company identifier
+    else{
+        NSLog(@"No se pudo obtener el id de la compañia");
+        return;
+    }
+    
     
     //Get url, pagesArray and ticketViewElementsArray
     [self createTicketViewElemetsWithId:idCompany];
     
-    //Change actual rfc and invoice Label
+    //Change actual rfc, invoice Label and company
     actualRFC = completeInvoice.rfc;
     invoiceLabel.text = completeInvoice.resultOCR;
+    empresaTextField.text = completeInvoice.company;
     
     //
     for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
@@ -374,7 +392,7 @@
     //RFC table
     if(tableView == rfcTableView){
 
-        rfcActionSheet = [[UIActionSheet alloc] initWithTitle:@"Seleccionar RFC" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+        rfcActionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Seleccionar RFC",nil) delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
         
         for (int index=0; index<[fetchedResults count]; index++) {
             BWRRFCInfo *rfcInfo = [fetchedResults objectAtIndex:index];
@@ -424,39 +442,42 @@
     
     //Get company dictionary
     NSDictionary *companyDataDictionary = [BWRWebConnection viewElementsWithCompany:identificador];
-    NSArray *rulesBlockArray = [companyDataDictionary valueForKey:@"rules_block"];
-    _tiendaURL = [companyDataDictionary valueForKey:@"url"];
-    
-    _invoicePagesArray = [[NSMutableArray alloc] init];
-    ticketScrollView.hidden=NO;
-    
-    //Recorrer rules_block
-    for(NSDictionary *pageDictionary in rulesBlockArray){
+    if(companyDataDictionary!=nil){
         
-        BWRInvoiceTicketPage *invoicePage = [[BWRInvoiceTicketPage alloc] initWithData:[pageDictionary valueForKey:@"name"] pageNumber:[pageDictionary valueForKey:@"page_num"]];
-        NSArray *rulesArray = [pageDictionary valueForKey:@"rules"];
+        NSArray *rulesBlockArray = [companyDataDictionary valueForKey:@"rules_block"];
+        _tiendaURL = [companyDataDictionary valueForKey:@"url"];
+        
+        _invoicePagesArray = [[NSMutableArray alloc] init];
+        ticketScrollView.hidden=NO;
+        
+        //Recorrer rules_block
+        for(NSDictionary *pageDictionary in rulesBlockArray){
             
-        //Recorrer rules
-        for(NSDictionary *ticketElement in rulesArray){
-            BWRTicketViewElement *ticketViewElement = [[BWRTicketViewElement alloc] initWithDictionary:ticketElement];
+            BWRInvoiceTicketPage *invoicePage = [[BWRInvoiceTicketPage alloc] initWithData:[pageDictionary valueForKey:@"name"] pageNumber:[pageDictionary valueForKey:@"page_num"]];
+            NSArray *rulesArray = [pageDictionary valueForKey:@"rules"];
             
-            //User data
-            if([ticketViewElement.dataSource isEqualToString:@"user_info"]){
-                [ticketViewElementsArray addObject:ticketViewElement];
+            //Recorrer rules
+            for(NSDictionary *ticketElement in rulesArray){
+                BWRTicketViewElement *ticketViewElement = [[BWRTicketViewElement alloc] initWithDictionary:ticketElement];
                 
-            //Ticket data
-            }else if([ticketViewElement.dataSource isEqualToString:@"ticket_info"]){
-                [ticketViewElement createViewWithRect:padding y:depth width:width height:heigth/**[ticketViewElement.valueCampoTicket count]*/ delegate:self];
-                [ticketViewElementsArray addObject:ticketViewElement];
-                [ticketScrollView addSubview:ticketViewElement.viewTicketElement];
-                depth = depth + (heigth /** [ticketViewElement.valueCampoTicket count]*/) +10;
+                //User data
+                if([ticketViewElement.dataSource isEqualToString:@"user_info"]){
+                    [ticketViewElementsArray addObject:ticketViewElement];
+                    
+                    //Ticket data
+                }else if([ticketViewElement.dataSource isEqualToString:@"ticket_info"]){
+                    [ticketViewElement createViewWithRect:padding y:depth width:width height:heigth/**[ticketViewElement.valueCampoTicket count]*/ delegate:self];
+                    [ticketViewElementsArray addObject:ticketViewElement];
+                    [ticketScrollView addSubview:ticketViewElement.viewTicketElement];
+                    depth = depth + (heigth /** [ticketViewElement.valueCampoTicket count]*/) +10;
+                }
+                
+                [invoicePage.rules addObject:ticketViewElement];
+                
             }
-            
-            [invoicePage.rules addObject:ticketViewElement];
+            [_invoicePagesArray addObject:invoicePage];
             
         }
-        [_invoicePagesArray addObject:invoicePage];
-        
     }
     
 }
@@ -585,10 +606,15 @@
 #pragma mark - Navegation
 - (void)goToWebview{
     
-    if([self validationInvoiceData] && !([invoiceLabel.text isEqualToString:@"Procesando"])){
+    if([self validationInvoiceData] && !([invoiceLabel.text isEqualToString:NSLocalizedString(@"Procesando",nil)])){
+        
+        //If resend invoice
+        if(invoiceAction==1){
+            [completeInvoice delateCompleteInvoice];
+        }
         
         //If don't resend invoice
-        if(invoiceAction == 0 || invoiceAction == 2){
+        //if(invoiceAction == 0 || invoiceAction == 2){
             
             //Put TextField text in selectionValue
             for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
@@ -604,7 +630,7 @@
             if(completeInvoice==nil){
                 return;
             }
-        }
+        //}
         
         //Put rfc user_info fields
         [self updateViewsWhitSelectedRFC];
@@ -638,13 +664,14 @@
     BWRCompleteInvoice *newCompleteInvoice=[[BWRCompleteInvoice alloc] initWithData:viewsArray rfc:actualRFC ticketImage:invoiceImage stringOCR:invoiceLabel.text company:empresaTextField.text];
     
     //Add invoice to data base
-    if([newCompleteInvoice addCompleteInvoiceWithStatus:@"Pendiente"]){
+    /*if([newCompleteInvoice addCompleteInvoiceWithStatus:@"Pendiente"]){
         NSLog(@"SE REALIZO EL ADD CORRECTAMENTE: %@", completeInvoice.idInvoice);
         return newCompleteInvoice;
     }else{
         NSLog(@"ERROR EN EL ADD");
         return nil;
-    }
+    }*/
+    return newCompleteInvoice;
 }
 
 @end

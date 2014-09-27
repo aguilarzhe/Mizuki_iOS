@@ -11,6 +11,7 @@
 #import "BWREditInvoiceViewController.h"
 #import "BWRMyAccountViewController.h"
 #import "BWRCompleteInvoice.h"
+#import "BWRMessagesToUser.h"
 #import "AppDelegate.h"
 
 @interface BWRInvoiceHistoryViewController ()
@@ -39,6 +40,7 @@ static BWRCompleteInvoice *actualInvoice;
 @synthesize pendingInvoicesArray;
 @synthesize actualInvoicesArray;
 @synthesize invoiceSegmentedControl;
+@synthesize myImagePickerController;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -46,28 +48,29 @@ static BWRCompleteInvoice *actualInvoice;
     //Load invoices from core data
     allInvoicesArray = [[NSMutableArray alloc] init];
     pendingInvoicesArray = [[NSMutableArray alloc] init];
-    [self loadInvoicesFromCoreData];
+    //[self loadInvoicesFromCoreData];
+    [self performSelectorInBackground:@selector(loadInvoices) withObject:nil];
     actualInvoicesArray = allInvoicesArray;
     
     //Measures
     NSInteger widthScreen = self.view.frame.size.width;
     NSInteger heightScreen = self.view.frame.size.height;
     
+    //Segmented control
+    invoiceSegmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:NSLocalizedString(@"Todas", nil), NSLocalizedString(@"Pendientes", nil), nil]];
+    invoiceSegmentedControl.frame = CGRectMake(10, 75, widthScreen-20, 30);
+    invoiceSegmentedControl.selectedSegmentIndex = 0;
+    invoiceSegmentedControl.tintColor = [UIColor blueColor];
+    [invoiceSegmentedControl addTarget:self action:@selector(valueChanged:) forControlEvents: UIControlEventValueChanged];
+    [self.view addSubview:invoiceSegmentedControl];
+    
     //Invoice Table View
-    invoiceTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, 55, widthScreen, heightScreen) style:UITableViewStylePlain];
+    invoiceTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, 115, widthScreen, heightScreen-115) style:UITableViewStylePlain];
     invoiceTableView.delegate = self;
     invoiceTableView.dataSource = self;
     invoiceTableView.scrollEnabled = YES;
     invoiceTableView.hidden = NO;
     [self.view addSubview:invoiceTableView];
-    
-    //Segmented control
-    invoiceSegmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Todas", @"Pendientes", nil]];
-    invoiceSegmentedControl.frame = CGRectMake(10, 70, widthScreen-20, 30);
-    invoiceSegmentedControl.selectedSegmentIndex = 0;
-    invoiceSegmentedControl.tintColor = [UIColor blueColor];
-    [invoiceSegmentedControl addTarget:self action:@selector(valueChanged:) forControlEvents: UIControlEventValueChanged];
-    [self.view addSubview:invoiceSegmentedControl];
 
     //Navegation buttons
     UIBarButtonItem *imageInvoiceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showImageInvoceActionSheet:)];
@@ -82,12 +85,15 @@ static BWRCompleteInvoice *actualInvoice;
     
     self.title = NSLocalizedString(@"Mis facturas", nil);
     
-    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [self performSelectorInBackground:@selector(loadInvoices) withObject:nil];
 }
 
 #pragma mark - BWRInvoiceHistorySources
@@ -111,6 +117,20 @@ static BWRCompleteInvoice *actualInvoice;
         UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:myAccountViewController];
         [popoverController presentPopoverFromBarButtonItem:settingsButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     }
+}
+
+-(void)loadInvoices{
+    while (1){
+        [self performSelectorOnMainThread:@selector(loadNewInvoices) withObject:nil waitUntilDone:YES];
+        [NSThread sleepForTimeInterval:10];
+    }
+}
+
+-(void)loadNewInvoices{
+    [pendingInvoicesArray removeAllObjects];
+    [allInvoicesArray removeAllObjects];
+    [self loadInvoicesFromCoreData];
+    [invoiceTableView reloadData];
 }
 
 /** Get the invoices in array according to type.
@@ -146,6 +166,7 @@ static BWRCompleteInvoice *actualInvoice;
         
     } else {
         NSLog(@"Error al recuperar.");
+        [BWRMessagesToUser Error:error code:1 message:@"Error al recuperar facturas"];
     }
 }
 
@@ -249,8 +270,10 @@ static BWRCompleteInvoice *actualInvoice;
         case 1:
             [self captureInvoiceFromPhotoLibrary];
             break;
-        default:
+        case 2:
             [self captureInvoiceFromData];
+            break;
+        default:
             break;
     }
 }
