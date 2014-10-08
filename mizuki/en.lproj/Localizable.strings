@@ -118,6 +118,10 @@
 "Error al recuperar" = "Error to recover";
 "Error en el servidor" = "Error in server";
 "Error desconocido" = "Uknown error";
+"Error de facturación" = "Invoicing error";
+"La facturación tuvo un error. ¿Desea verlo?" = "Invoicing has an error. Would you like see it?";
+"Después" = "More later";
+"Ver" = "See";
 
 //BWRRFCInfoController
 "Error al agregar rfc" = "Error to add rfc";

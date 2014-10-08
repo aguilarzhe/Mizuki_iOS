@@ -36,13 +36,13 @@
     [self captureInvoiceFromCamera];
 }
 
--(void)viewDidAppear:(BOOL)animated {
+/*-(void)viewDidAppear:(BOOL)animated {
     //[self.navigationController pushViewController:self animated:YES];
     //[self viewDidLoad];
     [self.navigationController popToRootViewControllerAnimated:YES];
     self.navigationController.navigationBarHidden = NO;
     [self captureInvoiceFromCamera];
-}
+}*/
 
 - (void)didReceiveMemoryWarning
 {
@@ -74,23 +74,21 @@
     }
 }
 
+#pragma mark - Navigation
 -(void)confirmInvoice{
-    NSLog(@"NavegationController: %@", self.navigationController);
-    [self.navigationController performSegueWithIdentifier:@"invoiceCamaraConfirmationSegue" sender:self];
-    /*BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [[BWRInvoiceConfirmationViewController alloc] init];
-    confirmInvoiceViewController.invoiceAction = 0;
-    confirmInvoiceViewController.invoiceImage = invoiceImage;
-    [self.navigationController pushViewController:confirmInvoiceViewController animated:YES];*/
-}
-
-#pragma mark - Navegation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if([[segue identifier] isEqualToString:@"invoiceCamaraConfirmationSegue"]){
-        BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [segue destinationViewController];
-        confirmInvoiceViewController.invoiceAction = 0;
-        confirmInvoiceViewController.invoiceImage = invoiceImage;
-    }
+    NSLog(@"NavigationController: %@", self.navigationController);
+    
+    //Get view controller from storyboard
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+    UIViewController * vc = [storyboard instantiateViewControllerWithIdentifier:@"BWRInvoiceConfirmation"];
+    
+    //Prepare for segue
+    ((BWRInvoiceConfirmationViewController *)vc).invoiceAction = 0;
+    ((BWRInvoiceConfirmationViewController *)vc).invoiceImage = invoiceImage;
+    
+    //Show next view controller
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:navigationController animated:YES completion:nil];
 }
 
 @end

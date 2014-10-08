@@ -9,8 +9,8 @@
 #import "AppDelegate.h"
 #import <GooglePlus/GooglePlus.h>
 #import "BWRGoCamaraViewController.h"
-#import "BWRInvoiceHistoryViewController.h"
-#import "BWRInvoiceConfirmationViewController.h"
+//#import "BWRMessagesToUser.h"
+#import "WebInvoiceViewController.h"
 
 @interface AppDelegate ()
 
@@ -26,7 +26,19 @@
 @synthesize token;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    //Notification permissions
+    if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)]){
+        
+        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound categories:nil]];
+    }
+    
+    // Handle launching from a notification
+    UILocalNotification *localNotif =
+    [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+    if (localNotif) {
+        NSLog(@"Recieved Notification %@",localNotif);
+    }
     
     return YES;
 }
@@ -48,10 +60,12 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     if([token isEqualToString:@"9204265553"]){
-        BWRGoCamaraViewController *goCamara = [[BWRGoCamaraViewController alloc]init];
-        //UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:goCamara];
-        //[self.window addSubview:navigationController.view];
-        [[[[UIApplication sharedApplication] delegate] window] setRootViewController:goCamara];
+        
+        NSString * storyboardName = @"Main";
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle: nil];
+        UIViewController * vc = [storyboard instantiateViewControllerWithIdentifier:@"BWRGoCamara"];
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:vc];
+        [_window.rootViewController presentViewController:navigationController animated:YES completion:nil];
     }
 }
 
@@ -82,17 +96,6 @@
     //Go to camara
     NSDictionary *queryDict = [self parseQueryToDictionary:[url query]];
     if([[queryDict valueForKey:@"token"] isEqualToString:@"9204265553"]){
-        /*BWRGoCamaraViewController *goCamara = [[BWRGoCamaraViewController alloc]init];
-        //[[[[UIApplication sharedApplication] delegate] window] setRootViewController:goCamara];
-        BWRInvoiceConfirmationViewController *invoiceConf = [[BWRInvoiceConfirmationViewController alloc] init];
-        //UITabBarController *tabVC = [[UITabBarController alloc] init];
-        //tabVC.viewControllers = @[goCamara, invoiceConf];
-        //self.window.rootViewController = tabVC;
-        //[[[[UIApplication sharedApplication] delegate] window] setRootViewController:invoiceHistory];
-        
-        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:goCamara];
-        [self.window addSubview:navigationController.view];
-        self.window.rootViewController = goCamara;*/
         token = [queryDict valueForKey:@"token"];
     }
     
@@ -101,6 +104,26 @@
                          annotation:annotation];
 }
 
+#pragma mark - Notification delegate
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notif {
+    // Handle the notificaton when the app is running
+    NSLog(@"Recieved Notification %@",notif);
+    
+    //If aplication is active, show alert
+    if ([application applicationState] == UIApplicationStateActive) {
+        //BWRMessagesToUser *userMessage = [[BWRMessagesToUser alloc] init];
+        //[userMessage alertNotification];
+    }
+}
+
+// will be called when in foreground
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    // get the necessary information out of the dictionary
+    // (the data you sent with your push message)
+    // and load your data
+    NSLog(@"CLIIIIIIICK EN NOTIFICACION *******************");
+}
 
 #pragma mark - Core Data stack
 

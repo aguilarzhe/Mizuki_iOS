@@ -14,6 +14,7 @@
 #import "AppDelegate.h"
 #import "Models/BWRRFCInfo.h"
 
+
 @interface BWRMyAccountViewController () <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, UIActionSheetDelegate>
 @property UIActionSheet *rfcActionSheet;
 @property UITableView *rfcTableView;
@@ -266,6 +267,7 @@
     }else{
         BWRInvoiceDataViewController *createInvoiceData = [segue destinationViewController];
         [createInvoiceData initWithDefault:NSLocalizedString(@"Datos de Facturación",nil)];
+        //[BWRSegue showInvoiceDataViewController:@"Datos de Facturación"];
     }
 }
 

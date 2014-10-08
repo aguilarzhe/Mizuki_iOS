@@ -112,6 +112,8 @@
 
 -(BOOL)validateFieldValueWithTicketMask{
     
+    [self editValueFieldAccordingToTicketMask];
+    
     NSError *error = NULL;
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:ticketMask options:NSRegularExpressionCaseInsensitive error:&error];
     NSTextCheckingResult *match = [regex firstMatchInString:((UITextField *)viewTicketElement).text  options:0 range:NSMakeRange(0, [((UITextField *)viewTicketElement).text length])];
@@ -123,6 +125,29 @@
         [BWRMessagesToUser Alert:@"Datos no válidos" message:[NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Error en el campo: ",nil), ticketField]];
         return FALSE;
     }
+}
+
+-(void)editValueFieldAccordingToTicketMask{
+    
+    NSCharacterSet *invalidChars = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890[]{},?:* "];
+    
+    NSArray *componentsMask = [ticketMask componentsSeparatedByCharactersInSet:invalidChars];
+    NSArray *componentsRegex = [ticketSearchRegex componentsSeparatedByCharactersInSet:invalidChars];
+    
+    //Depuring
+    NSString *resultMask = [componentsMask componentsJoinedByString:@""];
+    NSString *resultRegex = [componentsRegex componentsJoinedByString:@""];
+    NSLog(@"resultado: %@  regex: %@", resultMask, resultRegex);
+    
+    NSString *rightString = ((UITextField *)viewTicketElement).text;
+    for(int index=0; index<resultMask.length; index++){
+        if([resultMask characterAtIndex:index] != [resultRegex characterAtIndex:index]){
+            rightString = [rightString stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%c", [resultRegex characterAtIndex:index]] withString:[NSString stringWithFormat:@"%c", [resultMask characterAtIndex:index]]];
+            NSLog(@"mask: %c regex:%c", [resultMask characterAtIndex:index], [resultRegex characterAtIndex:index]);
+        }
+    }
+    NSLog(@"rightString: %@", rightString);
+    ((UITextField *)viewTicketElement).text = rightString;
 }
 
 @end

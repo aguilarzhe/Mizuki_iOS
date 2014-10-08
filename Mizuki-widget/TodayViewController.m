@@ -36,7 +36,7 @@
     toolbar.frame = CGRectMake(0, 10, self.view.frame.size.width-40, 40);
     
     //Button intem - invoices
-    /*UIBarButtonItem *invoicesButton = [[UIBarButtonItem alloc] initWithTitle:@"Mis facturas" style:UIBarButtonItemStylePlain target:self action:@selector(invoiceWithHistory)];
+    UIBarButtonItem *invoicesButton = [[UIBarButtonItem alloc] initWithTitle:@"Mis facturas" style:UIBarButtonItemStylePlain target:self action:@selector(invoiceWithHistory)];
     //Button item - galery
     UIBarButtonItem *galeryButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(invoiceWithGalery)];
     //Button item - data
@@ -49,7 +49,7 @@
     toolbar.items = @[flexibleItem, camaraButton];
     toolbar.barTintColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
     
-    [self.view addSubview:toolbar];*/
+    [self.view addSubview:toolbar];
 }
 
 - (void)didReceiveMemoryWarning {

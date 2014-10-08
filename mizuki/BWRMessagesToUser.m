@@ -12,11 +12,15 @@
 
 @interface BWRMessagesToUser ()
 
+@property UIAlertView *alertView;
+
 @end
 
 static bool confirmation;
 
 @implementation BWRMessagesToUser
+
+@synthesize alertView;
 
 +(void)Alert: (NSString *)title message:(NSString *)message{
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(title,nil) message:NSLocalizedString(message,nil) delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
@@ -49,23 +53,24 @@ static bool confirmation;
     NSLog(@"%@ %@ %@", message, error, [error localizedDescription]);
 }
 
-+(BOOL)Confirmation: (NSString *)question{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Confirmacion",nil) message:NSLocalizedString(question,nil) delegate:self cancelButtonTitle:@"No" otherButtonTitles:NSLocalizedString(@"Si",nil), nil];
-    [alert show];
+-(BOOL)Confirmation: (NSString *)question{
+    alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Confirmacion",nil) message:NSLocalizedString(question,nil) delegate:self cancelButtonTitle:@"No" otherButtonTitles:NSLocalizedString(@"Si",nil), nil];
+    [alertView show];
     
     return confirmation;
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    switch(buttonIndex) {
-        case 0: //"No" pressed
-            confirmation = NO;
-            break;
-        case 1: //"Yes" pressed
-            confirmation = YES;
-            break;
-    }
++ (void) Notification: (NSString *)message{
+    //[[NSNotificationCenter defaultCenter] postNotificationName:@"MyNotification" object:nil];
+    UILocalNotification* localNotification = [[UILocalNotification alloc] init];
+    localNotification.fireDate = [NSDate date];
+    localNotification.alertBody = message;
+    localNotification.timeZone = [NSTimeZone defaultTimeZone];
+    localNotification.alertAction = @"Show me the item";
+    localNotification.soundName = UILocalNotificationDefaultSoundName;
+    localNotification.applicationIconBadgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
+    
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification]; //presentLocalNotificationNow:localNotification];
 }
 
 @end

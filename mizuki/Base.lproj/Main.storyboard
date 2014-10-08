@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6154.17" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="aTW-i5-dLF">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="aTW-i5-dLF">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6153.11"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <scenes>
         <!--Initial Configuration Data User View Controller-->
@@ -13,7 +13,7 @@
                         <viewControllerLayoutGuide type="bottom" id="n30-Xz-mIy"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Qs0-VF-yXZ">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -36,7 +36,7 @@
                         <viewControllerLayoutGuide type="bottom" id="AhN-kG-qWx"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="vr4-na-1EZ">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -52,13 +52,13 @@
         <!--Invoice History View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="BWRInvoiceHistoryViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="BWRInvoiceHistory" id="BYZ-38-t0r" customClass="BWRInvoiceHistoryViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -83,7 +83,7 @@
                         <viewControllerLayoutGuide type="bottom" id="kYD-6z-hpp"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="rQ3-Qv-N6N">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -99,13 +99,13 @@
         <!--Go Camara View Controller-->
         <scene sceneID="6vj-To-rA5">
             <objects>
-                <viewController id="kV1-wc-t4b" customClass="BWRGoCamaraViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="BWRGoCamara" id="kV1-wc-t4b" customClass="BWRGoCamaraViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="vFe-HX-QFO"/>
                         <viewControllerLayoutGuide type="bottom" id="Qyx-k8-2ag"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Vu5-C0-Lkh">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -137,13 +137,13 @@
         <!--Invoice Confirmation View Controller-->
         <scene sceneID="tiu-BV-KrH">
             <objects>
-                <viewController id="rL8-FQ-150" customClass="BWRInvoiceConfirmationViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="BWRInvoiceConfirmation" id="rL8-FQ-150" customClass="BWRInvoiceConfirmationViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="6T4-g0-Vx7"/>
                         <viewControllerLayoutGuide type="bottom" id="Pf1-He-bkx"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="thc-ZW-13w">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -158,13 +158,13 @@
         <!--My Account View Controller-->
         <scene sceneID="nDm-xd-fQ1">
             <objects>
-                <viewController id="Yjm-3e-ggX" customClass="BWRMyAccountViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="BWRMyAccount" id="Yjm-3e-ggX" customClass="BWRMyAccountViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="eP2-Bw-8wW"/>
                         <viewControllerLayoutGuide type="bottom" id="DJA-Zs-xkp"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kOR-Up-3kl">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -181,13 +181,13 @@
         <!--Web Invoice View Controller-->
         <scene sceneID="lrb-rr-Lpg">
             <objects>
-                <viewController id="SsD-YA-AO4" customClass="WebInvoiceViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WebInvoice" id="SsD-YA-AO4" customClass="WebInvoiceViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="erV-YE-Dxi"/>
                         <viewControllerLayoutGuide type="bottom" id="L5X-vz-oCt"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="bqG-5I-Alf">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -201,8 +201,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="q3W-YU-4gn"/>
-        <segue reference="GoA-VB-Kl5"/>
-        <segue reference="v4g-2V-dkS"/>
+        <segue reference="fus-tq-EbD"/>
+        <segue reference="eBy-Ij-oQw"/>
+        <segue reference="mRf-qK-f6T"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -84,7 +84,7 @@ static BWRCompleteInvoice *actualInvoice;
     self.toolbarItems = @[flexibleItem, settingsButton];
     
     self.title = NSLocalizedString(@"Mis facturas", nil);
-    
+    self.view.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)didReceiveMemoryWarning {

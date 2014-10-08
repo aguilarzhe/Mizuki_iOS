@@ -9,23 +9,23 @@
 #import "WebInvoiceViewController.h"
 #import "BWRTicketViewElement.h"
 #import "BWRInvoiceTicketPage.h"
+#import "BWRMessagesToUser.h"
 #import "BWRWebConnection.h"
 
 @interface WebInvoiceViewController ()
 
-//@property UIWebView *invoiceWebView;
 @property NSURLResponse *theResponse;
 @property NSMutableData *dataRecive;
 @property BOOL loadError;
 
 @end
 
+static BOOL startInvoicing = FALSE;
 static UIWebView *invoiceWebView;
 
 @implementation WebInvoiceViewController
 
 @synthesize invoicePagesArray;
-//@synthesize invoiceWebView;
 @synthesize companyURL;
 @synthesize actualPage;
 @synthesize theResponse;
@@ -49,14 +49,14 @@ static UIWebView *invoiceWebView;
         NSURLRequest *urlRequest = [NSURLRequest requestWithURL:companyURL];
         [invoiceWebView loadRequest:urlRequest];
     }
-    //If there is't conection or doesn't correspond
+    //If no conection or doesn't correspond
     else{
-        if([completeInvoice addCompleteInvoiceWithStatus:@"Pendiente"]){
-            NSLog(@"SE REALIZO EL ADD CORRECTAMENTE: %@", completeInvoice.idInvoice);
-        }else{
-            NSLog(@"ERROR EN EL ADD");
-        }
-        //[completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:@"Pendiente"];
+        loadError = TRUE;
+        //Show the webview
+        [self alertNotification];
+        [BWRMessagesToUser Notification:@"Error de facturación"];
+        //Add invoice
+        [self validateInvoiceErrorWithAdd:TRUE];
     }
     
     [self goToInvoiceHistory];
@@ -72,18 +72,24 @@ static UIWebView *invoiceWebView;
 - (void) webViewDidFinishLoad:(UIWebView *)webView
 {
     // TODO: Change performSelectorInBackground to dispatch_async and dispatch_queue_t
-    //[self performSelectorInBackground:@selector(executeJavaScriptFromWebPageDiv) withObject:nil];
-    [self performSelectorInBackground:@selector(fillPagesAccordingToService) withObject:nil];
+    if(actualPage<[invoicePagesArray count] && !startInvoicing){
+        [self performSelectorInBackground:@selector(fillPagesInBackground) withObject:nil];
+        startInvoicing = TRUE;
+    }
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
  navigationType:(UIWebViewNavigationType)navigationType {
     
+    //If one page more (error) 
     if(actualPage==[invoicePagesArray count]){
         NSLog(@"Ya son las paginas +++++++++++++++++++++++++ %d",[invoicePagesArray count]);
-        //loadError = TRUE;
-        [completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:@"Pendiente"];
-        return FALSE;
+        loadError = TRUE;
+        //Show webview
+        [self alertNotification];
+        [BWRMessagesToUser Notification:@"Error de facturación"];
+        //Add invoice
+        [self validateInvoiceErrorWithAdd:FALSE];
     }
     return TRUE;
 }
@@ -91,47 +97,95 @@ static UIWebView *invoiceWebView;
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
     NSLog(@"ERROR: %@", error);
     loadError = TRUE;
-    [completeInvoice addCompleteInvoiceWithStatus:@"Pendiente"];
+    //Show webview
+    [self alertNotification];
+    [BWRMessagesToUser Notification:@"Error de facturación"];
 }
 
 #pragma mark - WebInvoiceViewConetroller Sources
--(void) fillPagesAccordingToService {
+-(void) fillPagesAccordingToService{
     
-    [self performSelectorOnMainThread:@selector(executeJavaScriptFromWebPageDiv) withObject:nil waitUntilDone:YES];
+    [self performSelectorOnMainThread:@selector(executeJavaScriptFromWebPage) withObject:nil waitUntilDone:YES];
 }
 
-- (void) executeJavaScriptFromWebPageDiv{
+-(void) fillPagesInBackground {
     
-    //Fill and send all forms
-    //if(!loadError){
-        for (int index=actualPage; index<[invoicePagesArray count]; index++){
-            BWRInvoiceTicketPage *invoicePage = [invoicePagesArray objectAtIndex:index];
-            NSString *javascript = [self createJavaScriptStringWithRules:invoicePage.rules];
-            //[self performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:javascript waitUntilDone:YES];
-            [self stringByEvaluatingJavaScriptFromString:javascript];
-            [NSThread sleepForTimeInterval:3];
-            actualPage++;
-        }
-    //}
+    UIBackgroundTaskIdentifier background_task;
+    UIApplication *application = [UIApplication sharedApplication];
     
-    //Finish invoicing
-    //Update invoice with new status
+    //Init background task
+    background_task = [application beginBackgroundTaskWithExpirationHandler:^ {
+        
+        //Clean up code. Tell the system that we are done.
+        [application endBackgroundTask: background_task];
+    }];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        //### background task starts
+        NSLog(@"Running in the background\n");
+        [self executeJavaScriptFromWebPage];
+        //#### background task ends
+        
+        //Clean up code. Tell the system that we are done.
+        [application endBackgroundTask: background_task];
+    });
+        
+}
+
+- (void) validateInvoiceErrorWithAdd: (BOOL)add{
+    
+    //Get state
     NSString *status = @"Facturada";
-    /*if(loadError){
+    //If there is an error
+    if(loadError){
         status = @"Pendiente";
-    }*/
-    [completeInvoice addCompleteInvoiceWithStatus:status];
-    NSLog(@"Se agregó la factura------------------------------------------");
-    //[self goToInvoiceHistory];
+    }
+    
+    //Add or update invoice
+    if(add){
+        [completeInvoice addCompleteInvoiceWithStatus:status];
+    }else{
+        [completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:status];
+    }
+    NSLog(@"Se agregó la factura--------------status: %@----------------------------", status);
+    startInvoicing = FALSE;
+    
+}
+
+#pragma  mark - JavaScript
+- (void) executeJavaScriptFromWebPage{
+    
+   //Fill and send all forms
+    for (int index=actualPage; index<[invoicePagesArray count]; index++){
+        BWRInvoiceTicketPage *invoicePage = [invoicePagesArray objectAtIndex:index];
+        NSString *javascript = [self createJavaScriptStringWithRules:invoicePage.rules];
+        [NSThread sleepForTimeInterval:6];
+        //[self stringByEvaluatingJavaScriptFromString:javascript];
+        [self performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:javascript waitUntilDone:YES];
+            
+        if(loadError){
+            break;
+        }
+        actualPage++;
+    }
+        
+    //Finish invoicing
+    [self validateInvoiceErrorWithAdd:TRUE];
+    
     
 }
 
 -(void)stringByEvaluatingJavaScriptFromString:(NSString *)javascript
 {
-    if([invoiceWebView stringByEvaluatingJavaScriptFromString:javascript]){
+    if([invoiceWebView stringByEvaluatingJavaScriptFromString:javascript]!=nil){
         NSLog(@"Java Script ejecutado");
     }else{
         NSLog(@"Java Script FALLO");
+        loadError = TRUE;
+        //Show webinvoice
+        [self alertNotification];
+        [BWRMessagesToUser Notification:@"Error de facturación"];
     }
     
 }
@@ -163,22 +217,47 @@ static UIWebView *invoiceWebView;
     return javascript;
 }
 
--(void)goToInvoiceHistory{
-    
-    //Update invoice with new status
-    /*NSString *status = @"Facturada";
-    if(loadError){
-        status = @"Pendiente";
-    }*/
-    
-    //if([completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:status]){
-        //Go to history
-        [self performSegueWithIdentifier:@"InvoiceCompleteSegue" sender:self];
-    //}
-    
+#pragma mark - Notification
+- (void) alertNotification{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error de facturación",nil)
+                                                        message:NSLocalizedString(@"La facturación tuvo un error. ¿Desea verlo?",nil)
+                                                       delegate:self
+                                              cancelButtonTitle:NSLocalizedString(@"Después",nil)
+                                              otherButtonTitles:NSLocalizedString(@"Ver",nil), nil];
+    [alertView show];
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+    [UIApplication sharedApplication].applicationIconBadgeNumber--; //Decrement notification badge
+    
+    //Button selection
+    switch(buttonIndex) {
+        case 0: //"More later" pressed
+            break;
+        case 1: //"See" pressed
+            [self showWebViewController];
+            break;
+    }
+}
 
+- (void) showWebViewController {
+    //History button
+    UIBarButtonItem *historyButton = [[UIBarButtonItem alloc] initWithTitle:@"History" style:UIBarButtonItemStyleDone target:self action:@selector(goToInvoiceHistory)];
+    self.navigationItem.rightBarButtonItem = historyButton;
+    
+    //Navigation
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self];
+    
+    //Set rootViewController with self
+    [[[[UIApplication sharedApplication] delegate] window] setRootViewController:navigationController];
+}
 
+#pragma mark - Navigation
+-(void)goToInvoiceHistory{
+    [self performSegueWithIdentifier:@"InvoiceCompleteSegue" sender:self];
+    
+}
 
 @end

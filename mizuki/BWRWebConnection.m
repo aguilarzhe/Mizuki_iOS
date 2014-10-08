@@ -23,7 +23,9 @@ static NSData *dataCompany;
 + (NSMutableArray *) companyListWithSubstring: (NSString *)substring{
     //Validate Connection
     if([self getConnection]){
+        //Get data from server
         NSData *dataCompany = [self downloadDataOfURL:[NSString stringWithFormat:@"http://bawaremobile.com/company?indicio=%@", substring]];
+        //Validate data
         if (dataCompany != nil)
         {
             NSMutableArray *companyList =[[NSMutableArray alloc] initWithArray:[NSJSONSerialization JSONObjectWithData:dataCompany options:0 error:NULL]];
@@ -36,8 +38,9 @@ static NSData *dataCompany;
 + (NSDictionary *) viewElementsWithCompany: (NSInteger)idCompany{
     //Validate Connection
     if([self getConnection]){
+        //Get data from server
         NSData *dataCompany = [self downloadDataOfURL:[NSString stringWithFormat:@"http://bawaremobile.com/company/%d", idCompany]];
-        
+        //Validate data
         if (dataCompany != nil)
         {
             NSDictionary *companyDataDictionary = [NSJSONSerialization JSONObjectWithData:dataCompany options:0 error:NULL];

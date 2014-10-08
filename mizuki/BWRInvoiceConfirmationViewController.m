@@ -156,6 +156,10 @@
     UIBarButtonItem *bt_enviar = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Enviar",nil) style:UIBarButtonItemStylePlain target:self action:@selector(goToWebview)];
     self.navigationItem.rightBarButtonItem = bt_enviar;
     
+    //Back button if needed
+    [self backButtonIfNeeded];
+    
+    //View features
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
     self.title = NSLocalizedString(@"Confirmación de factura",nil);
     
@@ -223,6 +227,24 @@
 }
 
 #pragma mark - ConfirmationViewControllerSources
+
+- (void) backButtonIfNeeded {
+    
+    if(self.navigationItem.backBarButtonItem == nil){
+        UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"<" style:UIBarButtonItemStyleDone target:self action:@selector(backToInvoiceHistory)];
+        //self.navigationItem.backBarButtonItem = backButton;
+        self.navigationItem.leftBarButtonItem = backButton;
+    }
+}
+
+-(void) backToInvoiceHistory{
+    //Get view controller from storyboard
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+    UIViewController * vc = [storyboard instantiateViewControllerWithIdentifier:@"BWRInvoiceHistory"];
+    //Show next view controller
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:navigationController animated:YES completion:nil];
+}
 
 - (void) processRecognition{
     while ([invoiceLabel.text isEqualToString:NSLocalizedString(@"Procesando",nil)]);

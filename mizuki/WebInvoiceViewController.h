@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "BWRCompleteInvoice.h"
 
-@interface WebInvoiceViewController : UIViewController <UIWebViewDelegate, NSURLConnectionDataDelegate>
+@interface WebInvoiceViewController : UIViewController <UIWebViewDelegate, NSURLConnectionDataDelegate, UIAlertViewDelegate>
 
 @property NSMutableArray *invoicePagesArray;
 @property NSURL *companyURL;

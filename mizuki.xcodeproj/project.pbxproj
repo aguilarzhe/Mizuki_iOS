@@ -13,8 +13,6 @@
 		2B1327F219BE5BA700D36AC0 /* com.baware.mizuki.Mizuki-widget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2B1327E419BE5BA700D36AC0 /* com.baware.mizuki.Mizuki-widget.appex */; };
 		2B182FB519B9537D00743BD7 /* BWRMessagesToUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B182FB419B9537D00743BD7 /* BWRMessagesToUser.m */; };
 		2B1BEDC219C9416B005E00EC /* BWRGoCamaraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B1BEDC119C9416B005E00EC /* BWRGoCamaraViewController.m */; };
-		2B1D89441950B38200C5A5A3 /* starbucks_liso.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2B1D89431950B38200C5A5A3 /* starbucks_liso.jpg */; };
-		2B1D89461950B3C300C5A5A3 /* starbucks_con_dobles.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2B1D89451950B3C300C5A5A3 /* starbucks_con_dobles.jpg */; };
 		2B21A4CF19B63F810070A433 /* BWRUserPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B21A4CE19B63F800070A433 /* BWRUserPreferences.m */; };
 		2B23A60319589FED0054FB8A /* OpenCV.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2B23A60219589FED0054FB8A /* OpenCV.mm */; };
 		2B2628AF1994442C00E5564B /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B2628AE1994442C00E5564B /* WebKit.framework */; };
@@ -117,8 +115,6 @@
 		2B182FB419B9537D00743BD7 /* BWRMessagesToUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRMessagesToUser.m; sourceTree = "<group>"; };
 		2B1BEDC019C94150005E00EC /* BWRGoCamaraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWRGoCamaraViewController.h; sourceTree = "<group>"; };
 		2B1BEDC119C9416B005E00EC /* BWRGoCamaraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRGoCamaraViewController.m; sourceTree = "<group>"; };
-		2B1D89431950B38200C5A5A3 /* starbucks_liso.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = starbucks_liso.jpg; sourceTree = "<group>"; };
-		2B1D89451950B3C300C5A5A3 /* starbucks_con_dobles.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = starbucks_con_dobles.jpg; sourceTree = "<group>"; };
 		2B21A4CE19B63F800070A433 /* BWRUserPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRUserPreferences.m; sourceTree = "<group>"; };
 		2B21A4D019B63FB50070A433 /* BWRUserPreferences.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BWRUserPreferences.h; sourceTree = "<group>"; };
 		2B23A60119589FD10054FB8A /* OpenCV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenCV.h; sourceTree = "<group>"; };
@@ -415,6 +411,29 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		2B15F06919DFAB6D009915BF /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				2BCEE579197DC23C00E00667 /* WebInvoiceViewController.h */,
+				2BCEE57A197DC24900E00667 /* WebInvoiceViewController.m */,
+				2BBBE1B8199FDE0400B94C1C /* BWREditInvoiceViewController.h */,
+				2BBBE1B9199FDE0400B94C1C /* BWREditInvoiceViewController.m */,
+				2F7D5CB61964E102003BBAB6 /* BWRMyAccountViewController.h */,
+				2F7D5CB41964E0EE003BBAB6 /* BWRMyAccountViewController.m */,
+				2F397D921948BF93004CC963 /* BWRInvoiceConfirmationViewController.h */,
+				2F397D901948BF30004CC963 /* BWRInvoiceConfirmationViewController.m */,
+				2B380A091965E93500A7FDFE /* BWRInvoiceDataViewController.h */,
+				2B380A0A1965E93500A7FDFE /* BWRInvoiceDataViewController.m */,
+				2B380A061965E8A300A7FDFE /* BWRInitialConfigurationDataUserViewController.h */,
+				2B380A071965E8A300A7FDFE /* BWRInitialConfigurationDataUserViewController.m */,
+				2F397D741948BD6F004CC963 /* BWRInvoiceHistoryViewController.h */,
+				2F397D751948BD6F004CC963 /* BWRInvoiceHistoryViewController.m */,
+				2B1BEDC019C94150005E00EC /* BWRGoCamaraViewController.h */,
+				2B1BEDC119C9416B005E00EC /* BWRGoCamaraViewController.m */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
 		2B23A60019589FA70054FB8A /* opencv-ios */ = {
 			isa = PBXGroup;
 			children = (
@@ -685,40 +704,23 @@
 		2F397D691948BD6F004CC963 /* mizuki */ = {
 			isa = PBXGroup;
 			children = (
-				2B1BEDC119C9416B005E00EC /* BWRGoCamaraViewController.m */,
-				2B1BEDC019C94150005E00EC /* BWRGoCamaraViewController.h */,
+				2B23A60019589FA70054FB8A /* opencv-ios */,
+				2BDB2E7F19509B0B00AD8F67 /* tesseract-ios */,
+				2BDB2F2419509B3900AD8F67 /* tessdata */,
 				2FBAEE031992FBE8004DE362 /* gpluslogin */,
 				2F3CFAC4197F71F1009428C9 /* images */,
-				2BCEE57A197DC24900E00667 /* WebInvoiceViewController.m */,
-				2BCEE579197DC23C00E00667 /* WebInvoiceViewController.h */,
-				2B23A60019589FA70054FB8A /* opencv-ios */,
-				2B1D89451950B3C300C5A5A3 /* starbucks_con_dobles.jpg */,
-				2B1D89431950B38200C5A5A3 /* starbucks_liso.jpg */,
-				2BDB2F2719509B7E00AD8F67 /* BWRProcessImage.m */,
-				2BDB2F2619509B6600AD8F67 /* BWRProcessImage.h */,
-				2BDB2F2419509B3900AD8F67 /* tessdata */,
-				2BDB2E7F19509B0B00AD8F67 /* tesseract-ios */,
-				2F397D6E1948BD6F004CC963 /* AppDelegate.h */,
-				2F397D6F1948BD6F004CC963 /* AppDelegate.m */,
-				2F397D741948BD6F004CC963 /* BWRInvoiceHistoryViewController.h */,
-				2F397D751948BD6F004CC963 /* BWRInvoiceHistoryViewController.m */,
+				2B15F06919DFAB6D009915BF /* ViewControllers */,
+				2F84BE2D196AF3F4002E4DB1 /* Models */,
 				2F397D771948BD6F004CC963 /* Main.storyboard */,
 				2F397D7A1948BD6F004CC963 /* Images.xcassets */,
 				2F397D711948BD6F004CC963 /* mizuki.xcdatamodeld */,
-				2B380A061965E8A300A7FDFE /* BWRInitialConfigurationDataUserViewController.h */,
-				2B380A071965E8A300A7FDFE /* BWRInitialConfigurationDataUserViewController.m */,
-				2B380A091965E93500A7FDFE /* BWRInvoiceDataViewController.h */,
-				2B380A0A1965E93500A7FDFE /* BWRInvoiceDataViewController.m */,
-				2F397D921948BF93004CC963 /* BWRInvoiceConfirmationViewController.h */,
-				2F397D901948BF30004CC963 /* BWRInvoiceConfirmationViewController.m */,
-				2F7D5CB41964E0EE003BBAB6 /* BWRMyAccountViewController.m */,
-				2F7D5CB61964E102003BBAB6 /* BWRMyAccountViewController.h */,
+				2F5E380E19804BBE00189A8F /* Localizable.strings */,
+				2BDB2F2719509B7E00AD8F67 /* BWRProcessImage.m */,
+				2BDB2F2619509B6600AD8F67 /* BWRProcessImage.h */,
+				2F397D6E1948BD6F004CC963 /* AppDelegate.h */,
+				2F397D6F1948BD6F004CC963 /* AppDelegate.m */,
 				2B351E6B1991CD84000D8611 /* BWRWebConnection.m */,
 				2B351E6D1991CD9A000D8611 /* BWRWebConnection.h */,
-				2F84BE2D196AF3F4002E4DB1 /* Models */,
-				2F5E380E19804BBE00189A8F /* Localizable.strings */,
-				2BBBE1B8199FDE0400B94C1C /* BWREditInvoiceViewController.h */,
-				2BBBE1B9199FDE0400B94C1C /* BWREditInvoiceViewController.m */,
 				2B21A4CE19B63F800070A433 /* BWRUserPreferences.m */,
 				2B21A4D019B63FB50070A433 /* BWRUserPreferences.h */,
 				2B182FB319B9536800743BD7 /* BWRMessagesToUser.h */,
@@ -922,10 +924,8 @@
 				2FBAEE201992FD79004DE362 /* GooglePlus.bundle in Resources */,
 				2BDB2F1E19509B0B00AD8F67 /* LICENSE in Resources */,
 				2BDB2F2519509B3900AD8F67 /* tessdata in Resources */,
-				2B1D89441950B38200C5A5A3 /* starbucks_liso.jpg in Resources */,
 				2F5E380C19804BBE00189A8F /* Localizable.strings in Resources */,
 				2F397D791948BD6F004CC963 /* Main.storyboard in Resources */,
-				2B1D89461950B3C300C5A5A3 /* starbucks_con_dobles.jpg in Resources */,
 				2F397D7B1948BD6F004CC963 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1159,7 +1159,6 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/mizuki",

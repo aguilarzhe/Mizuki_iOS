@@ -91,9 +91,6 @@ static NSString * const kClientId = @"853814459237-313spgj6avl7ot1au6gd5vhr8ttbo
         BWRInvoiceDataViewController *configurationInvoiceData = [segue destinationViewController];
         [configurationInvoiceData initWithFirstRFC:NSLocalizedString(@"Bienvenido",nil)];
     }
-    else if([[segue identifier] isEqualToString:@"invoiceCompleteDataSegue"]){
-        BWRInvoiceHistoryViewController *invoicesHistory = [segue destinationViewController];
-    }
 }
 
 
