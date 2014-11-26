@@ -16,11 +16,14 @@
 #import "BWRWebConnection.h"
 #import "BWRCompleteInvoice.h"
 #import "BWRUserPreferences.h"
+#import <MessageUI/MessageUI.h>
+#import "BWRMail.h"
 
 @interface BWRInvoiceConfirmationViewController ()
 @property NSString *tiendaURL;
 @property NSMutableArray *invoicePagesArray;
 @property NSString *actualRFC;
+@property BWRMail *mailSend;
 //Page1
 @property UIImageView *invoiceImageView;
 //Page2
@@ -208,10 +211,6 @@
     invoiceLabel.editable = NO;
     invoiceLabel.scrollEnabled = YES;
     invoiceLabel.text = NSLocalizedString(@"Procesando",nil);
-}
-
--(void)resendInvoice{
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -425,9 +424,19 @@
     
     //Autocomplete table
     }else if(tableView == completeTableView){
-        empresaTextField.text = [[completeStringsArray objectAtIndex:indexPath.row] valueForKey:@"name"];
-        completeTableView.hidden = YES;
-        [self createTicketViewElemetsWithId: [[[completeStringsArray objectAtIndex:indexPath.row] valueForKey:@"id"] intValue]];
+        //Get id company
+        int idCompany = [[[completeStringsArray objectAtIndex:indexPath.row] valueForKey:@"id"] intValue];
+        NSString *nameCompany = [[completeStringsArray objectAtIndex:indexPath.row] valueForKey:@"name"];
+        //Exist company
+        if (idCompany!=-1) {
+            empresaTextField.text = nameCompany;
+            completeTableView.hidden = YES;
+            [self createTicketViewElemetsWithId: idCompany];
+        }
+        //Add company
+        else{
+            [self requestNewCompany: nameCompany];
+        }
         
         //Only when the action is send invoice.
         if(invoiceAction==0){
@@ -530,7 +539,6 @@
 
 - (void)searchAutocompleteEntriesWithSubstring:(NSString *)substring {
 
-    NSMutableArray *temporalArray = [[NSMutableArray alloc] initWithArray:completeStringsArray];
     //If there are elements in array
     if([completeStringsArray count]!=0) {
         [completeStringsArray removeAllObjects];
@@ -546,34 +554,20 @@
     ticketScrollView.hidden = YES;
 
     //If substring length is equals to 3
-    if ([substring length]==3) {
+    if ([substring length]>=3) {
         //Get strings array to complete
         completeStringsArray = [BWRWebConnection companyListWithSubstring:substring];
+        
+        if([completeStringsArray count]==0){
+            //Show option request for new company
+            NSString *addCompanyString = [NSString stringWithFormat:@"Agregar tienda: %@", substring];
+            NSDictionary *addCompany = [[NSDictionary alloc ] initWithObjectsAndKeys: addCompanyString, @"name", @(-1), @"id", nil] ;
+            [completeStringsArray addObject:addCompany];
+        }
+        
         //Resize array
-        if([completeStringsArray count]!=0){
-            [completeTableView setFrame:CGRectMake(0, completeTableView.frame.origin.y, completeTableView.frame.size.width, 44*[completeStringsArray count])];
-            [completeTableView setContentSize:CGSizeMake(self.view.frame.size.width, (44 * [completeStringsArray count]))];
-        }
-    }
-    
-    //If substring length is higher than 3
-    else if ([substring length]>3){
-        for(NSDictionary *curDictionary in temporalArray) {
-            NSString *curString = [curDictionary valueForKey:@"name"];
-            NSRange substringRange = [curString rangeOfString:substring];
-            if (substringRange.location != NSNotFound) {
-                [completeStringsArray addObject:curDictionary];
-            }
-        }
-        //Resize array
-        if([completeStringsArray count]!=0){
-            [completeTableView setFrame:CGRectMake(0, completeTableView.frame.origin.y, completeTableView.frame.size.width, 44*[completeStringsArray count])];
-            [completeTableView setContentSize:CGSizeMake(self.view.frame.size.width, (44 * [completeStringsArray count]))];
-        //Save previous strings
-        }else{
-            completeStringsArray = temporalArray;
-            //completeTableView.hidden =YES;
-        }
+        [completeTableView setFrame:CGRectMake(0, completeTableView.frame.origin.y, completeTableView.frame.size.width, 44*[completeStringsArray count])];
+        [completeTableView setContentSize:CGSizeMake(self.view.frame.size.width, (44 * [completeStringsArray count]))];
     }
     
     //If substring length is less than 3
@@ -594,6 +588,28 @@
 {
     [textField resignFirstResponder];
     return YES;
+}
+
+#pragma mark - MFMailComposeViewController
+
+- (void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    [_mailSend didFinishWithResult:result error:error];
+}
+
+- (void) requestNewCompany: (NSString *)company {
+    
+    //Get rfc element from array
+    BWRRFCInfo *rfcActual;
+    for (BWRRFCInfo *rfcInfo in fetchedResults){
+        if ([actualRFC isEqualToString:rfcInfo.rfc]) {
+            rfcActual = rfcInfo;
+            break;
+        }
+    }
+    
+    _mailSend = [[BWRMail alloc] initWithRFC:rfcActual image:invoiceImage context:self];
+    [_mailSend showEmailWithCompany: company];
 }
 
 

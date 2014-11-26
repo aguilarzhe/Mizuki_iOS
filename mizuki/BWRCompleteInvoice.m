@@ -131,16 +131,14 @@
     date = [self stringDateFormatterFromDate:[NSDate date]];
     
     //Get Invoice
-    BWRInvoice *upInvoice;
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Invoice"];
+    BWRInvoice *upInvoice = [self getInvoiceFromPredicate:@"idInvoice == %@" value:idInvoice];
+    /*NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Invoice"];
     NSPredicate *predicateID = [NSPredicate predicateWithFormat:@"idInvoice == %@",idInvoice];
     [fetchRequest setPredicate:predicateID];
     NSError *error;
-    NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];*/
     
-    if(!error){
-        upInvoice = [fetchedObjects objectAtIndex:0];
-    }else{
+    if(upInvoice == nil){
         return FALSE;
     }
 
@@ -157,14 +155,15 @@
     //Get Rules
     BWRRule *upRule;
     NSInteger index = 0;
-    fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Rule"];
+    /*fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Rule"];
     predicateID = [NSPredicate predicateWithFormat:@"idInvoice_Invoice == %@",idInvoice];
     [fetchRequest setPredicate:predicateID];
     fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
     
     if(error){
         return FALSE;
-    }
+    }*/
+    NSArray *fetchedObjects = [self getArrayCoreDataElmentsFromEntity:@"Rule" predicate:@"idInvoice_Invoice == %@" value:idInvoice];
     
     //Update Rules
     for(BWRTicketViewElement *rule in rulesViewElementsArray){
@@ -180,7 +179,7 @@
         upRule.fieldValue = rule.selectionValue;
     }
     
-    error = nil;
+    NSError *error = nil;
     if([managedObjectContext save:&error]){
         return  TRUE;
     }
@@ -193,16 +192,14 @@
 -(BOOL) delateCompleteInvoice{
     
     //Get Invoice
-    BWRInvoice *dInvoice;
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Invoice"];
+    BWRInvoice *dInvoice = [self getInvoiceFromPredicate:@"idInvoice == %@" value:idInvoice];
+    /*NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Invoice"];
     NSPredicate *predicateID = [NSPredicate predicateWithFormat:@"idInvoice == %@",idInvoice];
     [fetchRequest setPredicate:predicateID];
     NSError *error;
-    NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];*/
     
-    if(!error){
-        dInvoice = [fetchedObjects objectAtIndex:0];
-    }else{
+    if(dInvoice == nil){
         return FALSE;
     }
     
@@ -210,21 +207,22 @@
     [managedObjectContext deleteObject:dInvoice];
     
     //Get Rules
-    fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Rule"];
+    /*fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Rule"];
     predicateID = [NSPredicate predicateWithFormat:@"idInvoice_Invoice == %@",idInvoice];
     [fetchRequest setPredicate:predicateID];
     fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
     
     if(error){
         return FALSE;
-    }
+    }*/
+    NSArray *fetchedObjects = [self getArrayCoreDataElmentsFromEntity:@"Rule" predicate:@"idInvoice_Invoice == %@" value:idInvoice];
     
     //Delete Rules
     for(BWRRule *dRule in fetchedObjects){
         [managedObjectContext deleteObject:dRule];
     }
     
-    error = nil;
+    NSError *error = nil;
     if([managedObjectContext save:&error]){
         return  TRUE;
     }
@@ -266,6 +264,32 @@
     NSString *stringDate = [dateFormatter stringFromDate:date];
     
     return stringDate;
+}
+
+-(NSArray *) getArrayCoreDataElmentsFromEntity: (NSString *)entitiy predicate:(NSString *)predicate value:(NSString *)value {
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:entitiy];
+    NSPredicate *predicateID = [NSPredicate predicateWithFormat:predicate, value];
+    [fetchRequest setPredicate:predicateID];
+    NSError *error;
+    NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    
+    if(!error){
+        return fetchedObjects;
+    }else{
+        return nil;
+    }
+}
+
+-(BWRInvoice *) getInvoiceFromPredicate: (NSString *)predicate value:(NSString *)value{
+    
+    NSArray *invoiceResult = [self getArrayCoreDataElmentsFromEntity:@"Invoice" predicate:predicate value:value];
+    
+    if(invoiceResult == nil){
+        return nil;
+    }else{
+        return [invoiceResult objectAtIndex:0];
+    }
 }
 
 

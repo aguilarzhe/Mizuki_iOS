@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="aTW-i5-dLF">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="aTW-i5-dLF">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <scenes>
         <!--Initial Configuration Data User View Controller-->
@@ -25,7 +25,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WKt-Ia-2LX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="483" y="-385"/>
+            <point key="canvasLocation" x="507" y="-813"/>
         </scene>
         <!--Invoice Data View Controller-->
         <scene sceneID="Jpl-KL-4iu">
@@ -47,7 +47,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nEK-Bm-Je9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1086" y="-373"/>
+            <point key="canvasLocation" x="1294" y="-797"/>
         </scene>
         <!--Invoice History View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -72,7 +72,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1093" y="233"/>
+            <point key="canvasLocation" x="469" y="-91"/>
         </scene>
         <!--Edit Invoice View Controller-->
         <scene sceneID="AyC-1O-TTu">
@@ -94,7 +94,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y0j-XJ-nVU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1086" y="801"/>
+            <point key="canvasLocation" x="469" y="629"/>
         </scene>
         <!--Go Camara View Controller-->
         <scene sceneID="6vj-To-rA5">
@@ -116,7 +116,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wFc-Cd-AjP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1064" y="1357"/>
+            <point key="canvasLocation" x="592" y="1829"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="OXi-Gn-ci7">
@@ -132,7 +132,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vQw-x9-HTV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-132" y="-385"/>
+            <point key="canvasLocation" x="-260" y="-813"/>
         </scene>
         <!--Invoice Confirmation View Controller-->
         <scene sceneID="tiu-BV-KrH">
@@ -149,11 +149,12 @@
                     </view>
                     <connections>
                         <segue destination="SsD-YA-AO4" kind="show" identifier="invoiceWebViewSegue" id="fOi-nm-YhW"/>
+                        <segue destination="H2R-Qg-Vu8" kind="show" identifier="EmailSegue" id="vMD-Aa-mjW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fAW-hQ-d43" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1726" y="233"/>
+            <point key="canvasLocation" x="1286" y="-99"/>
         </scene>
         <!--My Account View Controller-->
         <scene sceneID="nDm-xd-fQ1">
@@ -176,7 +177,28 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eR5-Fq-rzi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1726" y="-361"/>
+            <point key="canvasLocation" x="2018" y="-773"/>
+        </scene>
+        <!--Mail View Controller-->
+        <scene sceneID="6tX-oQ-YTi">
+            <objects>
+                <viewController id="H2R-Qg-Vu8" customClass="BWRMailViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="d5h-0v-RIC"/>
+                        <viewControllerLayoutGuide type="bottom" id="KKY-PU-Ez7"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Rl4-sO-Q5p">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <segue destination="rL8-FQ-150" kind="show" identifier="BackEmailSegue" id="qNC-iH-FWH"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Grg-s6-9s3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2012" y="-99"/>
         </scene>
         <!--Web Invoice View Controller-->
         <scene sceneID="lrb-rr-Lpg">
@@ -197,12 +219,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eqv-Bf-IRG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1714" y="812"/>
+            <point key="canvasLocation" x="1330" y="620"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="fus-tq-EbD"/>
         <segue reference="eBy-Ij-oQw"/>
-        <segue reference="mRf-qK-f6T"/>
+        <segue reference="qNC-iH-FWH"/>
+        <segue reference="fus-tq-EbD"/>
     </inferredMetricsTieBreakers>
 </document>

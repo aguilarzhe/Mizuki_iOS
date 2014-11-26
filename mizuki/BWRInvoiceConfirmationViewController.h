@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "BWRProcessImage.h"
 #import "BWRCompleteInvoice.h"
+#import <MessageUI/MessageUI.h>
 
-@interface BWRInvoiceConfirmationViewController : UIViewController <UIActionSheetDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate>
+@interface BWRInvoiceConfirmationViewController : UIViewController <UIActionSheetDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate, MFMailComposeViewControllerDelegate>
 @property NSString *invoiceText;
 @property UIImage *invoiceImage;
 

@@ -127,3 +127,16 @@
 "Error al agregar rfc" = "Error to add rfc";
 "Error al actualizar rfc" = "Error to update rfc";
 
+//BWRMail
+"No se puede enviar correo" = "This device cannot send email";
+"Por favor configure un correo en la aplicación Mail" = "Please, configure email in Mail application.";
+"Correo cancelado" = "Mail canceled";
+"Correo guardado" = "Mail saved";
+"Correo enviado" = "Mail sent";
+"Error de envío" = "Mail sent failure";
+"No se ha enviado solicitud de tienda nueva" = "It has not sent new company request";
+"Se ha enviado solicitud de tienda nueva" = "It has sent new company request";
+"El correo tuvo un error al ser enviado" = "The mail has an error when it sent";
+
+
+

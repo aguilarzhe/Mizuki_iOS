@@ -10,7 +10,6 @@
 		2B1327E719BE5BA700D36AC0 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1327E619BE5BA700D36AC0 /* NotificationCenter.framework */; };
 		2B1327ED19BE5BA700D36AC0 /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B1327EC19BE5BA700D36AC0 /* TodayViewController.m */; };
 		2B1327EF19BE5BA700D36AC0 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B1327EE19BE5BA700D36AC0 /* MainInterface.storyboard */; };
-		2B1327F219BE5BA700D36AC0 /* com.baware.mizuki.Mizuki-widget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2B1327E419BE5BA700D36AC0 /* com.baware.mizuki.Mizuki-widget.appex */; };
 		2B182FB519B9537D00743BD7 /* BWRMessagesToUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B182FB419B9537D00743BD7 /* BWRMessagesToUser.m */; };
 		2B1BEDC219C9416B005E00EC /* BWRGoCamaraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B1BEDC119C9416B005E00EC /* BWRGoCamaraViewController.m */; };
 		2B21A4CF19B63F810070A433 /* BWRUserPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B21A4CE19B63F800070A433 /* BWRUserPreferences.m */; };
@@ -24,6 +23,8 @@
 		2B3BEA8B199BD84D007466E2 /* BWRCompleteInvoice.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B3BEA8A199BD84D007466E2 /* BWRCompleteInvoice.m */; };
 		2B4496101976E47E00BFDBDB /* BWRTicketViewElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B44960F1976E47E00BFDBDB /* BWRTicketViewElement.m */; };
 		2B73652D1975DE6900726BCC /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B73652C1975DE6900726BCC /* opencv2.framework */; };
+		2B7532931A25566C006672F4 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B7532921A25566C006672F4 /* MessageUI.framework */; };
+		2B7532991A2580AD006672F4 /* BWRMail.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7532981A2580AD006672F4 /* BWRMail.m */; };
 		2BB862AA19D3C29400DDFB4A /* BWRRFCInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BB862A919D3C29400DDFB4A /* BWRRFCInfoController.m */; };
 		2BBBE1BA199FDE0400B94C1C /* BWREditInvoiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BBBE1B9199FDE0400B94C1C /* BWREditInvoiceViewController.m */; };
 		2BCEE57B197DC24900E00667 /* WebInvoiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BCEE57A197DC24900E00667 /* WebInvoiceViewController.m */; };
@@ -67,20 +68,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2B1327F019BE5BA700D36AC0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2F397D5F1948BD6E004CC963 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2B1327E319BE5BA700D36AC0;
-			remoteInfo = "Mizuki-widget";
-		};
-		2B1327F319BE5BA700D36AC0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2F397D5F1948BD6E004CC963 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2B1327E319BE5BA700D36AC0;
-			remoteInfo = "Mizuki-widget";
-		};
 		2F397D811948BD6F004CC963 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2F397D5F1948BD6E004CC963 /* Project object */;
@@ -97,7 +84,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				2B1327F219BE5BA700D36AC0 /* com.baware.mizuki.Mizuki-widget.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -136,6 +122,9 @@
 		2B44960F1976E47E00BFDBDB /* BWRTicketViewElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRTicketViewElement.m; sourceTree = "<group>"; };
 		2B4496111976E49100BFDBDB /* BWRTicketViewElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BWRTicketViewElement.h; sourceTree = "<group>"; };
 		2B73652C1975DE6900726BCC /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		2B7532921A25566C006672F4 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		2B7532971A25809E006672F4 /* BWRMail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWRMail.h; sourceTree = "<group>"; };
+		2B7532981A2580AD006672F4 /* BWRMail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRMail.m; sourceTree = "<group>"; };
 		2BB862A919D3C29400DDFB4A /* BWRRFCInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWRRFCInfoController.m; sourceTree = "<group>"; };
 		2BB862AB19D3C2B400DDFB4A /* BWRRFCInfoController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BWRRFCInfoController.h; sourceTree = "<group>"; };
 		2BBBE1B8199FDE0400B94C1C /* BWREditInvoiceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWREditInvoiceViewController.h; sourceTree = "<group>"; };
@@ -350,6 +339,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B7532931A25566C006672F4 /* MessageUI.framework in Frameworks */,
 				2B2628AF1994442C00E5564B /* WebKit.framework in Frameworks */,
 				2FCA2C8A1993E83D00C008DE /* CoreMedia.framework in Frameworks */,
 				2FCA2C881993E7E200C008DE /* AVFoundation.framework in Frameworks */,
@@ -387,6 +377,7 @@
 		2B1327E519BE5BA700D36AC0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2B7532921A25566C006672F4 /* MessageUI.framework */,
 				2B1327E619BE5BA700D36AC0 /* NotificationCenter.framework */,
 			);
 			name = Frameworks;
@@ -715,6 +706,8 @@
 				2F397D7A1948BD6F004CC963 /* Images.xcassets */,
 				2F397D711948BD6F004CC963 /* mizuki.xcdatamodeld */,
 				2F5E380E19804BBE00189A8F /* Localizable.strings */,
+				2B7532971A25809E006672F4 /* BWRMail.h */,
+				2B7532981A2580AD006672F4 /* BWRMail.m */,
 				2BDB2F2719509B7E00AD8F67 /* BWRProcessImage.m */,
 				2BDB2F2619509B6600AD8F67 /* BWRProcessImage.h */,
 				2F397D6E1948BD6F004CC963 /* AppDelegate.h */,
@@ -828,8 +821,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				2B1327F119BE5BA700D36AC0 /* PBXTargetDependency */,
-				2B1327F419BE5BA700D36AC0 /* PBXTargetDependency */,
 			);
 			name = mizuki;
 			productName = mizuki;
@@ -860,7 +851,7 @@
 		2F397D5F1948BD6E004CC963 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Efrén Aguilar";
 				TargetAttributes = {
 					2B1327E319BE5BA700D36AC0 = {
@@ -966,6 +957,7 @@
 				2B21A4CF19B63F810070A433 /* BWRUserPreferences.m in Sources */,
 				2BBBE1BA199FDE0400B94C1C /* BWREditInvoiceViewController.m in Sources */,
 				2B351E6C1991CD84000D8611 /* BWRWebConnection.m in Sources */,
+				2B7532991A2580AD006672F4 /* BWRMail.m in Sources */,
 				2B182FB519B9537D00743BD7 /* BWRMessagesToUser.m in Sources */,
 				2BB862AA19D3C29400DDFB4A /* BWRRFCInfoController.m in Sources */,
 				2BDB2F1D19509B0B00AD8F67 /* Tesseract.mm in Sources */,
@@ -990,16 +982,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		2B1327F119BE5BA700D36AC0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2B1327E319BE5BA700D36AC0 /* Mizuki-widget */;
-			targetProxy = 2B1327F019BE5BA700D36AC0 /* PBXContainerItemProxy */;
-		};
-		2B1327F419BE5BA700D36AC0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2B1327E319BE5BA700D36AC0 /* Mizuki-widget */;
-			targetProxy = 2B1327F319BE5BA700D36AC0 /* PBXContainerItemProxy */;
-		};
 		2F397D821948BD6F004CC963 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2F397D661948BD6F004CC963 /* mizuki */;
@@ -1107,7 +1089,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				METAL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv7 armv7s";
