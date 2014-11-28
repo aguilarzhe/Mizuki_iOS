@@ -157,10 +157,17 @@ static BWRCompleteInvoice *actualInvoice;
         
         for(BWRInvoice *invoice in invoicesResult){
             BWRCompleteInvoice *completeInvoice = [[BWRCompleteInvoice alloc] initFromCoreDataWithInvoice:invoice];
-            [allInvoicesArray addObject:completeInvoice];
-            if([@"Pendiente" isEqualToString:completeInvoice.status]){
-                [pendingInvoicesArray addObject:completeInvoice];
+            
+            //Invoice is not in process
+            if(![@"Process" isEqualToString:completeInvoice.status]){
+                [allInvoicesArray addObject:completeInvoice];
+                
+                //Invoice is pending 
+                if([@"Pendiente" isEqualToString:completeInvoice.status]){
+                    [pendingInvoicesArray addObject:completeInvoice];
+                }
             }
+            
         }
         
     } else {
@@ -411,7 +418,7 @@ static BWRCompleteInvoice *actualInvoice;
         editIvoiceViewController.completeInvoice = actualInvoice;
     }else if([[segue identifier] isEqualToString:@"InvoiceConfirmationDataSegue"]){
         BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [segue destinationViewController];
-        confirmInvoiceViewController.invoiceAction = 2;
+        confirmInvoiceViewController.invoiceAction = 1;
     }
 }
 

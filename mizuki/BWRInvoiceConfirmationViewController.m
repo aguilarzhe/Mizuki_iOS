@@ -44,7 +44,7 @@
 @implementation BWRInvoiceConfirmationViewController
 @synthesize actualRFC;
 @synthesize completeInvoice;
-@synthesize invoiceAction;
+@synthesize invoiceAction;      //0->invoice with ticket        1->invoice data
 //Page1
 @synthesize invoiceLabel;
 @synthesize invoiceText;
@@ -128,8 +128,8 @@
     ticketScrollView.hidden = NO;
     
     //PAGE 2 --------------------------------------------------------------------------------
-    //If action is send or resend invoice, creates page 2
-    if(invoiceAction == 0 || invoiceAction == 1){
+    //If action is send creates page 2
+    if(invoiceAction == 0){
         [self initPage2];
     }
     
@@ -170,11 +170,6 @@
     switch (invoiceAction) {
         case 0: // Send Invoice
             [self performSelectorInBackground:@selector(processImage) withObject:nil]; // Modificar por GCD
-            ticketDataPageControl.numberOfPages = 2;
-            break;
-            
-        case 1: //Resend invoice
-            [self sendInvoiceDirectly];
             ticketDataPageControl.numberOfPages = 2;
             break;
             
@@ -292,7 +287,7 @@
 }
 
 - (void) updateViewsWhitSelectedRFC {
-    //Get rfc element from arreglo
+    //Get rfc element from array
     BWRRFCInfo *rfcActual;
     for (BWRRFCInfo *rfcInfo in fetchedResults){
         if ([actualRFC isEqualToString:rfcInfo.rfc]) {
@@ -308,58 +303,6 @@
             NSLog(@"Valor de %@ es %@", viewElement.ticketField, viewElement.selectionValue);
         }
     }
-}
-
--(void)sendInvoiceDirectly{
-    
-    //Get id company
-    NSArray *stringCompanyArray = [BWRWebConnection companyListWithSubstring:completeInvoice.company];
-    int idCompany;
-    if(stringCompanyArray!=nil){
-        //Get data company
-        NSDictionary *companyDictionary = [stringCompanyArray objectAtIndex:0];
-        if(companyDictionary!=nil){
-            idCompany = [[companyDictionary valueForKey:@"id"] integerValue];
-        }
-        //If can't get company data
-        else{
-            NSLog(@"No se pudo obtener diccionario de datos de la comañia");
-            return;
-        }
-    }
-    //If can't get company identifier
-    else{
-        NSLog(@"No se pudo obtener el id de la compañia");
-        return;
-    }
-    
-    
-    //Get url, pagesArray and ticketViewElementsArray
-    [self createTicketViewElemetsWithId:idCompany];
-    
-    //Change actual rfc, invoice Label and company
-    actualRFC = completeInvoice.rfc;
-    invoiceLabel.text = completeInvoice.resultOCR;
-    empresaTextField.text = completeInvoice.company;
-    
-    //
-    for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
-        if ([viewElement.viewTicketElement isKindOfClass:[UITextField class]] && [viewElement.dataSource isEqualToString:@"ticket_info"]) {
-            
-            //Find ticket field
-            for(BWRTicketViewElement *rule in completeInvoice.rulesViewElementsArray){
-                if([viewElement.ticketField isEqualToString:rule.ticketField]){
-                    ((UITextField *)viewElement.viewTicketElement).text = rule.selectionValue;
-                    viewElement.selectionValue = rule.selectionValue;
-                    break;
-                }
-            }
-            
-        }
-    }
-    
-    //Resend invoice
-    [self goToWebview];
 }
 
 #pragma mark - UITableViewDataSource
@@ -616,7 +559,14 @@
 #pragma mark - Collection view data source
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 2;
+    //Invoice with ticket
+    if (invoiceAction == 0) {
+        return 2;
+    }
+    //Invoice put data
+    else{
+        return 1;
+    }
 }
 
 
@@ -646,33 +596,25 @@
     
     if([self validationInvoiceData] && !([invoiceLabel.text isEqualToString:NSLocalizedString(@"Procesando",nil)])){
         
-        //If resend invoice
-        if(invoiceAction==1){
-            [completeInvoice delateCompleteInvoice];
+        //Put TextField text in selectionValue
+        for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
+            if ([viewElement.viewTicketElement isKindOfClass:[UITextField class]] && [viewElement.dataSource isEqualToString:@"ticket_info"]) {
+                
+                viewElement.selectionValue = ((UITextField *)viewElement.viewTicketElement).text;
+                
+            }
         }
         
-        //If don't resend invoice
-        //if(invoiceAction == 0 || invoiceAction == 2){
-            
-            //Put TextField text in selectionValue
-            for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
-                if ([viewElement.viewTicketElement isKindOfClass:[UITextField class]] && [viewElement.dataSource isEqualToString:@"ticket_info"]) {
-                    
-                    viewElement.selectionValue = ((UITextField *)viewElement.viewTicketElement).text;
-                    
-                }
-            }
-            
-            //update completeInvoice with new invoice
-            completeInvoice = [self getNewCompleteInvoice];
-            if(completeInvoice==nil){
-                return;
-            }
-        //}
+        //update completeInvoice with new invoice
+        completeInvoice = [self getNewCompleteInvoice];
+        if(completeInvoice==nil){
+            return;
+        }
         
         //Put rfc user_info fields
         [self updateViewsWhitSelectedRFC];
         
+        //Go to webview
         [self performSegueWithIdentifier:@"invoiceWebViewSegue" sender:self];
     }
 }
@@ -702,13 +644,13 @@
     BWRCompleteInvoice *newCompleteInvoice=[[BWRCompleteInvoice alloc] initWithData:viewsArray rfc:actualRFC ticketImage:invoiceImage stringOCR:invoiceLabel.text company:empresaTextField.text];
     
     //Add invoice to data base
-    /*if([newCompleteInvoice addCompleteInvoiceWithStatus:@"Pendiente"]){
+    if([newCompleteInvoice addCompleteInvoiceWithStatus:@"Process"]){
         NSLog(@"SE REALIZO EL ADD CORRECTAMENTE: %@", completeInvoice.idInvoice);
         return newCompleteInvoice;
     }else{
         NSLog(@"ERROR EN EL ADD");
         return nil;
-    }*/
+    }
     return newCompleteInvoice;
 }
 

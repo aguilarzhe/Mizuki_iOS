@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6172.12" systemVersion="13F34" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="13F34" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Invoice" representedClassName="BWRInvoice" syncable="YES">
         <attribute name="company" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
@@ -35,8 +35,8 @@
         <attribute name="ticketMask" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Invoice" positionX="-63" positionY="90" width="128" height="150"/>
+        <element name="Invoice" positionX="286" positionY="17" width="128" height="148"/>
         <element name="RFCInfo" positionX="-63" positionY="-18" width="128" height="255"/>
-        <element name="Rule" positionX="-54" positionY="99" width="128" height="150"/>
+        <element name="Rule" positionX="115" positionY="39" width="128" height="150"/>
     </elements>
 </model>

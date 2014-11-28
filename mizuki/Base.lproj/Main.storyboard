@@ -89,12 +89,12 @@
                     </view>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="returnToHistorySegue" id="q3W-YU-4gn"/>
-                        <segue destination="rL8-FQ-150" kind="show" identifier="ResendingInvoiceSegue" id="car-cz-uCl"/>
+                        <segue destination="SsD-YA-AO4" kind="show" identifier="ResendInvoiceSegue" id="9Lk-2F-DKX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y0j-XJ-nVU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="469" y="629"/>
+            <point key="canvasLocation" x="469" y="667"/>
         </scene>
         <!--Go Camara View Controller-->
         <scene sceneID="6vj-To-rA5">
@@ -149,7 +149,6 @@
                     </view>
                     <connections>
                         <segue destination="SsD-YA-AO4" kind="show" identifier="invoiceWebViewSegue" id="fOi-nm-YhW"/>
-                        <segue destination="H2R-Qg-Vu8" kind="show" identifier="EmailSegue" id="vMD-Aa-mjW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fAW-hQ-d43" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -179,27 +178,6 @@
             </objects>
             <point key="canvasLocation" x="2018" y="-773"/>
         </scene>
-        <!--Mail View Controller-->
-        <scene sceneID="6tX-oQ-YTi">
-            <objects>
-                <viewController id="H2R-Qg-Vu8" customClass="BWRMailViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="d5h-0v-RIC"/>
-                        <viewControllerLayoutGuide type="bottom" id="KKY-PU-Ez7"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="Rl4-sO-Q5p">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <connections>
-                        <segue destination="rL8-FQ-150" kind="show" identifier="BackEmailSegue" id="qNC-iH-FWH"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Grg-s6-9s3" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2012" y="-99"/>
-        </scene>
         <!--Web Invoice View Controller-->
         <scene sceneID="lrb-rr-Lpg">
             <objects>
@@ -224,7 +202,8 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="eBy-Ij-oQw"/>
-        <segue reference="qNC-iH-FWH"/>
+        <segue reference="9Lk-2F-DKX"/>
         <segue reference="fus-tq-EbD"/>
+        <segue reference="v4g-2V-dkS"/>
     </inferredMetricsTieBreakers>
 </document>

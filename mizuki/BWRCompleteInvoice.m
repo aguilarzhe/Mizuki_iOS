@@ -132,12 +132,6 @@
     
     //Get Invoice
     BWRInvoice *upInvoice = [self getInvoiceFromPredicate:@"idInvoice == %@" value:idInvoice];
-    /*NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Invoice"];
-    NSPredicate *predicateID = [NSPredicate predicateWithFormat:@"idInvoice == %@",idInvoice];
-    [fetchRequest setPredicate:predicateID];
-    NSError *error;
-    NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];*/
-    
     if(upInvoice == nil){
         return FALSE;
     }
@@ -155,16 +149,11 @@
     //Get Rules
     BWRRule *upRule;
     NSInteger index = 0;
-    /*fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Rule"];
-    predicateID = [NSPredicate predicateWithFormat:@"idInvoice_Invoice == %@",idInvoice];
-    [fetchRequest setPredicate:predicateID];
-    fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
-    
-    if(error){
-        return FALSE;
-    }*/
     NSArray *fetchedObjects = [self getArrayCoreDataElmentsFromEntity:@"Rule" predicate:@"idInvoice_Invoice == %@" value:idInvoice];
-    
+    if(fetchedObjects == nil){
+        return FALSE;
+    }
+    NSLog(@"elementos rulesview: %d  elementos Rules: %d", rulesViewElementsArray.count, fetchedObjects.count);
     //Update Rules
     for(BWRTicketViewElement *rule in rulesViewElementsArray){
         upRule = [fetchedObjects objectAtIndex:index];
@@ -193,12 +182,6 @@
     
     //Get Invoice
     BWRInvoice *dInvoice = [self getInvoiceFromPredicate:@"idInvoice == %@" value:idInvoice];
-    /*NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Invoice"];
-    NSPredicate *predicateID = [NSPredicate predicateWithFormat:@"idInvoice == %@",idInvoice];
-    [fetchRequest setPredicate:predicateID];
-    NSError *error;
-    NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];*/
-    
     if(dInvoice == nil){
         return FALSE;
     }
@@ -207,15 +190,10 @@
     [managedObjectContext deleteObject:dInvoice];
     
     //Get Rules
-    /*fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Rule"];
-    predicateID = [NSPredicate predicateWithFormat:@"idInvoice_Invoice == %@",idInvoice];
-    [fetchRequest setPredicate:predicateID];
-    fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
-    
-    if(error){
-        return FALSE;
-    }*/
     NSArray *fetchedObjects = [self getArrayCoreDataElmentsFromEntity:@"Rule" predicate:@"idInvoice_Invoice == %@" value:idInvoice];
+    if(fetchedObjects == nil){
+        return FALSE;
+    }
     
     //Delete Rules
     for(BWRRule *dRule in fetchedObjects){
@@ -234,14 +212,9 @@
 
 -(NSMutableArray *) getRulesViewElementsOfInvoice{
     
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Rule"];
-    NSPredicate *predicateID = [NSPredicate predicateWithFormat:@"idInvoice_Invoice == %@",idInvoice];
-    [fetchRequest setPredicate:predicateID];
+    NSArray *fetchedObjects = [self getArrayCoreDataElmentsFromEntity:@"Rule" predicate:@"idInvoice_Invoice == %@" value:idInvoice];
     
-    NSError *error;
-    NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
-    
-    if(!error){
+    if(fetchedObjects != nil){
         
         //Do array of viewElements from rule array - core data
         NSMutableArray *resultArray = [[NSMutableArray alloc] init];

@@ -13,6 +13,7 @@
 #import "BWRWebConnection.h"
 #import "BWRInvoiceTicketPage.h"
 #import "BWRInvoiceConfirmationViewController.h"
+#import "WebInvoiceViewController.h"
 
 @interface BWREditInvoiceViewController ()
 
@@ -24,7 +25,7 @@
 @property NSArray *fetchedResults;
 @property NSString *rfcSelected;
 //Send invoice
-@property NSURL *tiendaURL;
+@property NSString *tiendaURL;
 @property NSMutableArray *invoicePagesArray;
 
 @end
@@ -44,17 +45,6 @@
 {
     [super viewDidLoad];
     
-    //Get rfc from data base
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *managedObjectContext = appDelegate.managedObjectContext;
-    
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"RFCInfo"];
-    NSSortDescriptor *ordenacionPorNombre = [[NSSortDescriptor alloc] initWithKey:@"rfc" ascending:YES];
-    fetchRequest.sortDescriptors = @[ordenacionPorNombre];
-    
-    NSError *fetchingError = nil;
-    fetchedResults = [managedObjectContext executeFetchRequest:fetchRequest error:&fetchingError];
-    
     //Medidas
     NSInteger widthScreen = self.view.frame.size.width;
     NSInteger heightScreen = self.view.frame.size.height;
@@ -71,8 +61,31 @@
     [self.view addSubview:sendButton];
     //*********************************************
     
+    //If invoice is not right
+    if(![completeInvoice.status isEqualToString:@"Facturada"]){
+        //Get rfc from data base
+        AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        NSManagedObjectContext *managedObjectContext = appDelegate.managedObjectContext;
+        
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"RFCInfo"];
+        NSSortDescriptor *ordenacionPorNombre = [[NSSortDescriptor alloc] initWithKey:@"rfc" ascending:YES];
+        fetchRequest.sortDescriptors = @[ordenacionPorNombre];
+        
+        NSError *fetchingError = nil;
+        fetchedResults = [managedObjectContext executeFetchRequest:fetchRequest error:&fetchingError];
+        
+        //Save Button
+        UIBarButtonItem *bt_save = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Guardar",nil) style:UIBarButtonItemStylePlain target:self action:@selector(saveInvoiceChanges)];
+        self.navigationItem.rightBarButtonItem = bt_save;
+    }
+    
+    //If invoce is right
+    else{
+        sendButton.enabled = NO;
+    }
+    
     //RFC table
-    rfcTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0f, depth+=height+10, widthScreen, height) style:UITableViewStylePlain];
+    rfcTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, depth+=height+10, widthScreen, height*2) style:UITableViewStylePlain];
     rfcTableView.scrollEnabled = NO;
     rfcTableView.dataSource = self;
     rfcTableView.delegate = self;
@@ -99,14 +112,7 @@
     [self inicializeViewTicketElementsArray];
     [self.view addSubview:ticketScrollView];
     
-    //If invoice is not right
-    if(![completeInvoice.status isEqualToString:@"Facturada"]){
-        //Save Button
-        UIBarButtonItem *bt_save = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Guardar",nil) style:UIBarButtonItemStylePlain target:self action:@selector(saveInvoiceChanges)];
-        self.navigationItem.rightBarButtonItem = bt_save;
-    }
-    
-    self.title = @"Editar Factura";
+    self.title = NSLocalizedString(@"Editar Factura",nil);
     
 }
 
@@ -151,22 +157,92 @@
     }
 }
 
--(void) sendInvoice {
+-(bool) prepareForResendInvoice {
     
-    //Update invoice
-    [self updateInvoice];
+    //Get id company
+    NSArray *stringCompanyArray = [BWRWebConnection companyListWithSubstring:completeInvoice.company];
+    int idCompany;
+    if(stringCompanyArray!=nil){
+        //Get data company
+        NSDictionary *companyDictionary = [stringCompanyArray objectAtIndex:0];
+        idCompany = [[companyDictionary valueForKey:@"id"] integerValue];
+    }
     
-    //Go to BWRInvoiceConfirmation
-    [self performSegueWithIdentifier:@"ResendingInvoiceSegue" sender:self];
+    //If can't get company identifier
+    else{
+        NSLog(@"No se pudo obtener el id de la compañia");
+        return FALSE;
+    }
+    
+    //Get RFC data
+    BWRRFCInfo *rfcData = [self getRFCInfo];
+    
+    //Get company dictionary
+    NSDictionary *companyDataDictionary = [BWRWebConnection viewElementsWithCompany:idCompany];
+    if(companyDataDictionary!=nil){
+        
+        NSArray *rulesBlockArray = [companyDataDictionary valueForKey:@"rules_block"];
+        _tiendaURL = [companyDataDictionary valueForKey:@"url"];
+        _invoicePagesArray = [[NSMutableArray alloc] init];
+        
+        //Recorrer rules_block
+        int index = 0;
+        for(NSDictionary *pageDictionary in rulesBlockArray){
+            
+            BWRInvoiceTicketPage *invoicePage = [[BWRInvoiceTicketPage alloc] initWithData:[pageDictionary valueForKey:@"name"] pageNumber:[pageDictionary valueForKey:@"page_num"]];
+            NSArray *rulesArray = [pageDictionary valueForKey:@"rules"];
+            
+            //Recorrer rules
+            for(NSDictionary *ticketElement in rulesArray){
+                BWRTicketViewElement *ticketViewElement = [[BWRTicketViewElement alloc] initWithDictionary:ticketElement];
+                
+                //User data
+                if([ticketViewElement.dataSource isEqualToString:@"user_info"]){
+                    ticketViewElement.selectionValue = [rfcData getFormValueWhitProperty:ticketViewElement.ticketField];
+                    
+                //Ticket data
+                }else if([ticketViewElement.dataSource isEqualToString:@"ticket_info"]){
+                    ticketViewElement.selectionValue = ((BWRTicketViewElement *)[completeInvoice.rulesViewElementsArray objectAtIndex:index]).selectionValue;
+                    ticketViewElement.viewTicketElement = ((BWRTicketViewElement *)[completeInvoice.rulesViewElementsArray objectAtIndex:index]).viewTicketElement;
+                    index++;
+                    
+                    //Validate ticketView
+                    if(![ticketViewElement validateFieldValueWithTicketMask]){
+                        return FALSE;
+                    }
+                }
+                
+                [invoicePage.rules addObject:ticketViewElement];
+                
+            }
+            [_invoicePagesArray addObject:invoicePage];
+            
+        }
+        
+    }
+    
+    //If can't get company dictionary
+    else{
+        NSLog(@"No se pudo obtener los dostos de la compañia");
+        return FALSE;
+    }
+    
+    return TRUE;
+    
 }
 
--(void) saveInvoiceChanges {
+-(BWRRFCInfo *) getRFCInfo{
     
-    //Update invoice
-    [self updateInvoice];
+    //Get rfc element from array
+    BWRRFCInfo *rfcActual;
+    for (BWRRFCInfo *rfcInfo in fetchedResults){
+        if ([completeInvoice.rfc isEqualToString:rfcInfo.rfc]) {
+            rfcActual = rfcInfo;
+            break;
+        }
+    }
     
-    //Go to History
-    [self performSegueWithIdentifier:@"returnToHistorySegue" sender:self];
+    return rfcActual;
 }
 
 #pragma mark - UITextFieldDelegate
@@ -218,11 +294,9 @@
                 BWRRFCInfo *rfcInfo = [fetchedResults objectAtIndex:index];
                 [rfcActionSheet addButtonWithTitle:rfcInfo.rfc];
             }
-        }else{
-            [rfcActionSheet addButtonWithTitle:completeInvoice.rfc];
+            [rfcActionSheet showInView:self.view];
         }
         
-        [rfcActionSheet showInView:self.view];
     }
 }
 
@@ -236,13 +310,38 @@
     }
 }
 
+#pragma mark - Navigation
+
+-(void) sendInvoice {
+    
+    //Update invoice
+    completeInvoice.status = @"Process";
+    [self updateInvoice];
+    
+    //Prepare data for resend
+    if([self prepareForResendInvoice]){
+        //Resend invoice
+        [self performSegueWithIdentifier:@"ResendInvoiceSegue" sender:self];
+    }
+}
+
+-(void) saveInvoiceChanges {
+    
+    //Update invoice
+    [self updateInvoice];
+    
+    //Go to History
+    [self performSegueWithIdentifier:@"returnToHistorySegue" sender:self];
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if([[segue identifier] isEqualToString:@"ResendingInvoiceSegue"]){
-        BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [segue destinationViewController];
-        confirmInvoiceViewController.invoiceAction = 1;
-        confirmInvoiceViewController.invoiceImage = completeInvoice.image;
-        confirmInvoiceViewController.completeInvoice = completeInvoice;
+    if([[segue identifier] isEqualToString:@"ResendInvoiceSegue"]){
+        WebInvoiceViewController *webViewInvoiceData = [segue destinationViewController];
+        webViewInvoiceData.invoicePagesArray = _invoicePagesArray;
+        webViewInvoiceData.companyURL = [NSURL URLWithString: _tiendaURL];
+        webViewInvoiceData.actualPage = 0;
+        webViewInvoiceData.completeInvoice=completeInvoice;
     }
 }
 

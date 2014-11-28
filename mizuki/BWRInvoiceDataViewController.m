@@ -14,7 +14,6 @@
 #import "AppDelegate.h"
 
 @interface BWRInvoiceDataViewController () <NSFetchedResultsControllerDelegate, UITextFieldDelegate>
-@property NSManagedObjectContext *managedObjectContext;
 @property BOOL opcion;
 @property BWRRFCInfo *updateRFC;
 @property BOOL firstRFC;
@@ -23,7 +22,6 @@
 
 @implementation BWRInvoiceDataViewController
 
-@synthesize managedObjectContext;
 @synthesize opcion;
 @synthesize updateRFC;
 @synthesize tf_rfc;
@@ -123,10 +121,6 @@ static UITextField *activeField;
         listoButton.frame = CGRectMake(padding, depth+=40, longWidth, height);
         [scrollView addSubview:listoButton];
     }
-    
-    // CoreData
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    managedObjectContext = appDelegate.managedObjectContext;
     
     //Ready button
     self.navigationItem.rightBarButtonItem = bt_save;
@@ -336,64 +330,6 @@ static UITextField *activeField;
         }
     }
     
-    /*BWRRFCInfo *rfcInfo;
-    
-    if(opcion){
-        rfcInfo = [NSEntityDescription insertNewObjectForEntityForName:@"RFCInfo" inManagedObjectContext:managedObjectContext];
-    }else{
-        rfcInfo = updateRFC;
-    }
-    
-    if (rfcInfo) {
-        
-        //update rfc info
-        rfcInfo.rfc = tf_rfc.text;
-        rfcInfo.nombre = tf_nombre.text;
-        rfcInfo.apellidoPaterno = tf_apaterno.text;
-        rfcInfo.apellidoMaterno = tf_amaterno.text;
-        rfcInfo.pais = @"MEXICO";
-        rfcInfo.estado = tf_estado.text;
-        rfcInfo.delegacion = tf_delegacion.text;
-        rfcInfo.colonia = tf_colonia.text;
-        rfcInfo.calle = tf_calle.text;
-        rfcInfo.numInterior = tf_noint.text;
-        rfcInfo.numExterior = tf_noext.text;
-        rfcInfo.codigoPostal = tf_cp.text;
-        rfcInfo.ciudad = tf_ciudad.text;
-        rfcInfo.localidad = tf_localidad.text;
-        
-        
-        
-        NSError *error = nil;
-        //Save changes in data base
-        if ([managedObjectContext save:&error];//){
-            if (![BWRUserPreferences getStringValueForKey:@"rfc"]) {
-                [BWRUserPreferences setStringValue:rfcInfo.rfc forKey:@"rfc"];
-            }
-        
-            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && !firstRFC){
-                [self dismissViewControllerAnimated:YES completion:nil];
-            }else{
-                [self performSegueWithIdentifier:@"invoiceHistorySegue" sender:self];
-            }
-        
-        }else{
-            NSLog(@"Error guardando elemento en base de datos %@", error);
-            
-            NSDictionary *userInfo = error.userInfo;
-            NSError *aux;
-            NSString *validationErrorKey;
-            if ((validationErrorKey = userInfo[@"NSValidationErrorKey"])) {
-                NSLog(@"%@", validationErrorKey);
-                [BWRMessagesToUser Error:error code:0 message:[NSString stringWithFormat:@"%@%@",NSLocalizedString(@"Hay un error en ",nil), NSLocalizedString(validationErrorKey,nil)]];
-            }else if((aux = userInfo[@"NSDetailedErrors"][0])){
-                NSLog(@"%@", aux.userInfo[@"NSValidationErrorKey"]);
-                [BWRMessagesToUser Error:error code:0 message:[NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Hay un error en ",nil), NSLocalizedString(aux.userInfo[@"NSValidationErrorKey"],nil)]];
-            }
-            
-        }
-
-    }*/
 }
                  
 #pragma mark - Navegation

@@ -56,7 +56,7 @@ static UIWebView *invoiceWebView;
         [self alertNotification];
         [BWRMessagesToUser Notification:@"Error de facturación"];
         //Add invoice
-        [self validateInvoiceErrorWithAdd:TRUE];
+        [self validateInvoiceError];
     }
     
     [self goToInvoiceHistory];
@@ -89,7 +89,7 @@ static UIWebView *invoiceWebView;
         [self alertNotification];
         [BWRMessagesToUser Notification:@"Error de facturación"];
         //Add invoice
-        [self validateInvoiceErrorWithAdd:FALSE];
+        [self validateInvoiceError];
     }
     return TRUE;
 }
@@ -133,7 +133,7 @@ static UIWebView *invoiceWebView;
         
 }
 
-- (void) validateInvoiceErrorWithAdd: (BOOL)add{
+- (void) validateInvoiceError{
     
     //Get state
     NSString *status = @"Facturada";
@@ -142,12 +142,9 @@ static UIWebView *invoiceWebView;
         status = @"Pendiente";
     }
     
-    //Add or update invoice
-    if(add){
-        [completeInvoice addCompleteInvoiceWithStatus:status];
-    }else{
-        [completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:status];
-    }
+    //Update invoice
+    [completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:status];
+    
     NSLog(@"Se agregó la factura--------------status: %@----------------------------", status);
     startInvoicing = FALSE;
     
@@ -171,7 +168,7 @@ static UIWebView *invoiceWebView;
     }
         
     //Finish invoicing
-    [self validateInvoiceErrorWithAdd:TRUE];
+    [self validateInvoiceError];
     
     
 }

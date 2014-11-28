@@ -112,8 +112,21 @@
 
 -(BOOL)validateFieldValueWithTicketMask{
     
-    [self editValueFieldAccordingToTicketMask];
-    
+    if ([self validateWithTicketMask]){
+        return TRUE;
+    }else{
+        [self editValueFieldAccordingToTicketMask];
+        
+        if ([self validateWithTicketMask]){
+            return TRUE;
+        }else{
+            [BWRMessagesToUser Alert:@"Datos no válidos" message:[NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Error en el campo: ",nil), ticketField]];
+            return FALSE;
+        }
+    }
+}
+
+-(BOOL) validateWithTicketMask{
     NSError *error = NULL;
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:ticketMask options:NSRegularExpressionCaseInsensitive error:&error];
     NSTextCheckingResult *match = [regex firstMatchInString:((UITextField *)viewTicketElement).text  options:0 range:NSMakeRange(0, [((UITextField *)viewTicketElement).text length])];
@@ -122,7 +135,6 @@
         ((UITextField *)viewTicketElement).text = [((UITextField *)viewTicketElement).text substringWithRange:match.range];
         return TRUE;
     }else{
-        [BWRMessagesToUser Alert:@"Datos no válidos" message:[NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Error en el campo: ",nil), ticketField]];
         return FALSE;
     }
 }
