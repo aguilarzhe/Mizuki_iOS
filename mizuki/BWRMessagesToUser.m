@@ -69,13 +69,13 @@ static bool confirmation;
     }
 }
 
-+ (void) Notification: (NSString *)message{
++ (void) Notification: (NSString *)message withIdentifier:(NSString *)identifier{
     //[[NSNotificationCenter defaultCenter] postNotificationName:@"MyNotification" object:nil];
     UILocalNotification* localNotification = [[UILocalNotification alloc] init];
     localNotification.fireDate = [NSDate date];
-    localNotification.alertBody = message;
+    localNotification.alertBody = NSLocalizedString(message,nil);
     localNotification.timeZone = [NSTimeZone defaultTimeZone];
-    localNotification.alertAction = @"userActionButton1";
+    localNotification.alertAction = identifier;
     localNotification.soundName = UILocalNotificationDefaultSoundName;
     localNotification.applicationIconBadgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
     

@@ -153,7 +153,7 @@
     if(fetchedObjects == nil){
         return FALSE;
     }
-    NSLog(@"elementos rulesview: %d  elementos Rules: %d", rulesViewElementsArray.count, fetchedObjects.count);
+    
     //Update Rules
     for(BWRTicketViewElement *rule in rulesViewElementsArray){
         upRule = [fetchedObjects objectAtIndex:index];
@@ -247,7 +247,7 @@
     NSError *error;
     NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
     
-    if(!error){
+    if(!error && fetchedObjects.count!=0){
         return fetchedObjects;
     }else{
         return nil;

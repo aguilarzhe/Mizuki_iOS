@@ -90,6 +90,9 @@
 "Confirmación de factura" = "Confirm Invoice";
 "Procesando" = "Loading";
 "Seleccionar RFC" = "Select RFC";
+"Error al guardar" = "Error to save";
+"La factura debe tener una empresa para ser guardada" = "The invoice must have an company for save it";
+"La factura debe tener los campos del ticket para ser guardada" = "The invoice must have the ticket fields for save it";
 
 //BWRWebConnection
 "No se pudieron obtener datos del servidor" = "Could't get dato from server";
@@ -118,10 +121,17 @@
 "Error al recuperar" = "Error to recover";
 "Error en el servidor" = "Error in server";
 "Error desconocido" = "Uknown error";
+
+//WebInvoiceViewController
 "Error de facturación" = "Invoicing error";
 "La facturación tuvo un error. ¿Desea verlo?" = "Invoicing has an error. Would you like see it?";
 "Después" = "More later";
 "Ver" = "See";
+"Ticket facturado." = "Ticket invoiced";
+"Estado: " = "Status: ";
+"Facturada" = "Invoiced";
+"Fallida" = "Failed";
+"Pendiente" = "Pending";
 
 //BWRRFCInfoController
 "Error al agregar rfc" = "Error to add rfc";

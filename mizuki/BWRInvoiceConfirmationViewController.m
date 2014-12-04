@@ -16,7 +16,7 @@
 #import "BWRWebConnection.h"
 #import "BWRCompleteInvoice.h"
 #import "BWRUserPreferences.h"
-#import <MessageUI/MessageUI.h>
+#import "BWRMessagesToUser.h"
 #import "BWRMail.h"
 
 @interface BWRInvoiceConfirmationViewController ()
@@ -162,11 +162,17 @@
     //Back button if needed
     [self backButtonIfNeeded];
     
+    //Save button
+    self.navigationController.toolbarHidden = NO;
+    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Guardar", nil) style:UIBarButtonItemStylePlain target:self action:@selector(saveInvoice)];
+    UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    self.toolbarItems = @[flexibleItem, saveButton];
+    
     //View features
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
     self.title = NSLocalizedString(@"Confirmación de factura",nil);
     
-    //If resending invoice
+    //Action according to in data
     switch (invoiceAction) {
         case 0: // Send Invoice
             [self performSelectorInBackground:@selector(processImage) withObject:nil]; // Modificar por GCD
@@ -240,6 +246,14 @@
     [self presentViewController:navigationController animated:YES completion:nil];
 }
 
+-(void) saveInvoice {
+    if ([self saveInvoiceValidation]) {
+        if([completeInvoice updateCompleteInvoiceWithRFC:actualRFC status:@"Pendiente"]){
+            [self backToInvoiceHistory];
+        }
+    }
+}
+
 - (void) processRecognition{
     while ([invoiceLabel.text isEqualToString:NSLocalizedString(@"Procesando",nil)]);
     
@@ -272,6 +286,36 @@
     invoiceLabel.text = text;
 }
 
+-(BOOL) saveInvoiceValidation{
+    
+    //Validate company field
+    if ([empresaTextField.text isEqualToString:@""]) {
+        [BWRMessagesToUser Alert:@"Error al guardar" message:@"La factura debe tener una empresa para ser guardada"];
+        return FALSE;
+    }
+    
+    //Validate views array
+    if (ticketViewElementsArray.count == 0) {
+        [BWRMessagesToUser Alert:@"Error al guardar" message:@"La factura debe tener los campos del ticket para ser guardada"];
+        return FALSE;
+    }
+    
+    //Save invoice
+    if(![self validationInvoiceData]){
+        return FALSE;
+    }
+    
+    //add completeInvoice with new invoice
+    completeInvoice = [self getNewCompleteInvoice];
+    
+    //Validate invoice add
+    if(completeInvoice==nil){
+        return FALSE;
+    }
+    
+    return TRUE;
+}
+
 - (BOOL) validationInvoiceData{
     
     for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
@@ -280,6 +324,8 @@
                 if(![viewElement validateFieldValueWithTicketMask]){
                     return FALSE;
                 }
+                //Put TextField text in selectionValue
+                viewElement.selectionValue = ((UITextField *)viewElement.viewTicketElement).text;
             }
         }
     }
@@ -304,6 +350,32 @@
         }
     }
 }
+
+-(BWRCompleteInvoice *) getNewCompleteInvoice{
+    
+    //Get view elements array
+    NSMutableArray *viewsArray= [[NSMutableArray alloc] init];
+    for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
+        if ([viewElement.dataSource isEqualToString:@"ticket_info"]) {
+            [viewsArray addObject:viewElement];
+        }
+    }
+    
+    //Create new invoice
+    BWRCompleteInvoice *newCompleteInvoice=[[BWRCompleteInvoice alloc] initWithData:viewsArray rfc:actualRFC ticketImage:invoiceImage stringOCR:invoiceLabel.text company:empresaTextField.text];
+    
+    //Add invoice to data base
+    if([newCompleteInvoice addCompleteInvoiceWithStatus:@"Process"]){
+        NSLog(@"SE REALIZO EL ADD CORRECTAMENTE: %@", completeInvoice.idInvoice);
+        return newCompleteInvoice;
+    }else{
+        NSLog(@"ERROR EN EL ADD");
+        return nil;
+    }
+    
+    return newCompleteInvoice;
+}
+
 
 #pragma mark - UITableViewDataSource
 
@@ -588,22 +660,7 @@
 #pragma mark - Navegation
 - (void)goToWebview{
     
-    if([self validationInvoiceData] && !([invoiceLabel.text isEqualToString:NSLocalizedString(@"Procesando",nil)])){
-        
-        //Put TextField text in selectionValue
-        for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
-            if ([viewElement.viewTicketElement isKindOfClass:[UITextField class]] && [viewElement.dataSource isEqualToString:@"ticket_info"]) {
-                
-                viewElement.selectionValue = ((UITextField *)viewElement.viewTicketElement).text;
-                
-            }
-        }
-        
-        //update completeInvoice with new invoice
-        completeInvoice = [self getNewCompleteInvoice];
-        if(completeInvoice==nil){
-            return;
-        }
+    if([self saveInvoiceValidation] && !([invoiceLabel.text isEqualToString:NSLocalizedString(@"Procesando",nil)])){
         
         //Put rfc user_info fields
         [self updateViewsWhitSelectedRFC];
@@ -624,28 +681,5 @@
     }
 }
 
--(BWRCompleteInvoice *) getNewCompleteInvoice{
-    
-    //Get view elements array
-    NSMutableArray *viewsArray= [[NSMutableArray alloc] init];
-    for(BWRTicketViewElement *viewElement in ticketViewElementsArray){
-        if ([viewElement.dataSource isEqualToString:@"ticket_info"]) {
-            [viewsArray addObject:viewElement];
-        }
-    }
-    
-    //Create new invoice
-    BWRCompleteInvoice *newCompleteInvoice=[[BWRCompleteInvoice alloc] initWithData:viewsArray rfc:actualRFC ticketImage:invoiceImage stringOCR:invoiceLabel.text company:empresaTextField.text];
-    
-    //Add invoice to data base
-    if([newCompleteInvoice addCompleteInvoiceWithStatus:@"Process"]){
-        NSLog(@"SE REALIZO EL ADD CORRECTAMENTE: %@", completeInvoice.idInvoice);
-        return newCompleteInvoice;
-    }else{
-        NSLog(@"ERROR EN EL ADD");
-        return nil;
-    }
-    return newCompleteInvoice;
-}
 
 @end

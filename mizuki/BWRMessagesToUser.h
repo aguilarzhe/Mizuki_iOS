@@ -12,6 +12,6 @@
 +(void)Alert: (NSString *)title message:(NSString *)message;
 +(void)Error: (NSError *)error code:(NSInteger)errorCode message:(NSString *)message;
 -(BOOL)Confirmation: (NSString *)question;
-+ (void) Notification: (NSString *)message;
++ (void) Notification: (NSString *)message withIdentifier:(NSString *)identifier;
 
 @end

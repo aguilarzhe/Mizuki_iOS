@@ -132,7 +132,7 @@ static UIWebView *invoiceWebView;
 - (void) errorOcurred {
     loadError = TRUE;
     //Show webview
-    [BWRMessagesToUser Notification:@"Error de facturación"];
+    [BWRMessagesToUser Notification:@"Error de facturación" withIdentifier:@"Fallida"];
     //Add invoice
     [self validateInvoiceError];
 }
@@ -147,7 +147,7 @@ static UIWebView *invoiceWebView;
     }
     
     else{
-        [BWRMessagesToUser Notification:[NSString stringWithFormat:@"Ticket facturado. Estado: %@", status]];
+        [BWRMessagesToUser Notification:[NSString stringWithFormat:@"%@ %@ %@",NSLocalizedString(@"Ticket facturado.",nil), NSLocalizedString(@"Estado: ",nil), NSLocalizedString(status,nil)] withIdentifier:@"Facturada"];
     }
     
     //Update invoice
@@ -171,9 +171,9 @@ static UIWebView *invoiceWebView;
         
         if(loadError){
             //Show webview
-            [BWRMessagesToUser Notification:@"Error de facturación"];
+            [BWRMessagesToUser Notification:@"Error de facturación" withIdentifier:@"Fallida"];
             break;
-        }loadError = TRUE;
+        }
         actualPage++;
     }
         
@@ -191,7 +191,7 @@ static UIWebView *invoiceWebView;
         NSLog(@"Java Script FALLO");
         loadError = TRUE;
         //Show webinvoice
-        [BWRMessagesToUser Notification:@"Error de facturación"];
+        [BWRMessagesToUser Notification:@"Error de facturación" withIdentifier:@"Fallida"];
     }
     
 }
@@ -228,12 +228,22 @@ static UIWebView *invoiceWebView;
 }
 
 #pragma mark - Notification
-- (void) alertNotification{
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error de facturación",nil)
-                                                        message:NSLocalizedString(@"La facturación tuvo un error. ¿Desea verlo?",nil)
-                                                       delegate:self
-                                              cancelButtonTitle:NSLocalizedString(@"Después",nil)
-                                              otherButtonTitles:NSLocalizedString(@"Ver",nil), nil];
+- (void) alertNotificationWithState: (NSString *)status{
+    
+    UIAlertView *alertView;
+    //Status is failed
+    if([status isEqualToString:@"Fallida"]){
+         alertView= [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error de facturación",nil)
+                                                            message:NSLocalizedString(@"La facturación tuvo un error. ¿Desea verlo?",nil)
+                                                           delegate:self
+                                                  cancelButtonTitle:NSLocalizedString(@"Después",nil)
+                                                  otherButtonTitles:NSLocalizedString(@"Ver",nil), nil];
+    }
+    //Status is right or pending
+    else{
+        [BWRMessagesToUser Alert:NSLocalizedString(@"Ticket facturado.",nil) message:[NSString stringWithFormat:@"%@%@", NSLocalizedString(@"Estado: ",nil), NSLocalizedString(status,nil)]];
+    }
+    
     [alertView show];
 }
 

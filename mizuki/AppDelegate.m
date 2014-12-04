@@ -110,8 +110,8 @@
     }
     //Application is active
     else{
-        NSLog(@"Alerta en Appdelegate");
-        [_webView alertNotification];
+        //succesful invoicing
+        [_webView alertNotificationWithState:notif.alertAction];
     }
 }
 

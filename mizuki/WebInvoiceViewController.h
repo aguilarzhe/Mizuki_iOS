@@ -17,6 +17,6 @@
 @property BWRCompleteInvoice *completeInvoice;
 
 - (void) showWebViewController;
-- (void) alertNotification;
+- (void) alertNotificationWithState: (NSString *)status;
 
 @end
