@@ -9,8 +9,6 @@
 #import "AppDelegate.h"
 #import <GooglePlus/GooglePlus.h>
 #import "BWRGoCamaraViewController.h"
-//#import "BWRMessagesToUser.h"
-#import "WebInvoiceViewController.h"
 
 @interface AppDelegate ()
 
@@ -31,13 +29,6 @@
     if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)]){
         
         [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound categories:nil]];
-    }
-    
-    // Handle launching from a notification
-    UILocalNotification *localNotif =
-    [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
-    if (localNotif) {
-        NSLog(@"Recieved Notification %@",localNotif);
     }
     
     return YES;
@@ -67,6 +58,9 @@
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:vc];
         [_window.rootViewController presentViewController:navigationController animated:YES completion:nil];
     }
+    
+    //Reset notification badge
+    [UIApplication sharedApplication].applicationIconBadgeNumber=0;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -108,21 +102,17 @@
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notif {
     // Handle the notificaton when the app is running
-    NSLog(@"Recieved Notification %@",notif);
+    NSLog(@"Metodo - Notification %@",notif);
     
-    //If aplication is active, show alert
-    if ([application applicationState] == UIApplicationStateActive) {
-        //BWRMessagesToUser *userMessage = [[BWRMessagesToUser alloc] init];
-        //[userMessage alertNotification];
+    //If aplication is not active, show webview
+    if ([application applicationState] != UIApplicationStateActive) {
+        [_webView showWebViewController];
     }
-}
-
-// will be called when in foreground
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    // get the necessary information out of the dictionary
-    // (the data you sent with your push message)
-    // and load your data
-    NSLog(@"CLIIIIIIICK EN NOTIFICACION *******************");
+    //Application is active
+    else{
+        NSLog(@"Alerta en Appdelegate");
+        [_webView alertNotification];
+    }
 }
 
 #pragma mark - Core Data stack

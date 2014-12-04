@@ -16,4 +16,7 @@
 @property NSInteger actualPage;
 @property BWRCompleteInvoice *completeInvoice;
 
+- (void) showWebViewController;
+- (void) alertNotification;
+
 @end

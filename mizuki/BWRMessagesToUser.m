@@ -60,13 +60,22 @@ static bool confirmation;
     return confirmation;
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == 0) {
+        confirmation = TRUE;
+    }
+    else{
+        confirmation = FALSE;
+    }
+}
+
 + (void) Notification: (NSString *)message{
     //[[NSNotificationCenter defaultCenter] postNotificationName:@"MyNotification" object:nil];
     UILocalNotification* localNotification = [[UILocalNotification alloc] init];
     localNotification.fireDate = [NSDate date];
     localNotification.alertBody = message;
     localNotification.timeZone = [NSTimeZone defaultTimeZone];
-    localNotification.alertAction = @"Show me the item";
+    localNotification.alertAction = @"userActionButton1";
     localNotification.soundName = UILocalNotificationDefaultSoundName;
     localNotification.applicationIconBadgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
     

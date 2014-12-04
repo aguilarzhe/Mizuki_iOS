@@ -11,7 +11,7 @@
 
 @interface BWRMail ()
 
-@property UIViewController<MFMailComposeViewControllerDelegate> *actualViewController;
+@property UIViewController *actualViewController;
 @property NSData *imageMail;
 
 @end
@@ -25,7 +25,7 @@ NSString *emailSupport = @"skyla1504@hotmail.com";
 @synthesize imageMail;
 
 
--(BWRMail*) initWithRFC: (BWRRFCInfo *)rfc image:(UIImage *)image context:(UIViewController<MFMailComposeViewControllerDelegate> *)controller{
+-(BWRMail*) initWithRFC: (BWRRFCInfo *)rfc image:(UIImage *)image context:(UIViewController *)controller{
     self = [super init];
     
     rfcData = rfc;
@@ -47,7 +47,7 @@ NSString *emailSupport = @"skyla1504@hotmail.com";
         
         
         MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
-        mc.mailComposeDelegate = _actualViewController;
+        mc.mailComposeDelegate = self;
         [mc setSubject:emailTitle];
         [mc setMessageBody:messageBody isHTML:NO];
         [mc setToRecipients:toRecipents];
@@ -82,7 +82,7 @@ NSString *emailSupport = @"skyla1504@hotmail.com";
     return RFCformat;
 }
 
-- (void) didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+- (void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
 {
     switch (result)
     {

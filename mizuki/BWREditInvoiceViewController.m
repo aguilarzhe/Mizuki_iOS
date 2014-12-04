@@ -323,6 +323,11 @@
         //Resend invoice
         [self performSegueWithIdentifier:@"ResendInvoiceSegue" sender:self];
     }
+    //Error ocurred in prepare data for resend
+    else{
+        completeInvoice.status = @"Pendiente";
+        [self updateInvoice];
+    }
 }
 
 -(void) saveInvoiceChanges {

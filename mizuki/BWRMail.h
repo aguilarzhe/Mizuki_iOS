@@ -10,12 +10,11 @@
 #import <MessageUI/MessageUI.h>
 #import "BWRRFCInfo.h"
 
-@interface BWRMail : NSObject
+@interface BWRMail : NSObject <MFMailComposeViewControllerDelegate>
 
 @property BWRRFCInfo *rfcData;
 
--(BWRMail*) initWithRFC: (BWRRFCInfo *)rfc image:(UIImage *)image context:(UIViewController<MFMailComposeViewControllerDelegate> *)controller;
+-(BWRMail*) initWithRFC: (BWRRFCInfo *)rfc image:(UIImage *)image context:(UIViewController *)controller;
 - (void) showEmailWithCompany: (NSString *)company;
-- (void) didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error;
 
 @end

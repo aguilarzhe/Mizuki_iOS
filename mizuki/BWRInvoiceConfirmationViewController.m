@@ -533,13 +533,7 @@
     return YES;
 }
 
-#pragma mark - MFMailComposeViewController
-
-- (void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
-{
-    [_mailSend didFinishWithResult:result error:error];
-}
-
+#pragma mark - Send Mail
 - (void) requestNewCompany: (NSString *)company {
     
     //Get rfc element from array
