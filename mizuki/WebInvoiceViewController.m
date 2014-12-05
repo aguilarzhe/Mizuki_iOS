@@ -56,7 +56,7 @@ static UIWebView *invoiceWebView;
     }
     //If no conection or doesn't correspond
     else{
-        [self errorOcurred];
+        [self validateInvoiceWithStatus:1];
     }
     
     [self goToInvoiceHistory];
@@ -87,7 +87,7 @@ static UIWebView *invoiceWebView;
     //If one web page more (error)
     if(actualPage==[invoicePagesArray count]){
         NSLog(@"Ya son las paginas +++++++++++++++++++++++++ %d",[invoicePagesArray count]);
-        [self errorOcurred];
+        [self validateInvoiceWithStatus:2];
     }
     
     return TRUE;
@@ -95,7 +95,7 @@ static UIWebView *invoiceWebView;
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
     NSLog(@"ERROR: %@", error);
-    [self errorOcurred];
+    [self validateInvoiceWithStatus:2];
 }
 
 #pragma mark - WebInvoiceViewConetroller Sources
@@ -129,37 +129,37 @@ static UIWebView *invoiceWebView;
         
 }
 
-- (void) errorOcurred {
-    loadError = TRUE;
-    //Show webview
-    [BWRMessagesToUser Notification:@"Error de facturación" withIdentifier:@"Fallida"];
-    //Add invoice
-    [self validateInvoiceError];
+- (void) validateInvoiceWithStatus: (int)status{
+    
+    NSString *statusString;
+    NSString *message;
+    
+    switch (status) {
+        case 0:     //Invoice rigth
+            statusString = @"Facturada";
+            message = [NSString stringWithFormat:@"%@ %@ %@",NSLocalizedString(@"Ticket facturado.",nil), NSLocalizedString(@"Estado: ",nil), NSLocalizedString(statusString,nil)];
+            break;
+            
+        case 1:     //Invoice pending
+            statusString = @"Pendiente";
+            message = [NSString stringWithFormat:@"%@ %@ %@",NSLocalizedString(@"Ticket no facturado.",nil), NSLocalizedString(@"Estado: ",nil), NSLocalizedString(statusString,nil)];
+            break;
+            
+        default:    //Invoice failed
+            statusString = @"Fallida";
+            message = @"Error de facturación";
+            break;
+    }
+    
+    [BWRMessagesToUser Notification:message withIdentifier:statusString];
+    [completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:statusString];
+    startInvoicing = FALSE;
 }
 
-- (void) validateInvoiceError{
-    
-    //Get state
-    NSString *status = @"Facturada";
-    //If there is an error
-    if(loadError){
-        status = @"Pendiente";
-    }
-    
-    else{
-        [BWRMessagesToUser Notification:[NSString stringWithFormat:@"%@ %@ %@",NSLocalizedString(@"Ticket facturado.",nil), NSLocalizedString(@"Estado: ",nil), NSLocalizedString(status,nil)] withIdentifier:@"Facturada"];
-    }
-    
-    //Update invoice
-    [completeInvoice updateCompleteInvoiceWithRFC:completeInvoice.rfc status:status];
-    
-    NSLog(@"Se agregó la factura--------------status: %@----------------------------", status);
-    startInvoicing = FALSE;
-    
-}
 
 #pragma  mark - JavaScript
 - (void) executeJavaScriptFromWebPage{
+    int status = 0; //Facturada
     
    //Fill and send all forms
     for (int index=actualPage; index<[invoicePagesArray count]; index++){
@@ -170,15 +170,14 @@ static UIWebView *invoiceWebView;
         [self performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:javascript waitUntilDone:YES];
         
         if(loadError){
-            //Show webview
-            [BWRMessagesToUser Notification:@"Error de facturación" withIdentifier:@"Fallida"];
+            status = 2;
             break;
         }
         actualPage++;
     }
         
     //Finish invoicing
-    [self validateInvoiceError];
+    [self validateInvoiceWithStatus:status];
     
     
 }
@@ -190,8 +189,6 @@ static UIWebView *invoiceWebView;
     }else{
         NSLog(@"Java Script FALLO");
         loadError = TRUE;
-        //Show webinvoice
-        [BWRMessagesToUser Notification:@"Error de facturación" withIdentifier:@"Fallida"];
     }
     
 }

@@ -162,8 +162,8 @@ static BWRCompleteInvoice *actualInvoice;
             if(![@"Process" isEqualToString:completeInvoice.status]){
                 [allInvoicesArray addObject:completeInvoice];
                 
-                //Invoice is pending 
-                if([@"Pendiente" isEqualToString:completeInvoice.status]){
+                //Invoice is pending or failed
+                if(![@"Facturada" isEqualToString:completeInvoice.status]){
                     [pendingInvoicesArray addObject:completeInvoice];
                 }
             }

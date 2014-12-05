@@ -128,6 +128,7 @@
 "Después" = "More later";
 "Ver" = "See";
 "Ticket facturado." = "Ticket invoiced";
+"Ticket no facturado." = "Ticket is not invoiced";
 "Estado: " = "Status: ";
 "Facturada" = "Invoiced";
 "Fallida" = "Failed";
