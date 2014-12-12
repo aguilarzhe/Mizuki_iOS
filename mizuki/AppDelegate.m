@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <GooglePlus/GooglePlus.h>
 #import "BWRGoCamaraViewController.h"
+#import "BWRInvoiceHistoryViewController.h"
 
 @interface AppDelegate ()
 
@@ -101,8 +102,6 @@
 #pragma mark - Notification delegate
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notif {
-    // Handle the notificaton when the app is running
-    NSLog(@"Metodo - Notification %@",notif);
     
     //If aplication is not active, show webview
     if ([application applicationState] != UIApplicationStateActive) {

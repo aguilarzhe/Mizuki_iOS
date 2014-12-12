@@ -54,12 +54,24 @@
     NSInteger width = widthScreen-(2*padding);
     
     //TEMPORAL*************************************
-    UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [sendButton addTarget:self action:@selector(sendInvoice) forControlEvents:UIControlEventTouchDown];
-    [sendButton setTitle:NSLocalizedString(@"Reenviar",nil) forState:UIControlStateNormal];
-    sendButton.frame = CGRectMake(0, depth+=height+10, widthScreen, height);
-    [self.view addSubview:sendButton];
+    UITextField *statusTextField = [[UITextField alloc] initWithFrame:CGRectMake(padding, depth+=height+10, width, height)];
+    statusTextField.enabled = NO;
+    statusTextField.text = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"Estado: ",nil),  NSLocalizedString(completeInvoice.status,nil)];
+    if ([completeInvoice.status isEqualToString:@"Facturada"]) {
+        statusTextField.textColor = [UIColor greenColor];
+    }else if ([completeInvoice.status isEqualToString:@"Pendiente"]){
+        statusTextField.textColor = [UIColor yellowColor];
+    }else{
+        statusTextField.textColor = [UIColor redColor];
+    }
+    [self.view addSubview:statusTextField];
     //*********************************************
+    
+    //Resend button
+    self.navigationController.toolbarHidden = NO;
+    UIBarButtonItem *sendButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Reenviar", nil) style:UIBarButtonItemStylePlain target:self action:@selector(sendInvoice)];
+    UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    self.toolbarItems = @[flexibleItem, sendButton];
     
     //If invoice is not right
     if(![completeInvoice.status isEqualToString:@"Facturada"]){

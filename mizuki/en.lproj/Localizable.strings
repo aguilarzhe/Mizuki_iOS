@@ -133,6 +133,7 @@
 "Facturada" = "Invoiced";
 "Fallida" = "Failed";
 "Pendiente" = "Pending";
+"Error al cargar la página" = "Load page error";
 
 //BWRRFCInfoController
 "Error al agregar rfc" = "Error to add rfc";

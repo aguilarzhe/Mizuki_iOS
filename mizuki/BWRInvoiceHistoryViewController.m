@@ -25,10 +25,12 @@
 @property NSMutableArray *invoices;
 @property UIImagePickerController *myImagePickerController;
 @property UISegmentedControl *invoiceSegmentedControl;
+@property NSThread *threadLoad;
 
 @end
 
 static BWRCompleteInvoice *actualInvoice;
+static UIBackgroundTaskIdentifier backgroundTask;
 
 @implementation BWRInvoiceHistoryViewController
 
@@ -41,6 +43,7 @@ static BWRCompleteInvoice *actualInvoice;
 @synthesize actualInvoicesArray;
 @synthesize invoiceSegmentedControl;
 @synthesize myImagePickerController;
+@synthesize threadLoad;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -48,8 +51,8 @@ static BWRCompleteInvoice *actualInvoice;
     //Load invoices from core data
     allInvoicesArray = [[NSMutableArray alloc] init];
     pendingInvoicesArray = [[NSMutableArray alloc] init];
-    //[self loadInvoicesFromCoreData];
-    [self performSelectorInBackground:@selector(loadInvoices) withObject:nil];
+    //[self loadInvoices];
+    [self performSelectorInBackground:@selector(loadNewInvoices) withObject:nil];
     actualInvoicesArray = allInvoicesArray;
     
     //Measures
@@ -93,7 +96,7 @@ static BWRCompleteInvoice *actualInvoice;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    [self performSelectorInBackground:@selector(loadInvoices) withObject:nil];
+   // [self performSelectorInBackground:@selector(loadInvoices) withObject:nil];
 }
 
 #pragma mark - BWRInvoiceHistorySources
@@ -119,14 +122,52 @@ static BWRCompleteInvoice *actualInvoice;
     }
 }
 
--(void)loadInvoices{
-    while (1){
-        [self performSelectorOnMainThread:@selector(loadNewInvoices) withObject:nil waitUntilDone:YES];
-        [NSThread sleepForTimeInterval:10];
-    }
+- (void) loadInvoices {
+    threadLoad = [[NSThread alloc] initWithTarget:self selector:@selector(loadNewInvoices) object:nil];
+    [threadLoad start];
 }
 
--(void)loadNewInvoices{
+- (void)loadNewInvoices{
+    
+    //Init background task
+    /*backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^ {
+        
+        //Clean up code. Tell the system that we are done.
+        [[UIApplication sharedApplication] endBackgroundTask: backgroundTask];
+    }];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{*/
+        
+        //### background task starts
+        while (1){
+            
+            //Load new invoices on view
+            /*[self performSelector:@selector(loadNewInvoicesOnView)
+                         onThread:[NSThread mainThread]
+                       withObject:nil
+                    waitUntilDone:NO];
+            
+            //Wait 10 seconds
+            sleep(10);
+            if ([threadLoad isCancelled]) {
+                //stop the thread:
+                self.threadLoad = nil;
+                break;
+            }*/
+            //NSThread *threadLoad = [[NSThread alloc] initWithTarget:self selector:@selector(loadNewInvoices) object:nil];
+            //[threadLoad start];
+            [self performSelectorOnMainThread:@selector(loadNewInvoicesFrom) withObject:nil waitUntilDone:YES];
+            //[self loadNewInvoices];
+            [NSThread sleepForTimeInterval:10];
+        }
+        
+        //#### background task ends
+        
+    //});
+    
+}
+
+- (void)loadNewInvoicesFrom{
     [pendingInvoicesArray removeAllObjects];
     [allInvoicesArray removeAllObjects];
     [self loadInvoicesFromCoreData];
@@ -251,14 +292,6 @@ static BWRCompleteInvoice *actualInvoice;
             [self presentViewController:myImagePickerController animated:YES completion:nil];
         }
     }
-}
-
-/** Get the ticket from data
- 
- Invoke BWRConfirmationViewController view to fill ticket data.
- */
--(void)captureInvoiceFromData{
-    [self performSegueWithIdentifier:@"InvoiceConfirmationDataSegue" sender:self];
 }
 
 #pragma mark - UIActionSheetDelegate
@@ -402,6 +435,14 @@ static BWRCompleteInvoice *actualInvoice;
     [self performSegueWithIdentifier:@"EditInvoiceSegue" sender:self];
 }
 
+/** Get the ticket from data
+ 
+ Invoke BWRConfirmationViewController view to fill ticket data.
+ */
+-(void)captureInvoiceFromData{
+    [self performSegueWithIdentifier:@"InvoiceConfirmationDataSegue" sender:self];
+}
+
 /** Prepare the reciver class before the segue.
  
  If the segue identifier is invoiceConfirmationSegue, send invoiceImage and indication of don't resend invoice.
@@ -409,6 +450,11 @@ static BWRCompleteInvoice *actualInvoice;
  */
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    //Stop background task. Tell the system that we are done.
+    //[[UIApplication sharedApplication] endBackgroundTask: backgroundTask];
+    [threadLoad cancel];
+    
+    //Prepare for segue accoridingo with segue identifier
     if([[segue identifier] isEqualToString:@"invoiceConfirmationSegue"]){
         BWRInvoiceConfirmationViewController *confirmInvoiceViewController = [segue destinationViewController];
         confirmInvoiceViewController.invoiceAction = 0;
