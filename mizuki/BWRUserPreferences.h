@@ -15,5 +15,6 @@
 + (NSArray *)getConfPreferencesArray;
 + (void) setDefaultsWithEmail: (NSString *)email;
 + (BOOL) applicationConfigured;
+//+ (void) loadUserNotificationSettingsWithApplication: (UIApplication*) application;
 
 @end

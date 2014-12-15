@@ -11,6 +11,7 @@
 #import "BWRRule.h"
 #import "BWRTicketViewElement.h"
 #import "BWRMessagesToUser.h"
+#import "BWRUserPreferences.h"
 
 @interface BWRCompleteInvoice ()
 
@@ -49,11 +50,18 @@
     
     idInvoice = dateFormat;
     rfc = rfcTicket;
-    image = invoiceImage;
     date = dateFormat;
     status = @"Pendiente";
     resultOCR = OCRresult;
     company = organitation;
+    
+    //Validate save image from user preferences
+    if ([BWRUserPreferences getBoolValueForKey:@"Guardar Fotos"]) {
+        image = invoiceImage;
+    }
+    else{
+        image = nil;
+    }
     
     return self;
 }
@@ -68,11 +76,18 @@
     //Init Invoice
     idInvoice = invoice.idInvoice;
     rfc = invoice.rfc;
-    image = [UIImage imageWithData:invoice.image];
     date = [self stringDateFormatterFromDate:invoice.date];
     status = invoice.status;
     resultOCR = invoice.resultOCR;
     company = invoice.company;
+    
+    //Validate save image from user preferences
+    if ([BWRUserPreferences getBoolValueForKey:@"Guardar Fotos"]) {
+        image = [UIImage imageWithData:invoice.image];
+    }
+    else{
+        image = nil;
+    }
     
     //rulesviewarray
     rulesViewElementsArray = [[NSMutableArray alloc] initWithArray:[self getRulesViewElementsOfInvoice]];

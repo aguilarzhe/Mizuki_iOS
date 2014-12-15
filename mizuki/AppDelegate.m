@@ -10,6 +10,7 @@
 #import <GooglePlus/GooglePlus.h>
 #import "BWRGoCamaraViewController.h"
 #import "BWRInvoiceHistoryViewController.h"
+#import "BWRUserPreferences.h"
 
 @interface AppDelegate ()
 
@@ -31,6 +32,7 @@
         
         [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound categories:nil]];
     }
+    //[BWRUserPreferences loadUserNotificationSettingsWithApplication: application];
     
     return YES;
 }

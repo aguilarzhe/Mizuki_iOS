@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "BWRMessagesToUser.h"
+#import "BWRUserPreferences.h"
 
 @interface BWRMessagesToUser ()
 
@@ -70,16 +71,27 @@ static bool confirmation;
 }
 
 + (void) Notification: (NSString *)message withIdentifier:(NSString *)identifier{
-    //[[NSNotificationCenter defaultCenter] postNotificationName:@"MyNotification" object:nil];
-    UILocalNotification* localNotification = [[UILocalNotification alloc] init];
-    localNotification.fireDate = [NSDate date];
-    localNotification.alertBody = NSLocalizedString(message,nil);
-    localNotification.timeZone = [NSTimeZone defaultTimeZone];
-    localNotification.alertAction = identifier;
-    localNotification.soundName = UILocalNotificationDefaultSoundName;
-    localNotification.applicationIconBadgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
     
-    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification]; //presentLocalNotificationNow:localNotification];
+    //Validate user notification preferences
+    if ([BWRUserPreferences getBoolValueForKey:@"Notificaciones"]) {
+        
+        //Create notification
+        UILocalNotification* localNotification = [[UILocalNotification alloc] init];
+        localNotification.fireDate = [NSDate date];
+        localNotification.alertBody = NSLocalizedString(message,nil);
+        localNotification.timeZone = [NSTimeZone defaultTimeZone];
+        localNotification.alertAction = identifier;
+        localNotification.soundName = UILocalNotificationDefaultSoundName;
+        localNotification.applicationIconBadgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
+        
+        //Validate sound user preferences
+        if (![BWRUserPreferences getBoolValueForKey:@"Sonido"]) {
+            localNotification.soundName = nil;
+        }
+        
+        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification]; //presentLocalNotificationNow:localNotification];
+    }
+    
 }
 
 @end
